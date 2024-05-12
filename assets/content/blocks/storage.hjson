@@ -1,0 +1,29 @@
+/*Copyright belongs to choigame123*/
+name: Storage
+description: Vault with large size. It can store more 2 times of the normal vault. Contents inside the container can be retrieved with unloader.
+
+type: StorageBlock
+category: effect
+
+size: 4
+health: 2500
+hasItems: true
+itemCapacity: 15000
+
+requirements: [
+copper/1200
+titanium/800
+thorium/500
+plastanium/150
+phase-fabric/80
+]
+research: {
+     parent: vault
+     requirements: [
+         titanium/3000
+         thorium/1500
+         copper/25000
+         lead/30000
+         plastanium/2000
+     ]
+}

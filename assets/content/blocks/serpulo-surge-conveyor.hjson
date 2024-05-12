@@ -1,0 +1,32 @@
+/*Copyright belongs to choigame123*/
+name: Surge Conveyor
+description: High-grade conveyor, transporting a large number of item. Faster than 3× titanium conveyor.
+
+type: Conveyor
+category: distribution
+
+hasShadow: true
+health: 100
+speed: 0.24
+displayedSpeed: 33.3
+
+requirements: [
+  surge-alloy/1
+  thorium/5
+  titanium/3
+  copper/10
+]
+research: {
+    parent: thorium-conveyor
+    requirements: [
+        copper/6000
+        titanium/4300
+        lead/2000
+        graphite/1000
+        plastanium/4200
+        silicon/5100
+        thorium/4000
+        surge-alloy/1500
+        phase-fabric/2600
+    ]
+}

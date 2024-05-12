@@ -1,0 +1,32 @@
+/*Copyright belongs to choigame123*/
+name: Armored Surge Conveyor
+description: High-grade conveyor, transporting a large number of item. Faster than 3× titanium conveyor. Prevent item from sides.
+
+type: ArmoredConveyor
+category: distribution
+
+hasShadow: true
+health: 100
+speed: 0.24
+displayedSpeed: 33.3
+
+requirements: [
+  surge-alloy/3
+  thorium/5
+  titanium/3
+  copper/10
+]
+research: {
+    parent: serpulo-surge-conveyor
+    requirements: [
+        copper/60000
+        titanium/43000
+        lead/20000
+        graphite/10000
+        plastanium/42000
+        silicon/51000
+        thorium/40000
+        surge-alloy/15000
+        phase-fabric/26000
+    ]
+}

@@ -1,0 +1,29 @@
+/*Copyright belongs to choigame123*/
+name: Cluster
+description: One of the largest blocks for storing resources. Contents inside the container can be retrieved wiStorageBlock
+
+type: StorageBlock
+category: effect
+
+size: 5
+health: 1900
+hasItems: true
+itemCapacity: 30000
+
+requirements: [
+copper/2200
+titanium/1800
+thorium/700
+plastanium/530
+phase-fabric/120
+]
+research: {
+     parent: storage
+     requirements: [
+         titanium/30000
+         thorium/15000
+         copper/25000
+         lead/30000
+         plastanium/20000
+     ]
+}

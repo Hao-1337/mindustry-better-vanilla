@@ -1,0 +1,112 @@
+package hao1337;
+
+import arc.Application;
+import arc.Core;
+import arc.files.Fi;
+import arc.files.ZipFi;
+import arc.util.Http;
+import arc.util.Log;
+import arc.util.Http.HttpResponse;
+import arc.util.io.Streams;
+import arc.util.serialization.Jval;
+import java.net.URLClassLoader;
+import java.util.Objects;
+import mindustry.Vars;
+import mindustry.core.UI;
+import mindustry.mod.Mods.LoadedMod;
+import mindustry.ui.fragments.LoadingFragment;
+
+public class AutoUpdate {
+   public static String repo;
+   public static String packname;
+   public static String url;
+   public static int latestBuild;
+   private static String latest;
+
+   public static LoadedMod mod;
+
+   public static float progress;
+   public static String download;
+   public static boolean overBuild;
+
+   public static void load(String Iurl, String IPackname, String Irepo) {
+      try {
+         packname = IPackname;
+         mod = Vars.mods.getMod(packname);
+         if (mod == null) {
+           return;
+         }
+         repo = Irepo;
+         url = Iurl;
+         Jval meta = Jval.read((new ZipFi(mod.file)).child("mod.hjson").readString());
+         mod.meta.author = meta.getString("author");
+         mod.meta.description = meta.getString("description");
+      } catch (Throwable err) {
+        Log.err(err);
+      }
+   }
+
+   public static void check() {
+      Log.info("Checking for updates.");
+      Http.get(url, (res) -> {
+         Jval json = Jval.read(res.getResultAsString());
+         latest = json.getString("tag_name").substring(1);
+         download = ((Jval)json.get("assets").asArray().get(0)).getString("browser_download_url");
+         latestBuild = Integer.parseInt(json.getString("tag_name").substring(1));
+         int modBuild = Integer.parseInt("9");
+         Log.info(latestBuild + " " + mod.meta.version);
+         overBuild = modBuild > latestBuild;
+         if (modBuild != latestBuild) {
+            Vars.ui.showCustomConfirm("hao1337.update.name", Core.bundle.format("hao1337.update.info", new Object[]{mod.meta.version, latest}), "hao1337.update.nope", "hao1337.update.ok", AutoUpdate::update, () -> {
+            });
+         }
+
+      }, Log::err);
+   }
+
+   public static void update() {
+      try {
+         ClassLoader var1 = mod.loader;
+         if (var1 instanceof URLClassLoader) {
+            URLClassLoader cl = (URLClassLoader)var1;
+            cl.close();
+         }
+
+         mod.loader = null;
+      } catch (Throwable var2) {
+         Log.err(var2);
+      }
+
+      Vars.ui.loadfrag.show("hao1337.update.updating");
+      Vars.ui.loadfrag.setProgress(() -> {
+         return progress;
+      });
+      Http.get(download, AutoUpdate::handle, Log::err);
+   }
+
+   public static void handle(HttpResponse res) {
+      try {
+         Fi file = Vars.tmpDirectory.child("hao1337/better-vanilla".replace("/", "") + ".zip");
+         Streams.copyProgress(res.getResultAsStream(), file.write(false), res.getContentLength(), 4096, (p) -> {
+            progress = p;
+         });
+         Vars.mods.importMod(file).setRepo(repo);
+         file.delete();
+         Application app = Core.app;
+         LoadingFragment fragment = Vars.ui.loadfrag;
+         Objects.requireNonNull(fragment);
+         app.post(fragment::hide);
+         UI var3 = Vars.ui;
+         Application app1 = Core.app;
+         Objects.requireNonNull(app1);
+         var3.showInfoOnHidden("hao1337.reloadexit", app1::exit);
+      } catch (Throwable var2) {
+         Log.err(var2);
+      }
+
+   }
+
+   public static boolean installed(String mod) {
+      return Vars.mods.getMod(mod) != null && Vars.mods.getMod(mod).enabled();
+   }
+}

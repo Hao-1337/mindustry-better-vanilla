@@ -1,0 +1,17 @@
+/*Copyright belongs to choigame123*/
+name: Box
+description: Compact box for storing resources.
+
+type: StorageBlock
+category: effect
+
+size: 1
+health: 500
+hasItems: true
+itemCapacity: 100
+
+requirements: [
+    copper/50
+    lead/30
+]
+research: container

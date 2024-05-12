@@ -1,0 +1,34 @@
+/*Copyright belongs to choigame123*/
+name: Phase Unloader
+description: Highspeed unloading resources. Energy requirement.
+
+type: Unloader
+category: effect
+group: transportation
+
+speed: 5
+health: 300
+hasPower: true
+
+consumes: {
+    power: 2
+}
+requirements: [
+    lead/150
+    titanium/135
+    metaglass/50
+    silicon/80
+    surge-alloy/40
+    phase-fabric/35
+]
+research: {
+    parent: surge-unloader
+    requirements: [
+        lead/1500
+        titanium/1350
+        metaglass/500
+        silicon/800
+        surge-alloy/400
+        phase-fabric/350
+    ]
+}

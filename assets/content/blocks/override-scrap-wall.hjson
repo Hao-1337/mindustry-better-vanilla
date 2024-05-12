@@ -1,0 +1,17 @@
+name: Scrap wall
+description: Having an extremely large health.
+type: Wall
+size: 1
+health: 820
+requirements: [
+scrap/30
+]
+group: walls
+research: {
+    parent: copper-wall-large
+    requirements: [
+        copper/1000
+        scrap/5000
+    ]
+}
+category: defense
