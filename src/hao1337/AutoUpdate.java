@@ -47,7 +47,7 @@ public class AutoUpdate {
    }
 
    public static void check() {
-      Log.info("Checking for updates.");
+      Log.info("Checking for updates at: " + url);
       Http.get(url, (res) -> {
          Jval json = Jval.read(res.getResultAsString());
          latest = json.getString("tag_name").substring(1);

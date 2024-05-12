@@ -63,17 +63,11 @@ public class Main extends Mod {
         top.getChildren().get(0).remove();
         //Add core items display and unit display
         ((Table)coreinfo.find("modification")).table(t -> {
-            t.top();
+            t.top().center;
             t.name = "Hao1337 UI";
             
-            t.table(null, e -> {
-                e.top().collapser(coreitemDisplay, () -> !Vars.ui.hudfrag.shown || !Vars.ui.minimapfrag.shown());
-                e.visibility = () -> Core.settings.getBool("hao1337.ui.coreinf.enable");
-            });
-            t.table(null, e -> {
-                e.top().collapser(unitDisplay, () -> !Vars.ui.hudfrag.shown || !Vars.ui.minimapfrag.shown());
-                e.visibility = () -> Core.settings.getBool("hao1337.ui.unitinf.enable");
-            });
+            t.collapser(coreitemDisplay, () -> Core.settings.getBool("hao1337.ui.coreinf.enable") && (!Vars.ui.hudfrag.shown || !Vars.ui.minimapfrag.shown())).top();
+            t.collapser(unitDisplay, () -> Core.settings.getBool("hao1337.ui.unitinf.enable") && (!Vars.ui.hudfrag.shown || !Vars.ui.minimapfrag.shown())).top();
         });
         //Add time control
         hud.fill(t -> {
