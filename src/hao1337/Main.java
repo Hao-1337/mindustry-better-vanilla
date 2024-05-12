@@ -36,7 +36,7 @@ public class Main extends Mod {
     }
 
     public void load() {
-        Log.info("Loading some example content.");
+        Log.info("[Hao1337: Better Vanilla] is launching.");
 
         unitDisplay.name = "unit-display";
         coreitemDisplay.name = "coreitem-display";
@@ -47,7 +47,10 @@ public class Main extends Mod {
         loadUI();
         OverrideDome.load();
 
-        if (Core.settings.getBool("hao1337.toggle.autoupdate")) AutoUpdate.load(gitapi, name, repoName);
+        if (Core.settings.getBool("hao1337.toggle.autoupdate")) {
+          AutoUpdate.load(gitapi, name, repoName);
+          AutoUpdate.check();
+        }
     }
     public void loadUI() {
         Group hud = Vars.ui.hudGroup;
