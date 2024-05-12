@@ -2,7 +2,7 @@ name: "hao1337-mod"
 displayName: "Hao1337: Better Vanilla"
 author: "[royal]Hao1337[]"
 description: "Add something help for vanilla. Also have some better UI (mobile only)."
-version: "1.0.5"
+version: "1.1.0"
 minGameVersion: 136
 java: true
 main: "hao1337.Main"
