@@ -86,7 +86,7 @@ public class AutoUpdate {
 
    public static void handle(HttpResponse res) {
       try {
-         Fi file = Vars.tmpDirectory.child("hao1337/better-vanilla".replace("/", "") + ".zip");
+         Fi file = Vars.tmpDirectory.child(repo.replace("/", "") + ".zip");
          Streams.copyProgress(res.getResultAsStream(), file.write(false), res.getContentLength(), 4096, (p) -> {
             progress = p;
          });

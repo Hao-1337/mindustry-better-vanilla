@@ -6,6 +6,7 @@ public class SettingBuilder {
     public void build() {
         Vars.ui.settings.addCategory("Better Vanilla", "setting-icoMenu", (t) -> {
             t.checkPref("hao1337.ui.coreinf.enable", true);
+            t.checkPref("hao1337.ui.unitinf.enable", true);
             t.checkPref("hao1337.toggle.autoupdate", false);
             t.row();
             t.label(() -> "test");
