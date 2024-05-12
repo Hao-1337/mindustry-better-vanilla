@@ -63,7 +63,7 @@ public class Main extends Mod {
         top.getChildren().get(0).remove();
         //Add core items display and unit display
         ((Table)coreinfo.find("modification")).table(t -> {
-            t.top().center;
+            t.top().center();
             t.name = "Hao1337 UI";
             
             t.collapser(coreitemDisplay, () -> Core.settings.getBool("hao1337.ui.coreinf.enable") && (!Vars.ui.hudfrag.shown || !Vars.ui.minimapfrag.shown())).top();
