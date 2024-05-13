@@ -1,4 +1,11 @@
 <h1> [ Better Vanilla ] </h1>
+
+![GitHub](https://img.shields.io/github/stars/Hao-1337/mindustry-better-vanilla?label=Stars)
+![GitHub](https://img.shields.io/github/forks/Hao-1337/mindustry-better-vanilla)
+![GitHub](https://img.shields.io/github/contributors/Hao-1337/mindustry-better-vanilla?label=Contributors)
+![GitHub](https://img.shields.io/github/license/Hao-1337/mindustry-better-vanilla?label=License)
+![GitHub](https://img.shields.io/github/issues/Hao-1337/mindustry-better-vanilla?label=Issues)
+![GitHub](https://img.shields.io/github/commit-activity/m/Hao-1337/mindustry-better-vanilla?label=Commits)
 <p>Add something helpful for vanilla. Also have some better UI.</p>
 <br>
 
