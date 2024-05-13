@@ -1,7 +1,20 @@
 name: "hao1337-mod"
-displayName: "Hao1337: Better Vanilla"
+displayName: "[[] Better Vanilla []]"
 author: "[royal]Hao1337[]"
-description: "Add something help for vanilla. Also have some better UI (mobile only)."
+description: '''
+Add something helpful for vanilla. Also have some better UI.
+
+- Coreitem display for mobile.
+- Unit conter display.
+- Time control. (WIP, now it only speed up the game)
+- Some change for vanilla (see in setting, default is off):
+  + Bigger vault, container and vault in Erekir.
+  + Bigger range for override dome, 200% speed up.
+  + Force projector have more shield health.
+- Auto update.
+
+[scarlet]Warning:[] The mod under development, any contributions would be gratefully appreciated. See github for more details.
+'''
 version: "1.2.0"
 minGameVersion: 146
 java: true
