@@ -78,7 +78,7 @@ public class AutoUpdate {
          Log.info(latestBuild + " " + mod.meta.version);
          overBuild = modBuild > latestBuild;
          if (modBuild != latestBuild) {
-            Vars.ui.showCustomConfirm("hao1337.update.name", Core.bundle.format("hao1337.update.info", new Object[]{mod.meta.version, latest}), "hao1337.update.nope", "hao1337.update.ok", AutoUpdate::update, () -> {
+            Vars.ui.showCustomConfirm(Core.bundle.format("hao1337.update.name"), Core.bundle.format("hao1337.update.info", new Object[]{mod.meta.version, latest}), Core.bundle.format("hao1337.update.ok"), Core.bundle.format("hao1337.update.nope"), AutoUpdate::update, () -> {
             });
          }
 
@@ -98,7 +98,7 @@ public class AutoUpdate {
          Log.err(var2);
       }
 
-      Vars.ui.loadfrag.show("hao1337.update.updating");
+      Vars.ui.loadfrag.show(Core.bundle.format("hao1337.update.updating"));
       Vars.ui.loadfrag.setProgress(() -> {
          return progress;
       });
@@ -120,7 +120,7 @@ public class AutoUpdate {
          UI var3 = Vars.ui;
          Application app1 = Core.app;
          Objects.requireNonNull(app1);
-         var3.showInfoOnHidden("hao1337.reloadexit", app1::exit);
+         var3.showInfoOnHidden(Core.bundle.format("hao1337.reloadexit"), app1::exit);
       } catch (Throwable var2) {
          Log.err(var2);
       }
