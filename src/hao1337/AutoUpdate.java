@@ -29,7 +29,6 @@ public class AutoUpdate {
 
    public static float progress;
    public static String download;
-   public static boolean overBuild;
 
    private static Fi modFile;
 
@@ -75,9 +74,8 @@ public class AutoUpdate {
          latest = json.getString("tag_name").substring(1);
          download = ((Jval)json.get("assets").asArray().get(0)).getString("browser_download_url");
          latestBuild = Integer.parseInt(json.getString("tag_name").substring(1).replace(".", ""));
-         Log.info(latestBuild + " " + mod.meta.version);
-         overBuild = modBuild > latestBuild;
-         if (modBuild != latestBuild) {
+         Log.info("Fetch complete, version: [accent]" + latestBuild + "[]. User version: [accent]" + modBuild + "[](" + mod.meta.version + ")");
+         if (latestBuild > modBuild) {
             Vars.ui.showCustomConfirm(Core.bundle.format("hao1337.update.name"), Core.bundle.format("hao1337.update.info", new Object[]{mod.meta.version, latest}), Core.bundle.format("hao1337.update.ok"), Core.bundle.format("hao1337.update.nope"), AutoUpdate::update, () -> {
             });
          }
