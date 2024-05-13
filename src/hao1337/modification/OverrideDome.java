@@ -8,7 +8,7 @@ public class OverrideDome {
     public static void load() {
         if (Core.settings.getBool("hao1337.gameplay.better-override-dome")) {
             OverdriveProjector overridedome = (OverdriveProjector)Vars.content.block("overdrive-dome");
-            overridedome.range = 300f;
+            overridedome.range = 350f;
             overridedome.speedBoost = 3f;
         }
     }

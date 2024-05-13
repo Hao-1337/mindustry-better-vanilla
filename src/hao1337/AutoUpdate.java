@@ -19,9 +19,11 @@ import mindustry.ui.fragments.LoadingFragment;
 public class AutoUpdate {
    public static String repo;
    public static String packname;
+   public static String unzipName;
    public static String url;
    public static int latestBuild;
    private static String latest;
+   private static int modBuild;
 
    public static LoadedMod mod;
 
@@ -29,16 +31,36 @@ public class AutoUpdate {
    public static String download;
    public static boolean overBuild;
 
-   public static void load(String Iurl, String IPackname, String Irepo) {
+   private static Fi modFile;
+
+   public static void load(String InputUrl, String InputPackname, String InputRepo, String InputUnzipName, String Version) {
       try {
-         packname = IPackname;
+         packname = InputPackname;
+         repo = InputRepo;
+         url = InputUrl;
+         unzipName = InputUnzipName;
+         modBuild = Integer.parseInt(Version.replace(".", ""));
+
          mod = Vars.mods.getMod(packname);
+
          if (mod == null) {
-           return;
+            modFile = Vars.modDirectory.child(unzipName);
+            if (!modFile.exists()) {
+               Log.err("Mod file not found: " + packname);
+               return;
+            }
          }
-         repo = Irepo;
-         url = Iurl;
-         Jval meta = Jval.read((new ZipFi(mod.file)).child("mod.hjson").readString());
+         else try {
+            modFile = new ZipFi(mod.file);
+         } catch (Throwable e) {
+            modFile = Vars.modDirectory.child(unzipName);
+            if (!modFile.exists()) {
+               Log.err("Mod file not found: " + packname);
+               return;
+            }
+         }
+
+         Jval meta = Jval.read(modFile.child("mod.hjson").readString());
          mod.meta.author = meta.getString("author");
          mod.meta.description = meta.getString("description");
       } catch (Throwable err) {
@@ -52,8 +74,7 @@ public class AutoUpdate {
          Jval json = Jval.read(res.getResultAsString());
          latest = json.getString("tag_name").substring(1);
          download = ((Jval)json.get("assets").asArray().get(0)).getString("browser_download_url");
-         latestBuild = Integer.parseInt(json.getString("tag_name").substring(1));
-         int modBuild = Integer.parseInt("9");
+         latestBuild = Integer.parseInt(json.getString("tag_name").substring(1).replace(".", ""));
          Log.info(latestBuild + " " + mod.meta.version);
          overBuild = modBuild > latestBuild;
          if (modBuild != latestBuild) {
