@@ -1,10 +1,6 @@
 package hao1337.ui;
 
-import arc.Core;
-import arc.scene.ui.Label;
-import arc.scene.ui.layout.Table;
 import mindustry.*;
-import mindustry.graphics.Pal;
 
 public class SettingBuilder {
     public void build() {
