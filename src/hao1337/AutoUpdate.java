@@ -62,6 +62,10 @@ public class AutoUpdate {
          Jval meta = Jval.read(modFile.child("mod.hjson").readString());
          mod.meta.author = meta.getString("author");
          mod.meta.description = meta.getString("description");
+         
+         // OMG i'm stupid LMAOOOO
+         int ver = Integer.parseInt(meta.getString("version").replace(".", ""));
+         if (ver > modBuild) modBuild = ver;
       } catch (Throwable err) {
         Log.err(err);
       }
