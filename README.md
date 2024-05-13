@@ -8,6 +8,8 @@
 
 <h3>Features</h3>
 
+![Preview](https://github.com/Hao-1337/mindustry-better-vanilla/assets/108588018/72654879-1a5b-4f70-a443-d9b362eb2136)
+
 - Coreitem display for mobile.
 - Unit conter display.
 - Time control. (WIP, now it only speed up the game)
