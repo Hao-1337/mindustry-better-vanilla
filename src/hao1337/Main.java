@@ -12,7 +12,7 @@ import mindustry.game.EventType.*;
 import mindustry.mod.Mod;
 
 public class Main extends Mod {
-    public static final String version = "1.2.0";
+    public static final String version = "1.2.1";
     public static final String gitapi = "https://api.github.com/repos/Hao-1337/mindustry-better-vanilla/releases/latest";
     public static final String repoName = "hao1337/mindustry-better-vanilla";
     public static final String name = "hao1337-mod";
