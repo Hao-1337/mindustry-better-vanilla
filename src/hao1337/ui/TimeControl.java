@@ -8,7 +8,6 @@ import arc.scene.style.TextureRegionDrawable;
 import arc.scene.ui.Label;
 import arc.scene.ui.layout.Cell;
 import arc.scene.ui.layout.Table;
-import arc.util.Log;
 import arc.util.Time;
 import arc.util.Tmp;
 import mindustry.Vars;
@@ -27,7 +26,7 @@ public class TimeControl extends Table {
     public Drawable reset = new TextureRegionDrawable(Icon.refresh);
 
     private int displaytime = 1;
-    private int gametime = 1;
+    private float gametime = 1;
     private Color[] gadient = { Pal.lancerLaser, Pal.accent, Color.valueOf("cc6eaf") };
     private Cell<Label> label;
 
@@ -69,9 +68,8 @@ public class TimeControl extends Table {
     }
 
     void timeUpdate() {
-        Log.info("Time: " + time);
         gametime = Math.abs(time);
-        displaytime = time < 0 ? gametime + 1 : gametime;
+        displaytime = (int)(time < 0 ? gametime + 1 : gametime);
         if (time < 0)
             gametime = 1 / (gametime + 1);
 
