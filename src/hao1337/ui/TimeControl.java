@@ -7,6 +7,7 @@ import arc.scene.style.Drawable;
 import arc.scene.style.TextureRegionDrawable;
 import arc.scene.ui.Label;
 import arc.scene.ui.layout.Cell;
+import arc.scene.ui.layout.Scl;
 import arc.scene.ui.layout.Table;
 import arc.util.Time;
 import arc.util.Tmp;
@@ -65,6 +66,8 @@ public class TimeControl extends Table {
         };
 
         touchable = Touchable.enabled;
+
+        if (Vars.mobile) moveBy(0, 46f);
     }
 
     void timeUpdate() {
