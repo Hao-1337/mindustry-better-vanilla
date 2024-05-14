@@ -2,6 +2,7 @@ package hao1337;
 
 import arc.*;
 import arc.scene.Group;
+import arc.scene.ui.layout.Scl;
 import arc.scene.ui.layout.Table;
 import arc.scene.ui.layout.WidgetGroup;
 import arc.util.*;
@@ -79,6 +80,7 @@ public class Main extends Mod {
            t.name = "Hao137 TimeControl";
 
            t.table(null, e -> e.top().left().collapser(timecontrol, () -> true));
+           if (Vars.mobile) t.moveBy(0, Scl.scl(46));
         });
     }
 }
