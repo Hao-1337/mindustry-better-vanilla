@@ -55,7 +55,7 @@ public class TimeControl extends Table {
                   .tooltip(ht -> ht.background(Styles.black6).margin(4f).add(Core.bundle.format("hao1337.speedup")).style(Styles.outlineLabel));
             });
 
-        }).minHeight(94f).minWidth(160f);
+        }).minHeight(94f).minWidth(154f);
 
         visibility = () -> {
             if (!Vars.ui.hudfrag.shown || Vars.ui.minimapfrag.shown())
