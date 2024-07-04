@@ -15,7 +15,8 @@ Add something helpful for vanilla. Also have some better UI.
 
 [scarlet]Warning:[] The mod under development, any contributions would be gratefully appreciated. See github for more details.
 '''
-version: "1.2.2"
+version: "1.0.0"
 minGameVersion: 146
 java: true
+hidden: true
 main: "hao1337.Main"

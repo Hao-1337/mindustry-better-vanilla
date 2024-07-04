@@ -16,11 +16,13 @@ import mindustry.gen.Tex;
 import mindustry.graphics.Pal;
 import mindustry.input.InputHandler;
 import mindustry.ui.Styles;
+import mindustry.ui.fragments.HudFragment;
 
 public class TimeControl extends Table {
     public int time = 1;
     public int maxSpeed = 32;
     public int minSpeed = -16;
+    public static boolean enableSpeedUp = true;
     public Drawable left = new TextureRegionDrawable(Icon.left);
     public Drawable right = new TextureRegionDrawable(Icon.right);
     public Drawable reset = new TextureRegionDrawable(Icon.refresh);
@@ -66,6 +68,9 @@ public class TimeControl extends Table {
 
         touchable = Touchable.enabled;
     }
+    public void reset() {
+        update();
+    }
 
     void timeUpdate() {
         gametime = Math.abs(time);
@@ -78,6 +83,10 @@ public class TimeControl extends Table {
     }
 
     void update(boolean step) {
+        if (step && !enableSpeedUp && time >= 1.0) {
+            Vars.ui.showInfoToast(Core.bundle.format("hao1337.ui.speedup.error"), 5);
+            return;
+        }
         time += step ? 1 : -1;
         if (time > maxSpeed)
             time = maxSpeed;

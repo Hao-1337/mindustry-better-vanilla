@@ -5,11 +5,31 @@ import mindustry.Vars;
 import mindustry.world.blocks.defense.OverdriveProjector;
 
 public class OverrideDome {
+    private static float range;
+    private static float speed;
+    private static OverdriveProjector overridedome;
+    private static boolean ik;
+
+    public static float newRange = 300f;
+    public static float newSpeed = 3f;
+
     public static void load() {
-        if (Core.settings.getBool("hao1337.gameplay.better-override-dome")) {
-            OverdriveProjector overridedome = (OverdriveProjector)Vars.content.block("overdrive-dome");
-            overridedome.range = 350f;
-            overridedome.speedBoost = 3f;
+        overridedome = (OverdriveProjector)Vars.content.block("overdrive-dome");
+
+        range = overridedome.range;
+        speed = overridedome.speedBoost;
+        
+        ik = Core.settings.getBool("hao1337.gameplay.better-override-dome");
+        apply(true);
+    }
+
+    public static void apply(boolean is) {
+        if (is && ik) {
+            overridedome.range = newRange;
+            overridedome.speedBoost = newSpeed;
+            return;
         }
+        overridedome.range = range;
+        overridedome.speedBoost = speed;
     }
 }
