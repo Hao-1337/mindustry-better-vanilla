@@ -157,6 +157,4 @@ Thumbs.db
 android/libs/
 
 ## Other
-/package.json
-/processor.js
 /gradle/dist/

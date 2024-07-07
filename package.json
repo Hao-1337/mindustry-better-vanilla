@@ -1,0 +1,16 @@
+{
+  "name": "hao1337-mindustry",
+  "version": "1.0.0",
+  "description": "Mindustry mod",
+  "main": "processor.js",
+  "scripts": {
+    "compile": "gradlew jar",
+    "cPush": "node ./processor.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Hao-1337/mod-mindustry"
+  },
+  "author": "",
+  "license": "ISC"
+}
