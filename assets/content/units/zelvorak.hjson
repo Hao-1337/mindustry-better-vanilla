@@ -226,7 +226,7 @@
       ejectEffect: none,
       bullet: {
         type: BasicBulletType,
-        sprite: plasma,
+        # sprite: plasma,
         status: melting,
         statusDuration: 300,
         damage: 680,
