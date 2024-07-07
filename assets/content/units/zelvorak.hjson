@@ -1,5 +1,5 @@
  {
- localizedName: Zelvorak,
+  localizedName: Zelvorak,
   description: '''[orange]The heavy gunner class titan unit. Equipped four gunners and four heavy gunners, and it is equipped with missike launchers. Can fire devastating energy orb that deals massive damage on impact, empowers nearby allies.''',
   details: Rule the skies and destroy the land.,
   singleTarget: true,
@@ -21,11 +21,12 @@
   hitSize: 140,
   armor: 60,
   engineOffset: 52,
-  targetFlag: reactor,
+  targetFlags: [
+    reactor
+  ],
   engineSize: 8.5,
   lowAltitude: true,
   targetAir: true,
-  commandLimit: 8,
   immunities: [
     blasted,
     wet,
@@ -46,7 +47,9 @@
       recoil: 1,
       ejectEffect: casing2,
       shootSound: bang,
-      shots: 1,
+      shoot: {
+        shots: 1
+      },
       shake: 1,
       bullet: {
         splashDamage: 30,
@@ -77,7 +80,9 @@
       recoil: 1,
       ejectEffect: casing2,
       shootSound: bang,
-      shots: 1,
+      shoot: {
+        shots: 1
+      },
       shake: 1,
       bullet: {
         splashDamage: 30,
@@ -101,7 +106,10 @@
       alternate: true,
       y: 5,
       x: 22,
-      shots: 3,
+      shoot: {
+        shotDelay: 5,
+        shots: 3
+      },
       rotate: true,
       rotateSpeed: 4,
       inaccuracy: 5,
@@ -109,7 +117,6 @@
       reload: 16,
       recoil: 1,
       shake: 0.5,
-      shotDelay: 5,
       ejectEffect: casing2,
       shootSound: shootBig,
       bullet: {
@@ -138,7 +145,10 @@
       alternate: true,
       y: -12,
       x: 28,
-      shots: 3,
+      shoot: {
+        shotDelay: 5,
+        shots: 3
+      },
       rotate: true,
       rotateSpeed: 4,
       inaccuracy: 5,
@@ -146,7 +156,6 @@
       reload: 16,
       recoil: 1,
       shake: 0.5,
-      shotDelay: 5,
       ejectEffect: casing2,
       shootSound: shootBig,
       bullet: {
@@ -180,11 +189,13 @@
       rotateSpeed: 2.9,
       reload: 15,
       recoil: 0.5,
-      shots: 2,
+      shoot: {
+        shotDelay: 1,
+        shots: 2
+      },
       shootY: 8,
       inaccuracy: 10,
       xRand: 11,
-      shotDelay: 1,
       shootSound: missile,
       velocityRnd: 0.4,
       bullet: {
@@ -217,10 +228,12 @@
       rotate: false,
       shootY: 58,
       cooldownTime: 860,
-      shots: 1,
+      shoot: {
+        shots: 1,
+        firstShotDelay: 120
+      },
       shootStatus: unmoving,
       shootStatusDuration: 120,
-      firstShotDelay: 120,
       shake: 3,
       shootSound: bigLaserShoot,
       ejectEffect: none,
@@ -372,7 +385,6 @@
         frontColor: fff8e8,
         backColor: f9c27a,
         fragBullets: 33,
-        fragCone: 360,
         fragBullet: {
           type: LiquidBulletType,
           liquid: slag,

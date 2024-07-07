@@ -17,7 +17,7 @@ plastanium/530
 phase-fabric/120
 ]
 research: {
-     parent: storage
+     parent: silo
      requirements: [
          titanium/30000
          thorium/15000
