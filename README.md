@@ -7,6 +7,9 @@
 ![GitHub](https://img.shields.io/github/issues/Hao-1337/mindustry-better-vanilla?label=Issues)
 ![GitHub](https://img.shields.io/github/commit-activity/m/Hao-1337/mindustry-better-vanilla?label=Commits)
 <p>Add something helpful for vanilla. Also have some better UI.</p>
+
+Textures and sprites made by: [ĐạiPH](https://github.com/BackNNHH)
+<br>
 <br>
 
 > [!WARNING]
