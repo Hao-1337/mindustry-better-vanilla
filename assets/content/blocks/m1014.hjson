@@ -1,234 +1,226 @@
-type: ItemTurret
+{
+  type: ItemTurret,
 
-# Meta Data
-name: M1014
-localizedName: M1014
-description: A true shootgun. A bigger version of fuse one!
-category: turret
+  name: M1014,
+  localizedName: M1014,
+  description: A true shootgun. A bigger version of fuse one!,
+  category: turret,
 
-# Basic
-health: 5690
-size: 5
+  health: 5690,
+  size: 5,
 
-# Option
-hasBoost: true
-hasLiquids: true
-hasItems: true
+  hasBoost: true,
+  hasLiquids: true,
+  hasItems: true,
 
-# Container
-liquidCapacity: 30
+  liquidCapacity: 30,
 
-# IO Option
-consumes: {
-  coolant: {
-    amount: 0.65
-    reloadMultiplier: 1.5
-    optional: true
-  }
-}
+  consumes: {
+    coolant: {
+      amount: 0.65,
+      reloadMultiplier: 1.5,
+      optional: true
+    }
+  },
 
-# Turret
-range: 160
-shootCone: 20
-shootSound: shotgun
-shoot: {
-  type: ShootSpread
-  spread: 15
-  shots: 5
-}
+  range: 160,
+  shootCone: 20,
+  shootSound: shotgun,
+  shoot: {
+    type: ShootSpread,
+    spread: 15,
+    shots: 5
+  },
 
-# Turret Option
-maxAmmo: 80
-ammoPerShot: 5
-reload: 80
-recoilAmount: 2
-restitution: 0.3
-shootShake: 4
-rotateSpeed: 6
+  maxAmmo: 80,
+  ammoPerShot: 5,
+  reload: 80,
+  recoilAmount: 2,
+  restitution: 0.3,
+  shootShake: 4,
+  rotateSpeed: 6,
 
-# Armor Option
-ammoTypes: {
-  titanium: {
-    type: ShrapnelBulletType
-    pierce: true
-    width: 25
-    lifetime: 18
-    length: 160
-    serrations: 8
-    damage: 120
-    ammoMultiplier: 5
-    knockback: 1.4
-    status: slow
-    statusDuration: 120
-  }
-  thorium: {
-    type: BasicBulletType
-    pierce: false
-    width: 15
-    height: 20
-    speed: 6
-    lifetime: 25
-    length: 200
-    serrations: 8
-    damage: 280
-    ammoMultiplier: 1.5
-    knockback: 1.4
-    fromColor: F9A3C7FF
-    toColor: CB8EBFFF
-    hitColor: F9A3C7FF
-    trailColor: F9A3C7FF
-    frontColor: FFFFFFF0
-    trailWidth: 4
-    trailLength: 100
-    status: slow
-    statusDuration: 120
-    bulletInterval: 3
-    intervalRandomSpread: 20
-    intervalBullets: 2
-    intervalAngle: 180
-    intervalSpread: 300
-    fragBullets: 9
-    fragVelocityMin: 0.8
-    fragVelocityMax: 2.0
-    fragLifeMin: 0.6
-    fragBullet: {
-      type: BasicBulletType
-      pierce: true
-      pierceBuilding: true
-      damage: 60
-      hitSize: 5
-      width: 9
-      height: 15
-      lifetime: 60
-      buildingDamageMultiplier: 0.3
-      homing: true
-      homingPower: 0.2
-      fromColor: F9A3C7FF
-      toColor: CB8EBFFF
-      hitColor: F9A3C7FF
-      backColor: CB8EBFFF
-      trailColor: F9A3C7FF
-      frontColor: FFFFFFF0
-      trailWidth: 2
-      trailLength: 20
-      homingPower: 0.1
-      homingRange: 50
-      bulletInterval: 3
-      intervalRandomSpread: 20
-      intervalBullets: 2
-      intervalAngle: 180
-      intervalSpread: 300
-      fragBullets: 3
-      fragVelocityMin: 0.8
-      fragVelocityMax: 2.0
-      fragLifeMin: 0.6
+  ammoTypes: {
+    titanium: {
+      type: ShrapnelBulletType,
+      pierce: true,
+      width: 25,
+      lifetime: 18,
+      length: 160,
+      serrations: 8,
+      damage: 120,
+      ammoMultiplier: 5,
+      knockback: 1.4,
+      status: slow,
+      statusDuration: 120
+    },
+    thorium: {
+      type: BasicBulletType,
+      pierce: false,
+      width: 15,
+      height: 20,
+      speed: 6,
+      lifetime: 25,
+      length: 200,
+      serrations: 8,
+      damage: 280,
+      ammoMultiplier: 1.5,
+      knockback: 1.4,
+      fromColor: F9A3C7FF,
+      toColor: CB8EBFFF,
+      hitColor: F9A3C7FF,
+      trailColor: F9A3C7FF,
+      frontColor: FFFFFFF0,
+      trailWidth: 4,
+      trailLength: 100,
+      status: slow,
+      statusDuration: 120,
+      bulletInterval: 3,
+      intervalRandomSpread: 20,
+      intervalBullets: 2,
+      intervalAngle: 180,
+      intervalSpread: 300,
+      fragBullets: 9,
+      fragVelocityMin: 0.8,
+      fragVelocityMax: 2,
+      fragLifeMin: 0.6,
       fragBullet: {
-        # type: ArtilleryBulletType
-        type: BasicBulletType
-        pierce: true
-        pierceBuilding: true
-        damage: 30
-        hitSize: 5
-        width: 4.5
-        height: 7
-        lifetime: 30
-        splashDamageRadius: 5
-        splashDamage: 10
-        homing: true
-        homingPower: 0.2
-        fromColor: F9A3C7FF
-        toColor: CB8EBFFF
-        hitColor: F9A3C7FF
-        backColor: CB8EBFFF
-        trailColor: F9A3C7FF
-        frontColor: FFFFFFF0
-        trailWidth: 2
-        trailLength: 14
-      }
+        type: BasicBulletType,
+        pierce: true,
+        pierceBuilding: true,
+        damage: 60,
+        hitSize: 5,
+        width: 9,
+        height: 15,
+        lifetime: 60,
+        buildingDamageMultiplier: 0.3,
+        homing: true,
+        homingPower: 0.1,
+        fromColor: F9A3C7FF,
+        toColor: CB8EBFFF,
+        hitColor: F9A3C7FF,
+        backColor: CB8EBFFF,
+        trailColor: F9A3C7FF,
+        frontColor: FFFFFFF0,
+        trailWidth: 2,
+        trailLength: 20,
+        homingPower: 0.1,
+        homingRange: 50,
+        bulletInterval: 3,
+        intervalRandomSpread: 20,
+        intervalBullets: 2,
+        intervalAngle: 180,
+        intervalSpread: 300,
+        fragBullets: 3,
+        fragVelocityMin: 0.8,
+        fragVelocityMax: 2,
+        fragLifeMin: 0.6,
+        fragBullet: {
+          # type: ArtilleryBulletType
+          type: BasicBulletType,
+          pierce: true,
+          pierceBuilding: true,
+          damage: 30,
+          hitSize: 5,
+          width: 4.5,
+          height: 7,
+          lifetime: 30,
+          splashDamageRadius: 5,
+          splashDamage: 10,
+          homing: true,
+          homingPower: 0.2,
+          fromColor: F9A3C7FF,
+          toColor: CB8EBFFF,
+          hitColor: F9A3C7FF,
+          backColor: CB8EBFFF,
+          trailColor: F9A3C7FF,
+          frontColor: FFFFFFF0,
+          trailWidth: 2,
+          trailLength: 14
+        },
+        hitEffect: {
+          type: WaveEffect,
+          fromColor: CB8EBF0F,
+          toColor: CB8EBFFF,
+          sizeTo: 3,
+          strokeFrom: 2,
+          lifetime: 30
+        }
+      },
+      splashDamageRadius: 30,
+      splashDamage: 40,
+      hitSound: titanExplosion,
+      hitShake: 4,
+      shootEffect: thoriumShoot,
+      hitEffect: [
+        shootBig2,
+        {
+          sizeTo: 3,
+          lifetime: 58,
+          strokeFrom: 4,
+          fromColor: CB8EBF01,
+          toColor: CB8EBF0F
+        },
+        {
+          type: WaveEffect,
+          fromColor: CB8EBF0F,
+          toColor: CB8EBFFF,
+          sizeTo: 10,
+          strokeFrom: 4,
+          lifetime: 60
+        }
+      ]
+    },
+    surge-alloy: {
+      type: ShrapnelBulletType,
+      pierce: true,
+      length: 160,
+      lifetime: 18,
+      width: 25,
+      serrations: 8,
+      damage: 300,
+      ammoMultiplier: 5,
+      status: shocked,
+      lightning: 3,
+      lightningDamage: 10,
+      lightningLength: 15,
+      lightningCone: 18,
+      lightningLengthRand: 11,
+      statusDuration: 1200,
+      fromColor: FF8E38FF,
+      toColor: F3E979FF,
+      shootEffect: explosion,
       hitEffect: {
-        type: WaveEffect
-        fromColor: CB8EBF0F
-        toColor: CB8EBFFF
-        sizeTo: 3
-        strokeFrom: 2
-        lifetime: 30
+        type: ParticleEffect,
+        line: true,
+        particles: 7,
+        lifetime: 10,
+        length: 25,
+        cone: -360,
+        lenFrom: 5,
+        lenTo: 0,
+        colorFrom: FFF8AFFF,
+        colorTo: F3E979FF
       }
     }
-    splashDamageRadius: 30
-    splashDamage: 40
-    hitSound: titanExplosion
-    hitShake: 4
-    shootEffect: thoriumShoot
-    hitEffect: [
-      shootBig2
-      {
-        sizeTo: 3
-        lifetime: 58
-        strokeFrom: 4
-        fromColor: CB8EBF01
-        toColor: CB8EBF0F
-      }
-      {
-        type: WaveEffect
-        fromColor: CB8EBF0F
-        toColor: CB8EBFFF
-        sizeTo: 10
-        strokeFrom: 4
-        lifetime: 60
-      }
+  },
+
+  requirements: [
+    titanium/1200,
+    plastanium/450,
+    graphite/450,
+    thorium/600
+  ],
+
+  research: {
+    parent: fuse,
+    requirements: [
+      titanium/34000,
+      plastanium/4000,
+      silicon/10000,
+      thorium/4600,
+      surge-alloy/4000,
+      phase-fabric/2000
     ]
   }
-  surge-alloy: {
-    type: ShrapnelBulletType
-    pierce: true
-    length: 160
-    lifetime: 18
-    width: 25
-    serrations: 8
-    damage: 300
-    ammoMultiplier: 5
-    status: shocked
-    lightning: 3
-    lightningDamage: 10
-    lightningLength: 15
-    lightningCone: 18
-    lightningLengthRand: 11
-    statusDuration: 1200
-    fromColor: FF8E38FF
-    toColor: F3E979FF
-    shootEffect: explosion
-    hitEffect: {
-      type: ParticleEffect
-      line: true
-      particles: 7
-      lifetime: 10
-      length: 25
-      cone: -360
-      lenFrom: 5
-      lenTo: 0
-      colorFrom: FFF8AFFF
-      colorTo: F3E979FF
-    }
-  }
-}
-
-# Construction costs
-requirements: [
-  titanium/1200
-  plastanium/450
-  graphite/450
-  thorium/600
-]
-
-# research (campaign)
-research: {
-  parent: fuse
-  requirements: [
-    titanium/34000
-    plastanium/4000
-    silicon/10000
-    thorium/4600
-    surge-alloy/4000
-    phase-fabric/2000
-  ]
 }

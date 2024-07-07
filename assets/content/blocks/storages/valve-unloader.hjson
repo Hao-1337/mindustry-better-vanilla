@@ -1,0 +1,26 @@
+{
+  name: Valve Unloader,
+  description: Super high speed unloader!,
+  type: Unloader,
+  category: effect,
+  group: transportation,
+  speed: 5,
+  health: 330,
+  requirements: [
+    lead/95,
+    titanium/70,
+    silicon/55,
+    surge-alloy/25
+  ],
+  research: {
+    parent: unloader,
+    requirements: [
+      titanium/8400,
+      plastanium/1200,
+      silicon/11000,
+      thorium/6300,
+      surge-alloy/2500,
+      phase-fabric/2600
+    ]
+  }
+}

@@ -1,63 +1,60 @@
-/*Copyright belongs to choigame123*/
-name: Gigantic Dome
-description: Dome but extremely large. Consumes a lot of resources
-
-type: OverdriveProjector
-category: effect
-group: projectors
-
-hasBoost: true
-hasPower: true
-hasLiquids: true
-hasItems: true
-
-size: 6
-speedBoost: 9
-range: 960
-itemCapacity: 80
-health: 1820
-liquidCapacity: 60
-
-consumes: {
-    power: 40
+{
+  name: Gigantic Dome,
+  description: Dome but extremely large. Consumes a lot of resources,
+  type: OverdriveProjector,
+  category: effect,
+  group: projectors,
+  hasBoost: true,
+  hasPower: true,
+  hasLiquids: true,
+  hasItems: true,
+  size: 6,
+  speedBoost: 9,
+  range: 960,
+  itemCapacity: 80,
+  health: 1820,
+  liquidCapacity: 60,
+  consumes: {
+    power: 40,
     items: {
-        items: [
-            phase-fabric/3
-            silicon/2
-            plastanium/1
-            surge-alloy/1
-        ]
-    }
+      items: [
+        phase-fabric/3,
+        silicon/2,
+        plastanium/1,
+        surge-alloy/1
+      ]
+    },
     liquid: {
-        liquid: cryofluid
-        amount: 0.16
-        booster: true
-        optional: true
+      liquid: cryofluid,
+      amount: 0.16,
+      booster: true,
+      optional: true
     }
-}
-requirements: [
-    copper/8200
-    titanium/3400
-    lead/2200
-    graphite/1800
-    plastanium/4200
-    silicon/5100
-    thorium/3220
-    metaglass/1600
-    surge-alloy/1500
+  },
+  requirements: [
+    copper/8200,
+    titanium/3400,
+    lead/2200,
+    graphite/1800,
+    plastanium/4200,
+    silicon/5100,
+    thorium/3220,
+    metaglass/1600,
+    surge-alloy/1500,
     phase-fabric/2600
-]
-research: {
-    parent: overdrive-dome
+  ],
+  research: {
+    parent: overdrive-dome,
     requirements: [
-        copper/62000
-        titanium/34000
-        lead/22000
-        graphite/18000
-        plastanium/42000
-        silicon/51000
-        thorium/46000
-        surge-alloy/15000
-        phase-fabric/26000
+      copper/62000,
+      titanium/34000,
+      lead/22000,
+      graphite/18000,
+      plastanium/42000,
+      silicon/51000,
+      thorium/46000,
+      surge-alloy/15000,
+      phase-fabric/26000
     ]
+  }
 }

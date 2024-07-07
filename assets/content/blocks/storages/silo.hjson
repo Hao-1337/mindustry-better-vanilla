@@ -1,6 +1,5 @@
-/*Copyright belongs to choigame123*/
-name: Storage
-description: Vault with large size. It can store more 2 times of the normal vault. Contents inside the container can be retrieved with unloader.
+name: Silo
+description: It can store more 2 times of the normal vault. Contents inside the container can be retrieved with unloader.
 
 type: StorageBlock
 category: effect

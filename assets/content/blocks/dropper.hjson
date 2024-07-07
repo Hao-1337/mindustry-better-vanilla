@@ -1,82 +1,82 @@
-type: ItemTurret
-
-name: Droper
-localizedName: Droper
-description: A turret specializes in using titanium. Great range, can defend both in the air and on the ground
-category: turret
-
-reload: 26
-range: 210
-restitution: 0.3
-shootCone: 10
-size: 2
-maxAmmo: 40
-health: 790
-shootShake: 4
-rotateSpeed: 6
-shoot: {
-  type: ShootSpread
-  spread: 5
-  shots: 2
-}
-hasBoost: true
-hasLiquids: true
-hasItems: true
-shootSound: bang
-ammoPerShot: 2
-consumes: {
-   coolant: {
-      amount: 0.125
-      reloadMultiplier: 0.8
+{
+  type: ItemTurret,
+  name: Droper,
+  localizedName: Droper,
+  description: A turret specializes in using titanium. Great range, can defend both in the air and on the ground,
+  category: turret,
+  reload: 26,
+  range: 210,
+  restitution: 0.3,
+  shootCone: 10,
+  size: 2,
+  maxAmmo: 40,
+  health: 790,
+  shootShake: 4,
+  rotateSpeed: 6,
+  shoot: {
+    type: ShootSpread,
+    spread: 5,
+    shots: 2
+  },
+  hasBoost: true,
+  hasLiquids: true,
+  hasItems: true,
+  shootSound: bang,
+  ammoPerShot: 2,
+  consumes: {
+    coolant: {
+      amount: 0.125,
+      reloadMultiplier: 0.8,
       optional: true
-   }
-}
-recoilAmount: 2
-liquidCapacity: 20
-ammoTypes: {
-  titanium: {
-    type: BasicBulletType
-    damage: 40
-    width: 15
-    height: 15
-    pierce: false
-    lifetime: 57
-    speed: 4
-    length: 160
-    serrations: 4
-    knockback: 0.4
-    fromColor: "76BEE00F"
-    toColor: "1F8ED92F"
-    trailColor: "1F8ED9F0"
-    trailLength: 5
-    ammoMultiplier: 1.5
-    splashDamageRadius: 40
-    splashDamage: 10
-    hitEffect: {
-      type: WaveEffect
-      fromColor: CB8EBF0F
-      toColor: CB8EBFFF
-      sizeTo: 40
-      strokeFrom: 4
-      lifetime: 30
     }
-  }
-}
-drawer: {
-  type: DrawTurret
-}
-requirements: [
-  copper/300
-  titanium/250
-  lead/150
-  graphite/50
-]
-research: {
-    parent: salvo
+  },
+  recoilAmount: 2,
+  liquidCapacity: 20,
+  ammoTypes: {
+    titanium: {
+      type: BasicBulletType,
+      damage: 40,
+      width: 15,
+      height: 15,
+      pierce: false,
+      lifetime: 57,
+      speed: 4,
+      length: 160,
+      serrations: 4,
+      knockback: 0.4,
+      fromColor: 76BEE00F,
+      toColor: 1F8ED92F,
+      trailColor: 1F8ED9F0,
+      trailLength: 5,
+      ammoMultiplier: 1.5,
+      splashDamageRadius: 40,
+      splashDamage: 10,
+      hitEffect: {
+        type: WaveEffect,
+        fromColor: CB8EBF0F,
+        toColor: CB8EBFFF,
+        sizeTo: 40,
+        strokeFrom: 4,
+        lifetime: 30
+      }
+    }
+  },
+  drawer: {
+    type: DrawTurret
+  },
+  requirements: [
+    copper/300,
+    titanium/250,
+    lead/150,
+    graphite/50
+  ],
+  research: {
+    parent: salvo,
     requirements: [
-      titanium/3500
-      plastanium/300
-      silicon/1000
+      titanium/3500,
+      plastanium/300,
+      silicon/1000,
       thorium/460
     ]
+  }
 }

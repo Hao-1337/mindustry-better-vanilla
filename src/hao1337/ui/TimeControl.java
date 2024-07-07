@@ -16,7 +16,6 @@ import mindustry.gen.Tex;
 import mindustry.graphics.Pal;
 import mindustry.input.InputHandler;
 import mindustry.ui.Styles;
-import mindustry.ui.fragments.HudFragment;
 
 public class TimeControl extends Table {
     public int time = 1;

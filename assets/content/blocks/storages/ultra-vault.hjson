@@ -1,6 +1,5 @@
-/*Copyright belongs to choigame123*/
-name: Cluster
-description: One of the largest blocks for storing resources. Contents inside the container can be retrieved wiStorageBlock
+name: Ultra Vault
+description: One of the largest blocks for storing resources. Contents inside the container can be retrieved.
 
 type: StorageBlock
 category: effect

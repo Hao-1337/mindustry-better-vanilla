@@ -5,15 +5,16 @@ import mindustry.world.Block;
 
 public class HaoBlocks {
     // Storage blocks - serpulo
-    public static Block box, storage, cluster;
+    public static Block box, silo, ultraVault, valveUnloader;
     // Conveyor
     public static Block thoriumConveyor, armoredThoriumConveyor, surgeConveyor, armoredSurgeConveyor;
 
     public static void load() {
         // Use json for bypass content loader
         box = Vars.content.block("hao1337-mod-box");
-        storage = Vars.content.block("hao1337-mod-storage");
-        cluster = Vars.content.block("hao1337-mod-cluster");
+        silo = Vars.content.block("hao1337-mod-silo");
+        ultraVault = Vars.content.block("hao1337-mod-ultra-vault");
+        valveUnloader = Vars.content.block("hao1337-mod-valve-unloader");
         thoriumConveyor = Vars.content.block("hao1337-mod-thorium-conveyor");
         armoredThoriumConveyor = Vars.content.block("hao1337-mod-armored-thorium-conveyor");
         surgeConveyor = Vars.content.block("hao1337-mod-serpulo-surge-conveyor");
