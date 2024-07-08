@@ -221,24 +221,52 @@
       name: zelvorak-nuke,
       x: 0,
       y: 0,
-      reload: 860,
       alternate: false,
       mirror: false,
       top: false,
       rotate: false,
       shootY: 34,
-      cooldownTime: 240,
+      cooldownTime: 80,
+      reload: 820,
       shoot: {
         shots: 1,
         firstShotDelay: 120,
-        shotDelay: 800
+        shotDelay: 110
       },
       shootStatus: unmoving,
       shootStatusDuration: 60,
-      shootWarmupSpeed: 120,
+
       smoothReloadSpeed: 0.01,
-      minWarmup: 1.0,
+      shootWarmupSpeed: 0.02,
+      linearWarmup: false,
+      minWarmup: 0.95,
       heatColor: ff2515,
+      parts: [
+        {
+          type: RegionPart,
+          name: '-1',
+          progress: {
+            type: warmup,
+            blending: additive,
+            heatColor: purple,
+            delay: 0.2
+          }
+        },
+        {
+          type: RegionPart,
+          name: '-1',
+          progress: {
+            type: warmup,
+            heatProgress: {
+               type: heat,
+               delay: 5.0
+            },
+            heatColor: scarlet,
+            delay: 12.0
+          }
+        }
+      ],
+
       shake: 3,
       shootSound: bigLaserShoot,
       ejectEffect: none,
@@ -412,7 +440,7 @@
       type: mindustry.entities.abilities.StatusFieldAbility,
       range: 100,
       reload: 340,
-      duration: 245,
+      duration: 250,
       effect: overclock
     }
   ]

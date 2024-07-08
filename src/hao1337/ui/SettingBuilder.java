@@ -1,8 +1,10 @@
 package hao1337.ui;
 
 import arc.Core;
+import arc.scene.style.TextureRegionDrawable;
 import arc.scene.ui.Label;
 import mindustry.*;
+import mindustry.gen.Icon;
 import mindustry.gen.Tex;
 import mindustry.graphics.Pal;
 import mindustry.ui.dialogs.SettingsMenuDialog;
@@ -35,7 +37,7 @@ public class SettingBuilder {
     }
 
     public void build() {
-        Vars.ui.settings.addCategory("Better Vanilla", "setting-icoMenu", (t) -> {
+        Vars.ui.settings.addCategory("Better Vanilla", new TextureRegionDrawable(Icon.settingsSmall), (t) -> {
             t.pref(new SettingTitle(){{ desc = Core.bundle.format("hao1337.setting.category.ui"); }});
             t.checkPref("hao1337.ui.coreinf.enable", true);
             t.checkPref("hao1337.ui.unitinf.enable", true);
