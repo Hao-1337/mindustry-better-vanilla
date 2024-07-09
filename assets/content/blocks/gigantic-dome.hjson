@@ -9,7 +9,7 @@
   hasLiquids: true,
   hasItems: true,
   size: 6,
-  speedBoost: 9,
+  speedBoost: 5.25,
   range: 960,
   itemCapacity: 80,
   health: 1820,
