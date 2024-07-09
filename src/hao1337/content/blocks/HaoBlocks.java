@@ -8,6 +8,8 @@ public class HaoBlocks {
     public static Block box, silo, ultraVault, valveUnloader;
     // Conveyor
     public static Block thoriumConveyor, armoredThoriumConveyor, surgeConveyor, armoredSurgeConveyor;
+    // Constructor
+    public static Block leviathanReconstructor;
 
     public static void load() {
         // Use json for bypass content loader
@@ -19,5 +21,6 @@ public class HaoBlocks {
         armoredThoriumConveyor = Vars.content.block("hao1337-mod-armored-thorium-conveyor");
         surgeConveyor = Vars.content.block("hao1337-mod-serpulo-surge-conveyor");
         armoredSurgeConveyor = Vars.content.block("hao1337-mod-armored-surge-conveyor");
+        leviathanReconstructor = Vars.content.block("hao1337-mod-leviathan-reconstructor");
     }
 }
