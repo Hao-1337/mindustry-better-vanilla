@@ -21,7 +21,7 @@
     }
     liquids: {
         liquids: [
-            cryofluid/12
+            cryofluid/4
         ]
     }
   },
