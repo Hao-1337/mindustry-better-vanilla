@@ -2,14 +2,17 @@
   localizedName: Zelvorak,
   description: '''[orange]The heavy gunner class titan unit. Equipped four gunners and four heavy gunners, and it is equipped with missike launchers. Can fire devastating energy orb that deals massive damage on impact, empowers nearby allies.''',
   details: Rule the skies and destroy the land.,
+
   singleTarget: true,
   drawShields: false,
   research: eclipse,
+
   lightRadius: 250,
   fallSpeed: 0.006,
   rotateSpeed: 0.7,
-  crashDamageMultiplier: 10,
-  speed: 0.45,
+
+  crashDamageMultiplier: 3,
+  speed: 0.25,
   accel: 0.4,
   drag: 0.4,
   range: 430,
@@ -17,7 +20,7 @@
   aimDst: 430,
   faceTarget: true,
   flying: true,
-  health: 150000,
+  health: 100000,
   hitSize: 140,
   armor: 60,
   engineOffset: 52,
@@ -227,7 +230,7 @@
       rotate: false,
       shootY: 34,
       cooldownTime: 80,
-      reload: 820,
+      reload: 1200,
       shoot: {
         shots: 1,
         firstShotDelay: 120,
@@ -275,8 +278,8 @@
         sprite: missile-large,
         status: melting,
         statusDuration: 300,
-        damage: 680,
-        splashDamage: 2350,
+        damage: 1080,
+        splashDamage: 520,
         splashDamageRadius: 100,
         makeFire: true,
         incendChance: 140,
@@ -411,7 +414,7 @@
           sizeTo: 0
         },
         pierce: false,
-        absorbable: false,
+        absorbable: true,
         trailChance: 1,
         buildingDamageMultiplier: 0.4,
         smokeEffect: blastExplosion,
@@ -436,12 +439,33 @@
     }
   ],
   abilities: [
+    # Buff sức mạnh
     {
       type: mindustry.entities.abilities.StatusFieldAbility,
       range: 100,
       reload: 340,
       duration: 250,
       effect: overclock
+    },
+    # Buff hồi máu
+    {
+      type: mindustry.entities.abilities.RegenAbility,
+      amount: 10
+    },
+    # Triệu hồi lính nhử
+    {
+      type: mindustry.entities.abilities.UnitSpawnAbility,
+      unit: horizon,
+      spawnTime: 320,
+      spawnX: 32,
+      spawnY: -18
+    },
+    {
+      type: mindustry.entities.abilities.UnitSpawnAbility,
+      unit: horizon,
+      spawnTime: 320,
+      spawnX: 32,
+      spawnY: 18
     }
   ]
  }
