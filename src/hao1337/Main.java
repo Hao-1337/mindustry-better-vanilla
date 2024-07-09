@@ -32,10 +32,10 @@ public class Main extends Mod {
             coreitemDisplay.resetUsed();
 
             Log.info("Is multiplayer: @", Vars.net.active());
-            mod.updateState(false);
+            mod.updateState(true);
         });
         Events.on(ClientServerConnectEvent.class, e -> {
-            mod.updateState(false);
+            mod.updateState(true);
             timecontrol.reset();
         });
         Events.on(ClientLoadEvent.class, e -> {
