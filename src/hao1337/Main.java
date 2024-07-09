@@ -9,6 +9,7 @@ import arc.util.*;
 import hao1337.ui.*;
 import hao1337.content.blocks.HaoBlocks;
 import mindustry.Vars;
+import mindustry.game.EventType;
 import mindustry.game.EventType.*;
 import mindustry.mod.Mod;
 
@@ -31,7 +32,7 @@ public class Main extends Mod {
             coreitemDisplay.resetUsed();
 
             Log.info("Is multiplayer: @", Vars.net.active());
-            mod.updateState(!Vars.net.active());
+            mod.updateState(false);
         });
         Events.on(ClientServerConnectEvent.class, e -> {
             mod.updateState(false);
@@ -40,6 +41,10 @@ public class Main extends Mod {
         Events.on(ClientLoadEvent.class, e -> {
             LoadInit();
         });
+        // Test
+        // Events.on(EventType.TapEvent.class, e -> {
+        //     Log.info("Sẽx 1");
+        // });
     }
 
     public void LoadInit() {

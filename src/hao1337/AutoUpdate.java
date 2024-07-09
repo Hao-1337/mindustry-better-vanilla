@@ -24,6 +24,7 @@ public class AutoUpdate {
    public static int latestBuild;
    private static String latest;
    private static int modBuild;
+   private static String versionString;
 
    public static LoadedMod mod;
 
@@ -39,6 +40,7 @@ public class AutoUpdate {
          url = InputUrl;
          unzipName = InputUnzipName;
          modBuild = Integer.parseInt(Version.replace(".", ""));
+         versionString = Version;
 
          mod = Vars.mods.getMod(packname);
 
@@ -80,7 +82,7 @@ public class AutoUpdate {
          latestBuild = Integer.parseInt(json.getString("tag_name").substring(1).replace(".", ""));
          Log.info("Fetch complete, version: [accent]" + latestBuild + "[]. User version: [accent]" + modBuild + "[](" + mod.meta.version + ")");
          if (latestBuild > modBuild) {
-            Vars.ui.showCustomConfirm(Core.bundle.format("hao1337.update.name"), Core.bundle.format("hao1337.update.info", new Object[]{mod.meta.version, latest}), Core.bundle.format("hao1337.update.ok"), Core.bundle.format("hao1337.update.nope"), AutoUpdate::update, () -> {
+            Vars.ui.showCustomConfirm(Core.bundle.format("hao1337.update.name"), Core.bundle.format("hao1337.update.info", new Object[]{versionString, latest}), Core.bundle.format("hao1337.update.ok"), Core.bundle.format("hao1337.update.nope"), AutoUpdate::update, () -> {
             });
          }
 

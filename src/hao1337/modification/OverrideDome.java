@@ -11,7 +11,7 @@ public class OverrideDome {
     private static boolean ik;
 
     public static float newRange = 300f;
-    public static float newSpeed = 3f;
+    public static float newSpeed = 2.5f;
 
     public static void load() {
         overridedome = (OverdriveProjector)Vars.content.block("overdrive-dome");
