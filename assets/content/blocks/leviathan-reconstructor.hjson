@@ -1,0 +1,61 @@
+{
+  type: Reconstructor,
+  localizedName: Leviathan Recontructor,
+  description: Upgrades units to demi-god mechanical monsters.... may your enemies suffer,
+  size: 16,
+  constructTime: 30000,
+  hasLiquids: true,
+  hasItems: true,
+  liquidCapacity: 60,
+
+  consumes: {
+    power: 150,
+    items: {
+      items: [
+        titanium/5600,
+        plastanium/6320,
+        silicon/9420,
+        surge-alloy/6570,
+        silicon/3530
+      ]
+    }
+    liquids: {
+        liquids: [
+            cryofluid/12
+        ]
+    }
+  },
+  requirements: [
+    surge-alloy/2000,
+    phase-fabric/1000,
+    thorium/2500,
+    plastanium/1200,
+    titanium/3020,
+    silicon/3530,
+    graphite/5670,
+    lead/4000,
+    copper/7200
+  ],
+  upgrades: [
+    [
+      eclipse,
+      hao1337-mod-zelvorak
+    ]
+  ],
+  category: units,
+  research: {
+    parent: tetrative-reconstructor,
+    requirements: [
+        copper/720000,
+        lead/400000,
+        graphite/567000,
+        metaglass/260000,
+        titanium/300200,
+        silicon/353000,
+        thorium/250000,
+        surge-alloy/20000,
+        plastanium/32000,
+        phase-fabric/30000
+    ]
+  }
+}
