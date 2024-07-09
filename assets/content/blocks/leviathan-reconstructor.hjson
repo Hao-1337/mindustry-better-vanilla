@@ -14,9 +14,9 @@
       items: [
         titanium/5600,
         plastanium/6320,
-        silicon/9420,
+        silicon/8420,
         surge-alloy/6570,
-        silicon/3530
+        phase-fabric/3120
       ]
     }
     liquids: {
