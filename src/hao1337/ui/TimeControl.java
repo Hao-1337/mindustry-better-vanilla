@@ -65,7 +65,7 @@ public class TimeControl extends Table {
             return input.lastSchematic == null || input.selectPlans.isEmpty();
         };
 
-        touchable = Touchable.enabled;
+        touchable = Touchable.disabled;
     }
     public void reset() {
         update();
