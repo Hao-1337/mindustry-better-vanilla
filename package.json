@@ -12,5 +12,9 @@
     "url": "https://github.com/Hao-1337/mod-mindustry"
   },
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "chokidar": "^3.6.0",
+    "colors": "^1.4.0"
+  }
 }

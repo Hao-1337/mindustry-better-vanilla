@@ -12,7 +12,7 @@
   rotateSpeed: 0.7,
 
   crashDamageMultiplier: 3,
-  speed: 0.25,
+  speed: 0.35,
   accel: 0.4,
   drag: 0.4,
   range: 430,
@@ -24,9 +24,11 @@
   hitSize: 140,
   armor: 60,
   engineOffset: 52,
+
   targetFlags: [
     reactor
   ],
+
   engineSize: 8.5,
   lowAltitude: true,
   targetAir: true,
@@ -439,7 +441,6 @@
     }
   ],
   abilities: [
-    # Buff sức mạnh
     {
       type: mindustry.entities.abilities.StatusFieldAbility,
       range: 100,
@@ -447,25 +448,23 @@
       duration: 250,
       effect: overclock
     },
-    # Buff hồi máu
     {
       type: mindustry.entities.abilities.RegenAbility,
       amount: 10
     },
-    # Triệu hồi lính nhử
     {
       type: mindustry.entities.abilities.UnitSpawnAbility,
       unit: horizon,
-      spawnTime: 320,
-      spawnX: 32,
-      spawnY: -18
+      spawnTime: 820,
+      spawnX: 45,
+      spawnY: 4
     },
     {
       type: mindustry.entities.abilities.UnitSpawnAbility,
       unit: horizon,
-      spawnTime: 320,
-      spawnX: 32,
-      spawnY: 18
+      spawnTime: 820,
+      spawnX: -45,
+      spawnY: 4
     }
   ]
  }

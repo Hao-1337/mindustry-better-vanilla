@@ -8,6 +8,7 @@ import arc.scene.ui.layout.WidgetGroup;
 import arc.util.*;
 import hao1337.ui.*;
 import hao1337.content.blocks.HaoBlocks;
+import hao1337.content.units.HaoUnits;
 import mindustry.Vars;
 import mindustry.game.EventType;
 import mindustry.game.EventType.*;
@@ -58,6 +59,7 @@ public class Main extends Mod {
         loadUI();
         mod.load();
         HaoBlocks.load();
+        HaoUnits.load();
 
         // change sechematic max size
         Vars.maxSchematicSize = 512;

@@ -7,7 +7,7 @@ public class HaoBlocks {
     // Storage blocks - serpulo
     public static Block box, silo, ultraVault, valveUnloader;
     // Conveyor
-    public static Block thoriumConveyor, armoredThoriumConveyor, surgeConveyor, armoredSurgeConveyor;
+    public static Block thoriumConveyor, armoredThoriumConveyor, surgeConveyor, armoredSurgeConveyor, giganticDome;
     // Constructor
     public static Block leviathanReconstructor;
 
@@ -22,5 +22,6 @@ public class HaoBlocks {
         surgeConveyor = Vars.content.block("hao1337-mod-serpulo-surge-conveyor");
         armoredSurgeConveyor = Vars.content.block("hao1337-mod-armored-surge-conveyor");
         leviathanReconstructor = Vars.content.block("hao1337-mod-leviathan-reconstructor");
+        giganticDome = Vars.content.block("hao1337-mod-gigantic-dome");
     }
 }

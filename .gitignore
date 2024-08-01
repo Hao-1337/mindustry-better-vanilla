@@ -158,3 +158,4 @@ android/libs/
 
 ## Other
 /gradle/dist/
+/node_modules/

@@ -39,6 +39,7 @@ public class Loader {
         HaoBlocks.surgeConveyor.buildVisibility =
         HaoBlocks.valveUnloader.buildVisibility =
         HaoBlocks.leviathanReconstructor.buildVisibility =
+        HaoBlocks.giganticDome.buildVisibility =
         HaoBlocks.armoredThoriumConveyor.buildVisibility = enable ? BuildVisibility.shown : BuildVisibility.hidden;
     }
 }

@@ -38,42 +38,48 @@ public class TimeControl extends Table {
         table(Tex.pane, t -> {
             t.top().center();
             t.margin(4f);
-            
+
             t.table(e -> {
                 e.top();
                 e.label(() -> Core.bundle.format("hao1337.speedlabel"));
                 label = e.label(() -> (time < 0 ? "×1/" : "×") + displaytime);
             }).width(80f);
-            
+
             t.row();
 
             t.table(null, t1 -> {
                 t1.button(left, 10f, () -> update(false)).height(37f)
-                  .tooltip(ht -> ht.background(Styles.black6).margin(4f).add(Core.bundle.format("hao1337.speeddown")).style(Styles.outlineLabel));
+                        .tooltip(ht -> ht.background(Styles.black6).margin(4f)
+                                .add(Core.bundle.format("hao1337.speeddown")).style(Styles.outlineLabel));
                 t1.button(reset, 10f, () -> update()).height(37f).padLeft(2.5f).padRight(2.5f)
-                  .tooltip(ht -> ht.background(Styles.black6).margin(4f).add(Core.bundle.format("hao1337.speedreset")).style(Styles.outlineLabel));
+                        .tooltip(ht -> ht.background(Styles.black6).margin(4f)
+                                .add(Core.bundle.format("hao1337.speedreset")).style(Styles.outlineLabel));
                 t1.button(right, 10f, () -> update(true)).height(37f)
-                  .tooltip(ht -> ht.background(Styles.black6).margin(4f).add(Core.bundle.format("hao1337.speedup")).style(Styles.outlineLabel));
+                        .tooltip(ht -> ht.background(Styles.black6).margin(4f)
+                                .add(Core.bundle.format("hao1337.speedup")).style(Styles.outlineLabel));
             });
-
         }).minHeight(94f).minWidth(154f);
 
-        visibility = () -> {
-            if (!Vars.ui.hudfrag.shown || Vars.ui.minimapfrag.shown())
-                return true;
-            InputHandler input = Vars.control.input;
-            return input.lastSchematic == null || input.selectPlans.isEmpty();
-        };
-
-        touchable = Touchable.disabled;
+        visibility = this::shouldDisable;
+        update(() -> {
+            touchable = !shouldDisable() ? Touchable.disabled : Touchable.enabled;
+        });
     }
+
     public void reset() {
         update();
     }
 
+    boolean shouldDisable() {
+        if (!Vars.ui.hudfrag.shown || Vars.ui.minimapfrag.shown())
+            return true;
+        InputHandler input = Vars.control.input;
+        return input.lastSchematic == null || input.selectPlans.isEmpty();
+    }
+
     void timeUpdate() {
         gametime = Math.abs(time);
-        displaytime = (int)(time < 0 ? gametime + 1 : gametime);
+        displaytime = (int) (time < 0 ? gametime + 1 : gametime);
         if (time < 0)
             gametime = 1 / (gametime + 1);
 
