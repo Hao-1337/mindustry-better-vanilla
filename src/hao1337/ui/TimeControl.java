@@ -8,6 +8,7 @@ import arc.scene.style.TextureRegionDrawable;
 import arc.scene.ui.Label;
 import arc.scene.ui.layout.Cell;
 import arc.scene.ui.layout.Table;
+// import arc.util.Log;
 import arc.util.Time;
 import arc.util.Tmp;
 import mindustry.Vars;
@@ -30,6 +31,7 @@ public class TimeControl extends Table {
     private float gametime = 1;
     private Color[] gadient = { Pal.lancerLaser, Pal.accent, Color.valueOf("cc6eaf") };
     private Cell<Label> label;
+    private boolean needRebuild = true;
 
     public void build() {
         background(Styles.black6);
@@ -60,21 +62,35 @@ public class TimeControl extends Table {
             });
         }).minHeight(94f).minWidth(154f);
 
-        visibility = this::shouldDisable;
-        update(() -> {
-            touchable = !shouldDisable() ? Touchable.disabled : Touchable.enabled;
-        });
     }
 
-    public void reset() {
-        update();
+    public void rebuild() {
+        reset();
+        update(() -> {
+            boolean disable = shouldDisable();
+            // Log.info(disable);
+
+            touchable = disable ? Touchable.disabled : Touchable.enabled;
+
+            if (disable && !needRebuild) {
+                reset();
+                needRebuild = true;
+                return;
+            }
+
+            if (needRebuild && !disable) {
+                build();
+                needRebuild = false;
+            }
+        });
     }
 
     boolean shouldDisable() {
         if (!Vars.ui.hudfrag.shown || Vars.ui.minimapfrag.shown())
             return true;
         InputHandler input = Vars.control.input;
-        return input.lastSchematic == null || input.selectPlans.isEmpty();
+
+        return input.lastSchematic != null || !input.selectPlans.isEmpty();
     }
 
     void timeUpdate() {

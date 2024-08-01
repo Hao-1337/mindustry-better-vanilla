@@ -72,7 +72,7 @@ public class Main extends Mod {
         coreitemDisplay.name = "coreitem-display";
         timecontrol = new TimeControl();
 
-        timecontrol.build();
+        timecontrol.rebuild();
         setting.build();
 
         Group hud = Vars.ui.hudGroup;
