@@ -12,15 +12,16 @@ import mindustry.ui.dialogs.SettingsMenuDialog;
 public class SettingBuilder {
     public class SettingTitle extends SettingsMenuDialog.SettingsTable.Setting {
         public String desc;
+        public float height = 1f;
 
         public SettingTitle() {
             super((String) null);
         }
 
         public void add(SettingsMenuDialog.SettingsTable table) {
-            table.table(t -> t.background(Tex.underline)).fillX().minHeight(1f);
+            if (height > 0) table.table(t -> t.background(Tex.underline)).fillX().minHeight(height);
             table.row();
-            table.table(t -> {}).fillX().minHeight(5f);
+            table.table(t -> {}).fillX().minHeight(10f);
             table.row();
 
             Label l = ((Label) table.labelWrap(desc).fillX().center().get());
@@ -35,19 +36,67 @@ public class SettingBuilder {
             table.row();
         }
     }
+    public class Line extends SettingsMenuDialog.SettingsTable.Setting {
+        public float height = .25f;
+        public float width = 120f;
+
+        public Line() {
+            super((String) null);
+        }
+
+        public void add(SettingsMenuDialog.SettingsTable table) {
+            table.table(t -> t.background(Tex.underline)).width(width).minHeight(height);
+            table.row();
+        }
+    }
+    public class Padding extends SettingsMenuDialog.SettingsTable.Setting {
+        public float height = 25f;
+
+        public Padding() {
+            super((String) null);
+        }
+
+        public void add(SettingsMenuDialog.SettingsTable table) {
+            table.table(t -> {}).fillX().minHeight(height);
+            table.row();
+        }
+    }
+
 
     public void build() {
         Vars.ui.settings.addCategory("Better Vanilla", new TextureRegionDrawable(Icon.settingsSmall), (t) -> {
-            t.pref(new SettingTitle(){{ desc = Core.bundle.format("hao1337.setting.category.ui"); }});
+            t.pref(new SettingTitle(){{ desc = Core.bundle.format("hao1337.setting.category.ui"); height = 0f; }});
             t.checkPref("hao1337.ui.coreinf.enable", true);
             t.checkPref("hao1337.ui.unitinf.enable", true);
-            t.pref(new SettingTitle(){{ desc = Core.bundle.format("hao1337.setting.category.gameplay"); }});
-            t.checkPref("hao1337.gameplay.vault-bigger", false);
+            t.checkPref("hao1337.ui.timecontrol.enable", true);
+
+
+            t.pref(new SettingTitle(){{ desc = Core.bundle.format("hao1337.setting.category.gameplay.serpulo"); }});
+            t.checkPref("hao1337.gameplay.serpulo.vault-bigger", false);
             t.checkPref("hao1337.gameplay.better-override-dome", false);
             t.checkPref("hao1337.gameplay.better-shield", false);
             t.checkPref("hao1337.gameplay.scrap-wall", false);
-            t.checkPref("hao1337.gameplay.add-new-content", false);
+
+            t.pref(new Padding(){{ height = 40f; }});
+            t.checkPref("hao1337.gameplay.serpulo.thorium-conveyor", true);
+            t.checkPref("hao1337.gameplay.serpulo.surge-conveyor", true);
+            t.checkPref("hao1337.gameplay.serpulo.box", true);
+            t.checkPref("hao1337.gameplay.serpulo.silo", true);
+            t.checkPref("hao1337.gameplay.serpulo.ultra-vault", true);
+            t.checkPref("hao1337.gameplay.serpulo.gigantic-dome", true);
+            t.checkPref("hao1337.gameplay.serpulo.valve-unloader", true);
+            t.checkPref("hao1337.gameplay.serpulo.leviathan-recontructor", true);
+
+
+            t.pref(new SettingTitle(){{ desc = Core.bundle.format("hao1337.setting.category.gameplay.erekir"); }});
+            t.checkPref("hao1337.gameplay.erekir.vault-bigger", false);
+            t.checkPref("hao1337.gameplay.heat-generator", false);
+            t.checkPref("hao1337.gameplay.slag-centrifuge", false);
+
+
             t.pref(new SettingTitle(){{ desc = Core.bundle.format("hao1337.setting.category.other"); }});
+            t.sliderPref("hao1337.sechematic.size", 120, 50, 256, n -> n + "×" + n);
+            t.checkPref("hao1337.experimental", false);
             t.checkPref("hao1337.toggle.autoupdate", false);
         });
     }

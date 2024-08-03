@@ -14,8 +14,8 @@ import mindustry.game.EventType.*;
 import mindustry.mod.Mod;
 
 public class Main extends Mod {
-    public static final String version = "1.5.8";
-    public static final String gitapi = "https://api.github.com/repos/Hao-1337/mindustry-better-vanilla/releases/latest";
+    public static final String version = "1.0.1";
+    public static final String gitapi = "https://api.github.com/repos/Hao-1337/mindustry-better-vanilla/releases";
     public static final String repoName = "hao1337/mindustry-better-vanilla";
     public static final String name = "hao1337-mod";
     public static final String unzipName = "hao1337mindustry-better-vanilla";
@@ -36,7 +36,7 @@ public class Main extends Mod {
         });
         Events.on(ClientServerConnectEvent.class, e -> {
             mod.updateState(true);
-            timecontrol.reset();
+            timecontrol.rebuild();
         });
         Events.on(ClientLoadEvent.class, e -> {
             LoadInit();
@@ -60,10 +60,8 @@ public class Main extends Mod {
         HaoBlocks.load();
         HaoUnits.load();
 
-        // change sechematic max size
-        Vars.maxSchematicSize = 512;
-        // Show cliff button
-        Vars.experimental = true;
+        Vars.maxSchematicSize = Core.settings.getInt("hao1337.sechematic.size");
+        Vars.experimental = Core.settings.getBool("hao1337.experimental");
     }
 
     public void loadUI() {

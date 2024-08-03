@@ -32,6 +32,7 @@ public class TimeControl extends Table {
     private Color[] gadient = { Pal.lancerLaser, Pal.accent, Color.valueOf("cc6eaf") };
     private Cell<Label> label;
     private boolean needRebuild = true;
+    private boolean ignored = false;
 
     public void build() {
         background(Styles.black6);
@@ -66,9 +67,22 @@ public class TimeControl extends Table {
 
     public void rebuild() {
         reset();
+
         update(() -> {
+            boolean enable = Core.settings.getBool("hao1337.ui.timecontrol.enable");
+            // Log.info("Enable: @", enable);
+            if (!enable) { 
+                if (!ignored) {
+                    ignored = true;
+                    reset();
+                    update();
+                }
+                return;
+            }
+
+            ignored = false;
             boolean disable = shouldDisable();
-            // Log.info(disable);
+            // Log.info("Disable: @", disable);
 
             touchable = disable ? Touchable.disabled : Touchable.enabled;
 
@@ -100,7 +114,7 @@ public class TimeControl extends Table {
             gametime = 1 / (gametime + 1);
 
         Time.setDeltaProvider(() -> Math.min(Core.graphics.getDeltaTime() * 60 * gametime, 3 * gametime));
-        label.color(Tmp.c1.lerp(gadient, (time + maxSpeed) / (2 * minSpeed)));
+        if (label != null) label.color(Tmp.c1.lerp(gadient, (time + maxSpeed) / (2 * minSpeed)));
     }
 
     void update(boolean step) {
