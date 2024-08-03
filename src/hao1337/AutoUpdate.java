@@ -140,6 +140,7 @@ public class AutoUpdate {
 					desc.row();
 					desc.add("[sky]" + info).wrap().padLeft(30f).padTop(-8f).growX();
 					desc.row();
+					lastVer = version;
 				}
 			}).width(maxWidth).padRight(10f).get();
 
