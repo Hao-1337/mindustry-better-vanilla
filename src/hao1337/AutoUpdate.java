@@ -19,7 +19,6 @@ import java.net.URLClassLoader;
 import java.util.Objects;
 
 import mindustry.Vars;
-import mindustry.core.UI;
 import mindustry.mod.Mods.LoadedMod;
 import mindustry.ui.Styles;
 import mindustry.ui.dialogs.BaseDialog;
@@ -43,7 +42,8 @@ public class AutoUpdate {
 
 	private static Fi modFile;
 
-	public static void load(String InputUrl, String InputPackname, String InputRepo, String InputUnzipName, String Version) {
+	public static void load(String InputUrl, String InputPackname, String InputRepo, String InputUnzipName,
+			String Version) {
 		try {
 			packname = InputPackname;
 			repo = InputRepo;
@@ -75,7 +75,6 @@ public class AutoUpdate {
 			mod.meta.author = meta.getString("author");
 			mod.meta.description = meta.getString("description");
 
-			// OMG i'm stupid LMAOOOO
 			int ver = Integer.parseInt(meta.getString("version").replace(".", ""));
 			if (ver > modBuild)
 				modBuild = ver;
@@ -107,7 +106,7 @@ public class AutoUpdate {
 	private static void showCustomConfirm(String lastestVer, String currentVer) {
 		BaseDialog dialog = new BaseDialog(Core.bundle.format("hao1337.update.name"));
 		dialog.setFillParent(true);
-		dialog.cont.top().left();
+		dialog.cont.top().left().margin(20f);
 
 		if (versions.size <= 0) {
 			Log.err("WTF just happen?");
@@ -148,21 +147,19 @@ public class AutoUpdate {
 			pane.setStyle(Styles.noBarPane);
 		}).padLeft(30f).padTop(5f);
 
-		dialog.cont.row();
-		dialog.cont.table(t -> {
-			t.top().center().label(() -> {
-				return Core.bundle.format("hao1337.update.confirm");
+		dialog.cont.fill(t -> {
+			t.bottom().label(() ->  Core.bundle.format("hao1337.update.confirm")).fillX().center();
+			t.row();
+			t.table(t1 -> {
+				t1.defaults().padLeft(60f).padRight(60f).padTop(20f);
+				t1.button(Core.bundle.format("hao1337.update.nope"), () -> {
+					dialog.hide();
+				}).width(100f);
+				t1.button(Core.bundle.format("hao1337.update.ok"), () -> {
+					dialog.hide();
+					update();
+				}).width(100f);
 			});
-		});
-
-		dialog.buttons.defaults().size(200.0F, 54.0F).pad(100.0F);
-
-		dialog.buttons.button(Core.bundle.format("hao1337.update.nope"), () -> {
-			dialog.hide();
-		});
-		dialog.buttons.button(Core.bundle.format("hao1337.update.ok"), () -> {
-			dialog.hide();
-			update();
 		});
 
 		KeyCode key = KeyCode.escape;
@@ -178,15 +175,16 @@ public class AutoUpdate {
 
 	private static void update() {
 		try {
-			ClassLoader var1 = mod.loader;
-			if (var1 instanceof URLClassLoader) {
-				URLClassLoader cl = (URLClassLoader) var1;
+			ClassLoader loader = mod.loader;
+			if (loader instanceof URLClassLoader) {
+				URLClassLoader cl = (URLClassLoader) loader;
 				cl.close();
 			}
 
 			mod.loader = null;
-		} catch (Throwable var2) {
-			Log.err(var2);
+		} catch (Throwable err) {
+			Log.err(err);
+			Vars.ui.showException(err);
 		}
 
 		Vars.ui.loadfrag.show(Core.bundle.format("hao1337.update.updating"));
@@ -208,12 +206,11 @@ public class AutoUpdate {
 			LoadingFragment fragment = Vars.ui.loadfrag;
 			Objects.requireNonNull(fragment);
 			app.post(fragment::hide);
-			UI var3 = Vars.ui;
 			Application app1 = Core.app;
 			Objects.requireNonNull(app1);
-			var3.showInfoOnHidden(Core.bundle.format("hao1337.reloadexit"), app1::exit);
-		} catch (Throwable var2) {
-			Log.err(var2);
+			Vars.ui.showInfoOnHidden(Core.bundle.format("hao1337.reloadexit"), app1::exit);
+		} catch (Throwable err) {
+			Log.err(err);
 		}
 
 	}

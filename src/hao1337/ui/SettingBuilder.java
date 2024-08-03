@@ -95,7 +95,13 @@ public class SettingBuilder {
 
 
             t.pref(new SettingTitle(){{ desc = Core.bundle.format("hao1337.setting.category.other"); }});
-            t.sliderPref("hao1337.sechematic.size", 120, 50, 256, n -> n + "×" + n);
+            /**
+             * [E] java.io.IOException: Invalid schematic: Too large (max possible size is 128x128)
+	         * at mindustry.game.Schematics.read(Schematics.java:545)
+	         * at mindustry.game.Schematics.read(Schematics.java:525)
+	         * at mindustry.game.Schematics.loadFile(Schematics.java:138)
+             */
+            t.sliderPref("hao1337.sechematic.size", 64, 32, 128, n -> n + "×" + n);
             t.checkPref("hao1337.experimental", false);
             t.checkPref("hao1337.toggle.autoupdate", false);
         });
