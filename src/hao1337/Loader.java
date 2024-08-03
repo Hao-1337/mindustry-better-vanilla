@@ -37,21 +37,21 @@ public class Loader {
 
     public void contentSwitcher(boolean enable) {
         HaoBlocks.surgeConveyor.buildVisibility =
-        HaoBlocks.armoredSurgeConveyor.buildVisibility = enable && Core.settings.getBool("hao1337.gameplay.serpulo.thorium-conveyor") ? BuildVisibility.shown : BuildVisibility.hidden;
+        HaoBlocks.armoredSurgeConveyor.buildVisibility = enable && !Core.settings.getBool("hao1337.gameplay.serpulo.thorium-conveyor") ? BuildVisibility.shown : BuildVisibility.hidden;
 
         HaoBlocks.armoredThoriumConveyor.buildVisibility =
-        HaoBlocks.thoriumConveyor.buildVisibility =  enable && Core.settings.getBool("hao1337.gameplay.serpulo.surge-conveyor") ? BuildVisibility.shown : BuildVisibility.hidden;
+        HaoBlocks.thoriumConveyor.buildVisibility =  enable && !Core.settings.getBool("hao1337.gameplay.serpulo.surge-conveyor") ? BuildVisibility.shown : BuildVisibility.hidden;
 
-        HaoBlocks.box.buildVisibility = enable && Core.settings.getBool("hao1337.gameplay.serpulo.box") ? BuildVisibility.shown : BuildVisibility.hidden;
+        HaoBlocks.box.buildVisibility = enable && !Core.settings.getBool("hao1337.gameplay.serpulo.box") ? BuildVisibility.shown : BuildVisibility.hidden;
 
-        HaoBlocks.silo.buildVisibility = enable && Core.settings.getBool("hao1337.gameplay.serpulo.silo") ? BuildVisibility.shown : BuildVisibility.hidden;
+        HaoBlocks.silo.buildVisibility = enable && !Core.settings.getBool("hao1337.gameplay.serpulo.silo") ? BuildVisibility.shown : BuildVisibility.hidden;
 
-        HaoBlocks.ultraVault.buildVisibility = enable && Core.settings.getBool("hao1337.gameplay.serpulo.ultra-vault") ? BuildVisibility.shown : BuildVisibility.hidden;
+        HaoBlocks.ultraVault.buildVisibility = enable && !Core.settings.getBool("hao1337.gameplay.serpulo.ultra-vault") ? BuildVisibility.shown : BuildVisibility.hidden;
 
-        HaoBlocks.valveUnloader.buildVisibility = enable && Core.settings.getBool("hao1337.gameplay.serpulo.valve-unloader") ? BuildVisibility.shown : BuildVisibility.hidden;
+        HaoBlocks.valveUnloader.buildVisibility = enable && !Core.settings.getBool("hao1337.gameplay.serpulo.valve-unloader") ? BuildVisibility.shown : BuildVisibility.hidden;
 
-        HaoBlocks.leviathanReconstructor.buildVisibility  = enable && Core.settings.getBool("hao1337.gameplay.serpulo.leviathan-reconstructor") ? BuildVisibility.shown : BuildVisibility.hidden;
+        HaoBlocks.leviathanReconstructor.buildVisibility  = enable && !Core.settings.getBool("hao1337.gameplay.serpulo.leviathan-reconstructor") ? BuildVisibility.shown : BuildVisibility.hidden;
 
-        HaoBlocks.giganticDome.buildVisibility = enable && Core.settings.getBool("hao1337.gameplay.serpulo.gigantic-dome") ? BuildVisibility.shown : BuildVisibility.hidden;
+        HaoBlocks.giganticDome.buildVisibility = enable && !Core.settings.getBool("hao1337.gameplay.serpulo.gigantic-dome") ? BuildVisibility.shown : BuildVisibility.hidden;
     }
 }
