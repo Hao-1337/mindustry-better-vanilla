@@ -18,8 +18,6 @@ Textures and sprites made by: [ĐạiPH](https://github.com/BackNNHH)
 
 <h3>Features</h3>
 
-![Preview](https://github.com/Hao-1337/mindustry-better-vanilla/assets/108588018/72654879-1a5b-4f70-a443-d9b362eb2136)
-
 - Coreitem display for mobile.
 - Unit conter display.
 - Time control.
@@ -28,4 +26,24 @@ Textures and sprites made by: [ĐạiPH](https://github.com/BackNNHH)
   + Bigger range for override dome, 200% speed up.
   + Force projector have more shield health.
 - Auto update.
+- New contents as well:
+  + Thorium / surge conveyor (serpulo)
+  + Some storage blocks
+  + "T6" units
+- Aslo make some hidden contents available
+
+<h1>Screenshots</h1>
+
+
+<h4>Unit counter and coreitem(for mobile)</h4>
+
+![Preview](https://github.com/Hao-1337/mindustry-better-vanilla/assets/108588018/72654879-1a5b-4f70-a443-d9b362eb2136)
+
+<h4>Time control</h4>
+
+![Screenshot 2024-08-03 185953](https://github.com/user-attachments/assets/bdd6a206-f10e-4bb1-8e9a-3388cb74d5b7)
+
+<h4>Leviathan reconstructor</h4>
+
+![Screenshot 2024-08-03 185904](https://github.com/user-attachments/assets/c54194e3-9136-45f5-86eb-ea750f8912ed)
 
