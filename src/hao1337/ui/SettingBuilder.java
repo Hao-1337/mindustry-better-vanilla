@@ -73,9 +73,9 @@ public class SettingBuilder {
 
             t.pref(new SettingTitle(){{ desc = Core.bundle.format("hao1337.setting.category.gameplay.serpulo"); }});
             t.checkPref("hao1337.gameplay.serpulo.vault-bigger", false);
-            t.checkPref("hao1337.gameplay.better-override-dome", false);
-            t.checkPref("hao1337.gameplay.better-shield", false);
-            t.checkPref("hao1337.gameplay.scrap-wall", false);
+            t.checkPref("hao1337.gameplay.serpulo.better-override-dome", false);
+            t.checkPref("hao1337.gameplay.serpulo.better-shield", false);
+            t.checkPref("hao1337.gameplay.serpulo.scrap-wall", false);
 
             t.pref(new Padding(){{ height = 40f; }});
             t.checkPref("hao1337.gameplay.serpulo.thorium-conveyor", true);
@@ -90,8 +90,8 @@ public class SettingBuilder {
 
             t.pref(new SettingTitle(){{ desc = Core.bundle.format("hao1337.setting.category.gameplay.erekir"); }});
             t.checkPref("hao1337.gameplay.erekir.vault-bigger", false);
-            t.checkPref("hao1337.gameplay.heat-generator", false);
-            t.checkPref("hao1337.gameplay.slag-centrifuge", false);
+            t.checkPref("hao1337.gameplay.erekir.heat-generator", false);
+            t.checkPref("hao1337.gameplay.erekir.slag-centrifuge", false);
 
 
             t.pref(new SettingTitle(){{ desc = Core.bundle.format("hao1337.setting.category.other"); }});

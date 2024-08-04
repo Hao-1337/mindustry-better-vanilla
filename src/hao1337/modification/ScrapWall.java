@@ -19,7 +19,7 @@ public class ScrapWall {
         _3 = Blocks.scrapWallHuge.buildVisibility;
         _4 = Blocks.scrapWallGigantic.buildVisibility;
 
-        ik = Core.settings.getBool("hao1337.gameplay.scrap-wall");
+        ik = Core.settings.getBool("hao1337.gameplay.serpulo.scrap-wall");
         apply(true);
     }
 

@@ -6,6 +6,6 @@ import mindustry.world.meta.BuildVisibility;
 
 public class HeatReactor {
     public static void load() {
-        Blocks.heatReactor.buildVisibility = Core.settings.getBool("hao1337.gameplay.heat-generator") ? BuildVisibility.shown : BuildVisibility.hidden;
+        Blocks.heatReactor.buildVisibility = Core.settings.getBool("hao1337.gameplay.erekir.heat-generator") ? BuildVisibility.shown : BuildVisibility.hidden;
     }
 }

@@ -2,6 +2,7 @@ package hao1337.content.blocks;
 
 import mindustry.Vars;
 import mindustry.world.Block;
+import mindustry.world.blocks.defense.turrets.Turret;
 
 public class HaoBlocks {
     // Storage blocks - serpulo
@@ -10,6 +11,8 @@ public class HaoBlocks {
     public static Block thoriumConveyor, armoredThoriumConveyor, surgeConveyor, armoredSurgeConveyor, giganticDome;
     // Constructor
     public static Block leviathanReconstructor;
+    //defense
+    public static Turret m1014, dropper;
 
     public static void load() {
         // Use json for bypass content loader
@@ -23,5 +26,7 @@ public class HaoBlocks {
         armoredSurgeConveyor = Vars.content.block("hao1337-mod-armored-surge-conveyor");
         leviathanReconstructor = Vars.content.block("hao1337-mod-leviathan-reconstructor");
         giganticDome = Vars.content.block("hao1337-mod-gigantic-dome");
+        m1014 = (Turret)Vars.content.block("hao1337-m1014");
+        dropper = (Turret)Vars.content.block("hao1337-dropper");
     }
 }

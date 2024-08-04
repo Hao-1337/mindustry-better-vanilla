@@ -16,7 +16,7 @@ public class OverrideDome {
         range = ((OverdriveProjector)Blocks.overdriveDome).range;
         speed = ((OverdriveProjector)Blocks.overdriveDome).speedBoost;
         
-        ik = Core.settings.getBool("hao1337.gameplay.better-override-dome");
+        ik = Core.settings.getBool("hao1337.gameplay.serpulo.better-override-dome");
         apply(true);
     }
 

@@ -12,7 +12,7 @@ public class ForceProjector {
     public static void load() {
         shieldHealth = ((mindustry.world.blocks.defense.ForceProjector)Blocks.forceProjector).shieldHealth;
 
-        ik = Core.settings.getBool("hao1337.gameplay.better-shield");
+        ik = Core.settings.getBool("hao1337.gameplay.serpulo.better-shield");
         apply(true);
     }
 
