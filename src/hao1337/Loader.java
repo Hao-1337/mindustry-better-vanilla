@@ -5,6 +5,8 @@ import arc.util.Log;
 import hao1337.content.blocks.HaoBlocks;
 import hao1337.modification.ForceProjector;
 import hao1337.modification.HeatReactor;
+import hao1337.modification.Items;
+import hao1337.modification.Liquids;
 import hao1337.modification.OverrideDome;
 import hao1337.modification.ScrapWall;
 import hao1337.modification.SlagCentrifuge;
@@ -18,6 +20,8 @@ public class Loader {
         ForceProjector.load();
         OverrideDome.load();
         Vault.load();
+        Items.load();
+        Liquids.load();
         ScrapWall.load();
         HeatReactor.load();
         SlagCentrifuge.load();
@@ -52,6 +56,10 @@ public class Loader {
 
         HaoBlocks.leviathanReconstructor.buildVisibility  = enable && !Core.settings.getBool("hao1337.gameplay.serpulo.leviathan-reconstructor") ? BuildVisibility.shown : BuildVisibility.hidden;
 
-        HaoBlocks.giganticDome.buildVisibility = enable && !Core.settings.getBool("hao1337.gameplay.serpulo.gigantic-dome") ? BuildVisibility.shown : BuildVisibility.hidden;
+        HaoBlocks.m1014.buildVisibility = enable && !Core.settings.getBool("hao1337.gameplay.serpulo.m1014") ? BuildVisibility.shown : BuildVisibility.hidden;
+
+        HaoBlocks.dropper.buildVisibility = enable && !Core.settings.getBool("hao1337.gameplay.serpulo.dropper") ? BuildVisibility.shown : BuildVisibility.hidden;
+
+        HaoBlocks.giganticDome.buildVisibility = enable && !Core.settings.getBool("hao1337.gameplay.serpulo.gigantic-dome") ? BuildVisibility.shown : BuildVisibility.hidden;        
     }
 }

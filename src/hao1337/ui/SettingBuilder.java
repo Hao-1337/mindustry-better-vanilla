@@ -75,7 +75,7 @@ public class SettingBuilder {
             t.checkPref("hao1337.gameplay.serpulo.vault-bigger", false);
             t.checkPref("hao1337.gameplay.serpulo.better-override-dome", false);
             t.checkPref("hao1337.gameplay.serpulo.better-shield", false);
-            t.checkPref("hao1337.gameplay.serpulo.scrap-wall", false);
+            t.checkPref("hao1337.gameplay.serpulo.ascrap-wall", false);
 
             t.pref(new Padding(){{ height = 40f; }});
             t.checkPref("hao1337.gameplay.serpulo.thorium-conveyor", true);
@@ -86,12 +86,16 @@ public class SettingBuilder {
             t.checkPref("hao1337.gameplay.serpulo.gigantic-dome", true);
             t.checkPref("hao1337.gameplay.serpulo.valve-unloader", true);
             t.checkPref("hao1337.gameplay.serpulo.leviathan-recontructor", true);
+            t.checkPref("hao1337.gameplay.serpulo.m1014", true);
+            t.checkPref("hao1337.gameplay.serpulo.dropper", true);
 
 
             t.pref(new SettingTitle(){{ desc = Core.bundle.format("hao1337.setting.category.gameplay.erekir"); }});
             t.checkPref("hao1337.gameplay.erekir.vault-bigger", false);
             t.checkPref("hao1337.gameplay.erekir.heat-generator", false);
             t.checkPref("hao1337.gameplay.erekir.slag-centrifuge", false);
+            t.checkPref("hao1337.gameplay.erekir.hidden-item", true);
+            t.checkPref("hao1337.gameplay.erekir.hidden-liquid", true);
 
 
             t.pref(new SettingTitle(){{ desc = Core.bundle.format("hao1337.setting.category.other"); }});

@@ -8,6 +8,7 @@ import arc.scene.ui.layout.WidgetGroup;
 import arc.util.*;
 import hao1337.ui.*;
 import hao1337.content.blocks.HaoBlocks;
+import hao1337.content.items.HaoItems;
 import hao1337.content.units.HaoUnits;
 import mindustry.Vars;
 import mindustry.game.EventType.*;
@@ -57,8 +58,10 @@ public class Main extends Mod {
 
         loadUI();
         mod.load();
+        HaoItems.load();
         HaoBlocks.load();
         HaoUnits.load();
+        HaoBlocks.generateContent();
 
         Vars.maxSchematicSize = Core.settings.getInt("hao1337.sechematic.size");
         Vars.experimental = Core.settings.getBool("hao1337.experimental");

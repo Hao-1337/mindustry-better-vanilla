@@ -1,0 +1,25 @@
+{
+  name: "Uranium Centrifuge",
+  type: GenericCrafter,
+  size: 3,
+  hasPower: true,
+  hasItems: true,
+  itemCapacity: 60,
+  craftTime: 270,
+  consumes: {
+    items: [
+        fissile-matter/6
+    ],
+    power: 6
+  },
+  outputItem: hao1337-mod-uranium/1,
+  ambientSound: smelter,
+  ambientSoundVolume: 0.7
+  drawer: {},
+  requirements: [
+    oxide/60,
+    silicon/120,
+    tungsten/80,
+    carbide/60
+  ]
+}

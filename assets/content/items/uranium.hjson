@@ -1,0 +1,8 @@
+{
+  name: "Uranium-235"
+  hidden: false,
+  explosiveness: 0.3,
+  flammability: 0.2,
+  radioactivity: 0.8,
+  color: 008F2DFF
+}
