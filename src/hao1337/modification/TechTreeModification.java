@@ -25,7 +25,7 @@ public class TechTreeModification {
     }
 
     @SuppressWarnings("deprecation")
-    public static void margeNodeProduce(UnlockableContent parent, UnlockableContent child, int planetId) {
-        TechTree.all.filter(t -> t.content == parent).get(planetId).children.add(TechTree.nodeProduce(child, () -> {}));
+    public static void margeNodeProduce(UnlockableContent parent, UnlockableContent child, int index) {
+        TechTree.all.filter(t -> t.content == parent).get(index).children.add(TechTree.nodeProduce(child, () -> {}));
     }
 }

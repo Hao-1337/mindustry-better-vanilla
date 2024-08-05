@@ -42,10 +42,6 @@ public class Main extends Mod {
         Events.on(ClientLoadEvent.class, e -> {
             LoadInit();
         });
-        // Test
-        // Events.on(EventType.TapEvent.class, e -> {
-        //     Log.info("Sẽx 1");
-        // });
     }
 
     public void LoadInit() {
@@ -61,7 +57,7 @@ public class Main extends Mod {
         HaoItems.load();
         HaoBlocks.load();
         HaoUnits.load();
-        HaoBlocks.generateContent();
+        Loader.generateContent();
 
         Vars.maxSchematicSize = Core.settings.getInt("hao1337.sechematic.size");
         Vars.experimental = Core.settings.getBool("hao1337.experimental");

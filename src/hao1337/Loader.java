@@ -1,17 +1,26 @@
 package hao1337;
 
 import arc.Core;
+import arc.struct.Seq;
 import arc.util.Log;
 import hao1337.content.blocks.HaoBlocks;
+import hao1337.content.items.HaoItems;
 import hao1337.modification.ForceProjector;
 import hao1337.modification.HeatReactor;
-import hao1337.modification.Items;
 import hao1337.modification.Liquids;
 import hao1337.modification.OverrideDome;
 import hao1337.modification.ScrapWall;
 import hao1337.modification.SlagCentrifuge;
+import hao1337.modification.TechTreeModification;
 import hao1337.modification.Vault;
 import hao1337.ui.TimeControl;
+
+import mindustry.Vars;
+import mindustry.content.Blocks;
+import mindustry.content.Items;
+import mindustry.content.SectorPresets;
+import mindustry.game.Objectives;
+import mindustry.type.ItemStack;
 import mindustry.world.meta.BuildVisibility;
 
 public class Loader {
@@ -20,7 +29,7 @@ public class Loader {
         ForceProjector.load();
         OverrideDome.load();
         Vault.load();
-        Items.load();
+        hao1337.modification.Items.load();
         Liquids.load();
         ScrapWall.load();
         HeatReactor.load();
@@ -62,4 +71,14 @@ public class Loader {
 
         HaoBlocks.giganticDome.buildVisibility = enable && !Core.settings.getBool("hao1337.gameplay.serpulo.gigantic-dome") ? BuildVisibility.shown : BuildVisibility.hidden;        
     }
+
+    public static void generateContent() {
+        TechTreeModification.margeNode(Blocks.phaseHeater, Blocks.heatReactor, ItemStack.with(Items.beryllium, 2000, Items.oxide, 1500, Items.silicon, 3000), Seq.with(new Objectives.SectorComplete(SectorPresets.stronghold)));
+        TechTreeModification.margeNodeProduce(Items.thorium, Items.fissileMatter, 1);
+        TechTreeModification.margeNodeProduce(Items.fissileMatter, HaoItems.uranium, 0);
+
+        // uraniumCentrifuge.drawer = new DrawMulti(new DrawDefault(), new DrawBlurSpin(), new DrawArcSmelt());
+        Vars.state.rules.hiddenBuildItems.clear();
+    }
+
 }
