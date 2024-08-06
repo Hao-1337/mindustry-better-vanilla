@@ -15,8 +15,22 @@
   },
   outputItem: hao1337-mod-uranium/1,
   ambientSound: smelter,
-  ambientSoundVolume: 0.7
-  drawer: {},
+  warmupSpeed: 0.02,
+  ambientSoundVolume: 0.7,
+  drawer: [
+    {
+      type: DrawDefault
+    },
+    {
+      type: DrawRegion,
+      suffix: -top
+    },
+    {
+      type: DrawBlurSpin,
+      suffix: -rotator,
+      rotateSpeed: -6.0
+    }
+  ],
   requirements: [
     oxide/60,
     silicon/120,

@@ -21,6 +21,10 @@ import mindustry.content.Items;
 import mindustry.content.SectorPresets;
 import mindustry.game.Objectives;
 import mindustry.type.ItemStack;
+import mindustry.world.draw.DrawArcSmelt;
+import mindustry.world.draw.DrawBlurSpin;
+import mindustry.world.draw.DrawDefault;
+import mindustry.world.draw.DrawMulti;
 import mindustry.world.meta.BuildVisibility;
 
 public class Loader {
@@ -37,7 +41,7 @@ public class Loader {
     }
 
     public void updateState(boolean state) {
-        Log.info("[Mod]Current state: @", state);
+        Log.info("Mod Current state: @", state);
 
         ForceProjector.apply(state);
         OverrideDome.apply(state);
@@ -76,9 +80,7 @@ public class Loader {
         TechTreeModification.margeNode(Blocks.phaseHeater, Blocks.heatReactor, ItemStack.with(Items.beryllium, 2000, Items.oxide, 1500, Items.silicon, 3000), Seq.with(new Objectives.SectorComplete(SectorPresets.stronghold)));
         TechTreeModification.margeNodeProduce(Items.thorium, Items.fissileMatter, 1);
         TechTreeModification.margeNodeProduce(Items.fissileMatter, HaoItems.uranium, 0);
-
-        // uraniumCentrifuge.drawer = new DrawMulti(new DrawDefault(), new DrawBlurSpin(), new DrawArcSmelt());
-        Vars.state.rules.hiddenBuildItems.clear();
+        // Vars.state.rules.hiddenBuildItems.clear();
     }
 
 }
