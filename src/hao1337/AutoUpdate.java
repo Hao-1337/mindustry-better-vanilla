@@ -133,7 +133,7 @@ public class AutoUpdate {
 
 					int buildVer = Integer.parseInt(version.substring(1).replace(".", ""));
 
-					if (buildVer < modBuild)
+					if (buildVer <= modBuild)
 						continue;
 
 					desc.add(Core.bundle.format("hao1337.update.changelog", new Object[] { lastVer, version }));

@@ -1,6 +1,7 @@
 {
   name: "Uranium Centrifuge",
   type: GenericCrafter,
+  category: crafting,
   size: 3,
   hasPower: true,
   hasItems: true,
