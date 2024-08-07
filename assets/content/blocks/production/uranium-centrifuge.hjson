@@ -1,6 +1,6 @@
 {
   name: "Uranium Centrifuge",
-  type: GenericCrafter,
+  type: hao1337.lib.WarmupGenericCrafter,
   category: crafting,
   size: 3,
   hasPower: true,
@@ -28,7 +28,7 @@
     {
       type: DrawBlurSpin,
       suffix: -rotator,
-      rotateSpeed: -6.0
+      rotateSpeed: 0.1
     }
   ],
   requirements: [

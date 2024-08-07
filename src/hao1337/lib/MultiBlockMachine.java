@@ -211,6 +211,11 @@ public class MultiBlockMachine extends Block {
             Color.orange,
             () -> correct / capacity
          ));
+
+         Draw.z(80);
+         BlockStatus status = status();
+         if (status == BlockStatus.active) Drawf.dashRect(build.isValid ? doneColor : Pal.accent, getRect(Tmp.r1, x, y, rotation));
+         Draw.reset();
       }
 
       @Override
@@ -220,8 +225,6 @@ public class MultiBlockMachine extends Block {
 
       @Override
       public void drawStatus() {
-         BlockStatus status = status();
-         if (status == BlockStatus.active) Drawf.dashRect(build.isValid ? doneColor : Pal.accent, getRect(Tmp.r1, x, y, rotation));
          super.drawStatus();
       }
 
