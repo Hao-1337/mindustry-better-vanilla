@@ -160,3 +160,4 @@ android/libs/
 /gradle/dist/
 /node_modules/
 /processor.js
+/.vscode/

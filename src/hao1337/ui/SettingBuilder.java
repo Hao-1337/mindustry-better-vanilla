@@ -85,7 +85,7 @@ public class SettingBuilder {
             t.checkPref("hao1337.gameplay.serpulo.ultra-vault", true);
             t.checkPref("hao1337.gameplay.serpulo.gigantic-dome", true);
             t.checkPref("hao1337.gameplay.serpulo.valve-unloader", true);
-            t.checkPref("hao1337.gameplay.serpulo.leviathan-recontructor", true);
+            t.checkPref("hao1337.gameplay.serpulo.leviathan-reconstructor", true);
             t.checkPref("hao1337.gameplay.serpulo.m1014", true);
             t.checkPref("hao1337.gameplay.serpulo.dropper", true);
 

@@ -53,11 +53,11 @@ public class Loader {
     }
 
     public void contentSwitcher(boolean enable) {
-        HaoBlocks.surgeConveyor.buildVisibility =
-        HaoBlocks.armoredSurgeConveyor.buildVisibility = enable && !Core.settings.getBool("hao1337.gameplay.serpulo.thorium-conveyor") ? BuildVisibility.shown : BuildVisibility.hidden;
-
         HaoBlocks.armoredThoriumConveyor.buildVisibility =
-        HaoBlocks.thoriumConveyor.buildVisibility =  enable && !Core.settings.getBool("hao1337.gameplay.serpulo.surge-conveyor") ? BuildVisibility.shown : BuildVisibility.hidden;
+        HaoBlocks.thoriumConveyor.buildVisibility = enable && !Core.settings.getBool("hao1337.gameplay.serpulo.thorium-conveyor") ? BuildVisibility.shown : BuildVisibility.hidden;
+
+        HaoBlocks.surgeConveyor.buildVisibility =
+        HaoBlocks.armoredSurgeConveyor.buildVisibility =  enable && !Core.settings.getBool("hao1337.gameplay.serpulo.surge-conveyor") ? BuildVisibility.shown : BuildVisibility.hidden;
 
         HaoBlocks.box.buildVisibility = enable && !Core.settings.getBool("hao1337.gameplay.serpulo.box") ? BuildVisibility.shown : BuildVisibility.hidden;
 
