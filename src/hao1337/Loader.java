@@ -15,16 +15,11 @@ import hao1337.modification.TechTreeModification;
 import hao1337.modification.Vault;
 import hao1337.ui.TimeControl;
 
-import mindustry.Vars;
 import mindustry.content.Blocks;
 import mindustry.content.Items;
 import mindustry.content.SectorPresets;
 import mindustry.game.Objectives;
 import mindustry.type.ItemStack;
-import mindustry.world.draw.DrawArcSmelt;
-import mindustry.world.draw.DrawBlurSpin;
-import mindustry.world.draw.DrawDefault;
-import mindustry.world.draw.DrawMulti;
 import mindustry.world.meta.BuildVisibility;
 
 public class Loader {

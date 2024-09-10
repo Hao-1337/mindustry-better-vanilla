@@ -15,7 +15,7 @@ import mindustry.game.EventType.*;
 import mindustry.mod.Mod;
 
 public class Main extends Mod {
-    public static final String version = "1.7.1";
+    public static final String version = "1.7.2";
     public static final String gitapi = "https://api.github.com/repos/Hao-1337/mindustry-better-vanilla/releases";
     public static final String repoName = "hao1337/mindustry-better-vanilla";
     public static final String name = "hao1337-mod";
@@ -60,7 +60,7 @@ public class Main extends Mod {
         Loader.generateContent();
 
         Vars.maxSchematicSize = Core.settings.getInt("hao1337.sechematic.size");
-        Vars.experimental = Core.settings.getBool("hao1337.experimental");
+        Vars.experimental = Core.settings.getBool("hao1337.gameplay.experimental");
     }
 
     public void loadUI() {

@@ -75,7 +75,7 @@ public class SettingBuilder {
             t.checkPref("hao1337.gameplay.serpulo.vault-bigger", false);
             t.checkPref("hao1337.gameplay.serpulo.better-override-dome", false);
             t.checkPref("hao1337.gameplay.serpulo.better-shield", false);
-            t.checkPref("hao1337.gameplay.serpulo.ascrap-wall", false);
+            t.checkPref("hao1337.gameplay.serpulo.scrap-wall", false);
 
             t.pref(new Padding(){{ height = 40f; }});
             t.checkPref("hao1337.gameplay.serpulo.thorium-conveyor", true);
@@ -106,7 +106,8 @@ public class SettingBuilder {
 	         * at mindustry.game.Schematics.loadFile(Schematics.java:138)
              */
             t.sliderPref("hao1337.sechematic.size", 64, 32, 128, n -> n + "×" + n);
-            t.checkPref("hao1337.experimental", false);
+            t.checkPref("hao1337.gameplay.experimental", false);
+            t.checkPref("hao1337.mod.experimental", false);
             t.checkPref("hao1337.toggle.autoupdate", false);
         });
     }

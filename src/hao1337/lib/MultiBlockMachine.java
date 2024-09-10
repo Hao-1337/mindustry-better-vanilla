@@ -28,12 +28,8 @@ import mindustry.world.meta.BlockStatus;
 import mindustry.world.meta.BuildVisibility;
 
 public class MultiBlockMachine extends Block {
-   // 2D array that contains build sechematic
-   public int[][] buildPlans;
-   // Hash map for sechematic array
-   public String[] planIndex;
-   @Nullable
-   public Block[] blockIndex;
+   // ObjectMap that contains build sechematic
+   public MBMPlan[] build;
    // Build size
    public int areaSize = 32;
    protected int capacity = areaSize * areaSize;
@@ -48,6 +44,10 @@ public class MultiBlockMachine extends Block {
    @Nullable
    public String magreInto = null;
    private int correct = 0;
+   @Nullable
+   private int[][] buildPlans;
+   @Nullable
+   private Block[] blockIndex;
 
    MultiBlockMachine(String name) {
       super(name);
@@ -55,6 +55,7 @@ public class MultiBlockMachine extends Block {
       solid = true;
       sync = true;
       flags = EnumSet.of(flag);
+      buildVisibility = Core.settings.getBool("hao1337.gameplay.experimental") ? BuildVisibility.shown : BuildVisibility.hidden;
    }
 
    @Override
@@ -77,17 +78,23 @@ public class MultiBlockMachine extends Block {
       offsetX *= 8;
       offsetY *= 8;
       capacity = areaSize * areaSize;
-      blockIndex = new Block[planIndex.length];
 
-      for (int i = 0; i < planIndex.length; i++) {
-         if (blockIndex == null)
-            blockIndex[i] = null;
-         try {
-            blockIndex[i] = Vars.content.block(planIndex[i]);
-         } catch (Throwable err) {
-            Log.err(err);
+      buildPlans = new int[areaSize][areaSize];
+      blockIndex = new Block[build.length];
+      Matrix.fill(buildPlans, -1);
+
+      int i = 0;
+      for (MBMPlan plan : build) {
+         blockIndex[i] = Vars.content.block(plan.block);
+         for (MBMBuildIndex index : plan.pos) {
+            if (index.x > areaSize - 1 || index.y > areaSize - 1) Vars.ui.showException(new Throwable("Invalid position (outside of bounding box)"));
+            Matrix.squareFill(buildPlans, index.x, index.y, blockIndex[i].size, i);
          }
+         i++;
       }
+
+      buildPlans = Matrix.rotate(buildPlans, 3);
+
       super.init();
    }
 
@@ -149,6 +156,11 @@ public class MultiBlockMachine extends Block {
             int indexX = (int) Math.floor(uh / areaSize);
             int indexY = uh % areaSize;
 
+            if (buildPlansT[indexX][indexY] == -1) {
+               maching.add((Block)null);
+               continue;
+            }
+
             maching.add(blockIndex[buildPlansT[indexX][indexY]]);
          } while (uh++ < capacity - 1);
       }
@@ -159,7 +171,7 @@ public class MultiBlockMachine extends Block {
 
          updateMatching(rotation);
          correct = 0;
-
+   
          int lx = Math.round(rec.x / 8);
          int ly = Math.round(rec.y / 8);
          int hx = (int) Math.floor((rec.height + rec.x) / 8);
@@ -170,14 +182,20 @@ public class MultiBlockMachine extends Block {
             for (int y = ly; y <= hy; y++) {
                int indexX = areaSize - x + lx - 1;
                int indexY = y - ly;
-               int indexM = indexX * 16 + indexY;
+               int indexM = indexX * areaSize + indexY;
 
+               Tile tile = Vars.world.tiles.get(x, y);
                @Nullable
-               Building build = Vars.world.tiles.get(x, y).build;
+               Building build = tile.build;
                Block target = maching.get(indexM);
 
-               // Log.info(build == null ? "null" : "Current: " + build.block.name + " Match: "
-               // + maching.get(indexM));
+               // Log.info(build == null ? "null" : "Current: " + tile + " Match: " + maching.get(indexM));
+
+               if (target == null) {
+                  if (tile.block().name != "air") v = true;
+                  continue;
+               }
+
                if (build == null || build.block.name != target.name) {
                   v = true;
                   continue;
