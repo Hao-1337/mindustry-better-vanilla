@@ -32,6 +32,54 @@ Textures and sprites made by: [ĐạiPH](https://github.com/BackNNHH)
   + "T6" units
 - Aslo make some hidden contents available
 
+<h1> Experimental Section </h1>
+<h3> Multi block machine </h3>
+
+![image](https://github.com/user-attachments/assets/d14f5326-0bb2-4662-b880-f4ee980e549e)
+
+> [!NOTE]
+> It just have some prototype for now.
+
+- Here is example how you can do it in json:
+```json
+{
+  "name": "RBMK Build Projector",
+  "type": "hao1337.lib.MultiBlockMachine,",
+  "category": "power,",
+  "hasPower": true,
+  "size": 3,
+  "selfIsMachine": true,
+  "areaSize": 4,
+  "build": [
+    {
+      "block": "hao1337-mod-rbmk-reactor-controller",
+      "pos": [
+        {
+          "x": 0,
+          "y": 0
+        }
+      ]
+    },
+    {
+      "block": "carbide-wall",
+      "pos": [
+        {
+          "x": 3,
+          "y": 3
+        }
+      ]
+    }
+  ],
+  "requirements": [
+    "oxide/60,",
+    "silicon/120,",
+    "tungsten/80,",
+    "carbide/60"
+  ]
+}
+```
+
+
 <h1>Screenshots</h1>
 
 
