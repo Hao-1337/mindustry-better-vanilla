@@ -192,7 +192,11 @@ public class MultiBlockMachine extends Block {
                // Log.info(build == null ? "null" : "Current: " + tile + " Match: " + maching.get(indexM));
 
                if (target == null) {
-                  if (tile.block().name != "air") v = true;
+                  if (tile.block().name != "air") {
+                     v = true;
+                     continue;
+                  }
+                  correct ++;
                   continue;
                }
 

@@ -1,11 +1,11 @@
 {
-  name: "RBMK Build Projector",
-  type: hao1337.lib.MultiBlockMachine,
-  category: power,
-  hasPower: true,
-  size: 3,
-  selfIsMachine: true,
-  areaSize: 4,
+  "name": "RBMK Build Projector",
+  "type": "hao1337.lib.MultiBlockMachine,",
+  "category": "power,",
+  "hasPower": true,
+  "size": 3,
+  "selfIsMachine": true,
+  "areaSize": 4,
   // build
   //   [ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 ],
   //   [ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 ],
@@ -31,30 +31,30 @@
   //   "beryllium-wall", // auto control rod
   //   "carbide-wall" // manual control rod
   //
-  build: [
+  "build": [
     {
-      block: "hao1337-mod-rbmk-reactor-controller",
-      pos: [
+      "block": "hao1337-mod-rbmk-reactor-controller",
+      "pos": [
         {
-          x: 0,
-          y: 0
+          "x": 0,
+          "y": 0
         }
       ]
     },
     {
-      block: "carbide-wall",
-      pos: [
+      "block": "carbide-wall",
+      "pos": [
         {
-          x: 3,
-          y: 3
+          "x": 3,
+          "y": 3
         }
       ]
     }
   ],
-  requirements: [
-    oxide/60,
-    silicon/120,
-    tungsten/80,
-    carbide/60
+  "requirements": [
+    "oxide/60,",
+    "silicon/120,",
+    "tungsten/80,",
+    "carbide/60"
   ]
 }
