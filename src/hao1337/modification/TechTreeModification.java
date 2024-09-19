@@ -1,7 +1,6 @@
 package hao1337.modification;
 
 import arc.struct.Seq;
-import arc.util.Log;
 import mindustry.content.TechTree;
 import mindustry.ctype.UnlockableContent;
 import mindustry.game.Objectives;

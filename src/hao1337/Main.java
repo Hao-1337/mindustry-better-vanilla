@@ -10,9 +10,14 @@ import hao1337.ui.*;
 import hao1337.content.blocks.HaoBlocks;
 import hao1337.content.items.HaoItems;
 import hao1337.content.units.HaoUnits;
+import hao1337.net.HaoNetPackage;
+import hao1337.net.HaoNetPackageClient;
+import hao1337.net.Server;
 import mindustry.Vars;
+import mindustry.game.EventType;
 import mindustry.game.EventType.*;
 import mindustry.mod.Mod;
+import mindustry.net.Net;
 
 public class Main extends Mod {
     public static final String version = "1.7.2";
@@ -31,28 +36,33 @@ public class Main extends Mod {
         Events.on(WorldLoadEvent.class, e -> {
             unitDisplay.resetUsed();
             coreitemDisplay.resetUsed();
-
-            Log.info("Is multiplayer: @", Vars.net.active());
-            mod.updateState(true);
         });
         Events.on(ClientServerConnectEvent.class, e -> {
-            mod.updateState(true);
             timecontrol.rebuild();
+            mod.updateState(true);
         });
         Events.on(ClientLoadEvent.class, e -> {
-            LoadInit();
+            Net.registerPacket(HaoNetPackage::new);
+            Net.registerPacket(HaoNetPackageClient::new);
+            Server.load();
+            Init();
+        });
+        Events.on(Server.ServerStateChange.class, s -> {
+            timecontrol.useable = s.hasThisMod;
+            timecontrol.rebuild();
         });
     }
 
-    public void LoadInit() {
+    public void Init() {
         Log.info("[Hao1337: Better Vanilla] is launching.");
+        AutoUpdate.load(gitapi, name, repoName, unzipName, version);
 
         if (Core.settings.getBool("hao1337.toggle.autoupdate")) {
-            AutoUpdate.load(gitapi, name, repoName, unzipName, version);
             AutoUpdate.check();
         }
 
         loadUI();
+        Server.interval();
         mod.load();
         HaoItems.load();
         HaoBlocks.load();
@@ -94,7 +104,7 @@ public class Main extends Mod {
             t.bottom().left();
             t.name = "Hao137 TimeControl";
 
-            t.table(null, e -> e.top().left().collapser(timecontrol, () -> true));
+            t.table(null, e -> e.top().left().collapser(timecontrol, () -> Core.settings.getBool("hao1337.ui.timecontrol.enable")));
             if (Vars.mobile)
                 t.moveBy(0, Scl.scl(46));
         });

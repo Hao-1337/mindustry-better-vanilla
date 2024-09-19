@@ -56,4 +56,33 @@ public class Matrix {
             }
         }
     }
+    
+    public static MBMBuildIndex rotate(MBMBuildIndex point, int n, int rotation) {
+        int x = point.x;
+        int y = point.y;
+        MBMBuildIndex rotatedPoint = new MBMBuildIndex();
+
+        switch (rotation) {
+            case 0:
+                rotatedPoint.x = x;
+                rotatedPoint.y = y;
+                break;
+            case 1:
+                rotatedPoint.x = y;
+                rotatedPoint.y = n - 1 - x;
+                break;
+            case 2:
+                rotatedPoint.x = n - 1 - x;
+                rotatedPoint.y = n - 1 - y;
+                break;
+            case 3:
+                rotatedPoint.x = n - 1 - y;
+                rotatedPoint.y = x;
+                break;
+            default:
+                throw new IllegalArgumentException("Invalid rotation value. Must be 0, 1, 2, or 3.");
+        }
+
+        return rotatedPoint;
+    }
 }

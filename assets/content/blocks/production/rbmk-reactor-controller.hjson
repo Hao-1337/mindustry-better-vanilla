@@ -5,7 +5,7 @@
   "hasPower": true,
   "size": 3,
   "selfIsMachine": true,
-  "areaSize": 4,
+  "areaSize": 16,
   // build
   //   [ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 ],
   //   [ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 ],
@@ -42,11 +42,20 @@
       ]
     },
     {
-      "block": "carbide-wall",
+      "block": "carbide-wall-large",
       "pos": [
         {
           "x": 3,
           "y": 3
+        }
+      ]
+    },
+    {
+      "block": "carbide-wall",
+      "pos": [
+        {
+          "x": 5,
+          "y": 5
         }
       ]
     }

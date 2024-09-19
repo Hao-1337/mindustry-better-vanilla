@@ -13,7 +13,6 @@ import hao1337.modification.ScrapWall;
 import hao1337.modification.SlagCentrifuge;
 import hao1337.modification.TechTreeModification;
 import hao1337.modification.Vault;
-import hao1337.ui.TimeControl;
 
 import mindustry.content.Blocks;
 import mindustry.content.Items;
@@ -36,14 +35,10 @@ public class Loader {
     }
 
     public void updateState(boolean state) {
-        Log.info("Mod Current state: @", state);
-
         ForceProjector.apply(state);
         OverrideDome.apply(state);
         Vault.apply(state);
         ScrapWall.apply(state);
-        
-        TimeControl.enableSpeedUp = state;
         contentSwitcher(state);
     }
 
