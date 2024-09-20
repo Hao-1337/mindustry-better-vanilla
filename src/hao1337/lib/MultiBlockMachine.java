@@ -4,24 +4,25 @@ import arc.Core;
 import arc.graphics.Blending;
 import arc.graphics.Color;
 import arc.graphics.g2d.Draw;
+import arc.graphics.g2d.Fill;
+import arc.graphics.g2d.TextureRegion;
 import arc.math.geom.Geometry;
 import arc.math.geom.Rect;
-import arc.scene.ui.layout.Table;
 import arc.struct.EnumSet;
+import arc.struct.IntSeq;
 import arc.util.Eachable;
 import arc.util.Interval;
 import arc.util.Log;
 import arc.util.Nullable;
 import arc.util.Tmp;
-import arc.struct.Seq;
 
 import mindustry.Vars;
+import mindustry.content.Blocks;
 import mindustry.entities.units.BuildPlan;
 import mindustry.game.Team;
 import mindustry.gen.Building;
 import mindustry.graphics.Drawf;
 import mindustry.graphics.Pal;
-import mindustry.ui.Bar;
 import mindustry.world.Block;
 import mindustry.world.Tile;
 import mindustry.world.meta.BlockFlag;
@@ -46,9 +47,8 @@ public class MultiBlockMachine extends Block {
     public String mergeInto = null;
     private int correct = 0;
     @Nullable
-    private int[][] buildPlans;
-    @Nullable
     private Block[] blockIndex;
+    private int solidCount = 0;
 
     MultiBlockMachine(String name) {
         super(name);
@@ -56,8 +56,6 @@ public class MultiBlockMachine extends Block {
         solid = true;
         sync = true;
         flags = EnumSet.of(flag);
-        buildVisibility = Core.settings.getBool("hao1337.gameplay.experimental") ? BuildVisibility.shown
-                : BuildVisibility.hidden;
     }
 
     @Override
@@ -69,7 +67,8 @@ public class MultiBlockMachine extends Block {
         outputsPayload = false;
         rotate = true;
         offset = 0f;
-        buildVisibility = BuildVisibility.shown;
+        buildVisibility = Core.settings.getBool("hao1337.gameplay.experimental") ? BuildVisibility.shown
+                : BuildVisibility.hidden;
         consumePower(5f);
 
         if (selfIsMachine) {
@@ -78,9 +77,7 @@ public class MultiBlockMachine extends Block {
         }
 
         capacity = areaSize * areaSize;
-        buildPlans = new int[areaSize][areaSize];
         blockIndex = new Block[build.length];
-        Matrix.fill(buildPlans, -1);
 
         for (int i = 0; i < build.length; i++) {
             MBMPlan plan = build[i];
@@ -91,12 +88,9 @@ public class MultiBlockMachine extends Block {
                     Vars.ui.showException(new Throwable("Invalid position (outside of bounding box)"));
                     return; // Exit early if there’s an error
                 }
-                Matrix.squareFill(buildPlans, index.x, index.y, blockIndex[i].size, i);
             }
+            solidCount += blockIndex[i].size * blockIndex[i].size;
         }
-
-        buildPlans = Matrix.rotate(buildPlans, 3);
-
         super.init();
     }
 
@@ -131,89 +125,19 @@ public class MultiBlockMachine extends Block {
         Drawf.dashRect(valid ? Pal.accent : Pal.remove, rect);
     }
 
-    private class Bulding2D {
-        public boolean isValid = false;
-        public int lx, ly;
-
-        Interval interval = new Interval();
-        Seq<Block> matching = new Seq<Block>();
-        int[][] buildPlansT;
-        int lastRotate = -1;
-
-        void updateMatching(int rotation) {
-            if (rotation == lastRotate)
-                return;
-
-            lastRotate = rotation;
-            matching.clear();
-            buildPlansT = Matrix.rotate(buildPlans, rotation);
-
-            for (int i = 0; i < capacity; i++) {
-                int indexX = i / areaSize;
-                int indexY = i % areaSize;
-
-                if (buildPlansT[indexX][indexY] == -1) {
-                    matching.add((Block) null);
-                    continue;
-                }
-                matching.add(blockIndex[buildPlansT[indexX][indexY]]);
-            }
-        }
-
-        public void updateBounding(Rect rec, int rotation) {
-            if (!interval.get(10))
-                return;
-
-            updateMatching(rotation);
-            correct = 0;
-
-            lx = Math.round(rec.x / 8);
-            ly = Math.round(rec.y / 8);
-            int hx = Math.round((rec.height + rec.x) / 8);
-            int hy = Math.round((rec.width + rec.y) / 8);
-            boolean invalid = false;
-
-            for (int x = lx; x < hx && !invalid; x++) {
-                for (int y = ly; y < hy; y++) {
-                    int indexX = areaSize - x + lx - 1;
-                    int indexY = y - ly;
-                    int indexM = indexX * areaSize + indexY;
-
-                    Tile tile = Vars.world.tiles.get(x, y);
-                    @Nullable
-                    Building build = tile.build;
-                    Block target = matching.get(indexM);
-
-                    if (target == null) {
-                        if (!tile.block().name.equals("air")) {
-                            invalid = true;
-                            continue;
-                        }
-                        correct++;
-                        continue;
-                    }
-                    if (build == null || !build.block.name.equals(target.name))
-                        invalid = true;
-                    else
-                        correct++;
-                }
-            }
-            isValid = !invalid;
-        }
-    }
-
     @Override
     public void setBars() {
         super.setBars();
     }
 
     public class MultiBlockMachineBuild extends Building {
-        final Color doneColor = Color.rgb(0, 156, 23);
-        Bulding2D buildT = new Bulding2D();
+        public final Color projectColor = Color.rgb(125, 125, 125);
+        public final Color errorColor = Color.red;
+        public final Color doneColor = Color.rgb(0, 156, 23);
 
-        public void updateTile() {
-            buildT.updateBounding(getRect(Tmp.r1, x, y, rotation), rotation);
-        }
+        boolean isValid = false;
+        IntSeq currentBuild = new IntSeq();
+        Interval interval = new Interval();
 
         @Override
         public void draw() {
@@ -226,53 +150,137 @@ public class MultiBlockMachine extends Block {
             Draw.z(80);
             BlockStatus status = status();
             if (status == BlockStatus.active) {
-                projector();
-                Drawf.dashRect(buildT.isValid ? doneColor : Pal.accent, getRect(Tmp.r1, x, y, rotation));
+                updateProjector();
+                Drawf.dashRect(isValid ? doneColor : Pal.accent, getRect(Tmp.r1, x, y, rotation));
             }
             Draw.reset();
         }
 
         @Override
-        public void displayBars(Table table) {
-            super.displayBars(table);
-        }
-
-        @Override
-        public void drawStatus() {
-            super.drawStatus();
-        }
-
-        @Override
         public void drawSelect() {
             super.drawSelect();
-            Drawf.dashRect(buildT.isValid ? doneColor : Color.white, getRect(Tmp.r1, x, y, rotation));
+            Drawf.dashRect(isValid ? doneColor : Color.white, getRect(Tmp.r1, x, y, rotation));
         }
 
-        void projector() {
-            float pz = Draw.z();
-            Draw.z(20);
+        void updateProjector() {
             int rx = Geometry.d4x(rotation);
             int ry = Geometry.d4y(rotation);
-            int i = 0;
+
+            int i = 0, c = 0;
+            boolean lst = true;
+
+            correct = 0;
+            currentBuild.clear();
 
             for (MBMPlan plan : build) {
                 for (MBMBuildIndex index : plan.pos) {
                     Block b = blockIndex[i];
-                    float c = b.size % 2 == 0 ? 0.5f : b.size == 1 ? 1f : 0f;
+                    float hz = (float) b.size / 2;
+                    float pz = b.size % 2 == 1 ? b.size == 1 ? -8f : 8f : 4f;
 
-                    float projectedX = x + 8 * ((index.x - c) * rx + (c - index.y) * ry);
-                    float projectedY = y + 8 * ((index.x - c) * ry + (index.y - c) * rx);
+                    float cx = x + 8 * ((index.x - hz) * rx + (hz - index.y) * ry);
+                    float cy = y + 8 * ((index.x - hz) * ry + (index.y - hz) * rx);
+                    int x = b.size == 1 ? (int) Math.floor(cx / 8f) : Math.round(cx / 8f);
+                    int y = b.size == 1 ? (int) Math.floor(cy / 8f) : Math.round(cy / 8f);
 
-                    int nX = (int)projectedX / 8;
-                    int nY = (int)projectedY / 8;
-                    Tile tile = Vars.world.tile(nX, nY);
-                    Log.info("" + tile);
+                    BoundingResult re = checkBounding(b, x, y);
+                    if (!re.correct) projector(b.region, b.size, cx + hz * pz * (rx - ry), cy + hz * pz * (ry + rx), 50f);
 
-                    Drawf.additive(b.region, Color.valueOf("eeeeeeff"), projectedX, projectedY, 0f);
+                    if (!re.correct && lst)
+                        lst = false;
+                    correct += re.count;
+                    c += re.count;
+                    i++;
                 }
-                i++;
             }
+            Rect rec = getRect(Tmp.r1, x, y, rotation);
+
+            int lx = Math.round(rec.x / 8);
+            int ly = Math.round(rec.y / 8);
+            int hx = (int) Math.floor((rec.height + rec.x) / 8);
+            int hy = (int) Math.floor((rec.width + rec.y) / 8);
+
+            for (int ax = lx; ax <= hx; ax++) {
+                for (int ay = ly; ay <= hy; ay++) {
+                    Tile t = Vars.world.tile(ax, ay);
+                    if (t.block().isAir()) {
+                        correct++;
+                        continue;
+                    }
+                    if (t.build == null) {
+                        projectorError(ax * 8, ay * 8, 45f);
+                        continue;
+                    }
+                    if (currentBuild.contains(t.build.id)) {
+                        continue;
+                    }
+                    if (lst) lst = false;
+                    projectorError(ax * 8, ay * 8, 45f);
+                }
+            }
+            isValid = lst;
+            correct -= solidCount - c;
+        }
+
+        class BoundingResult {
+            public boolean correct = true;
+            public int count = 0;
+        }
+
+        void projector(TextureRegion region, int size, float x, float y, float layer) {
+            float pz = Draw.z();
+            Draw.z(layer);
+            Draw.color(projectColor, 1f);
+            Draw.blend(Blending.additive);
+            Draw.rect(region, x, y, 0f);
+            Draw.blend();
+            Draw.z(layer + 10f);
+            Draw.color(projectColor, 0f);
+            Fill.square(x, y, size * 4f);
+            Draw.color();
             Draw.z(pz);
+        }
+
+        void projectorError(float x, float y, float layer) {
+            float pz = Draw.z();
+            Draw.z(layer);
+
+            Draw.color(errorColor, 0.5f);
+            Fill.square(x, y, 4f);
+            Draw.color();
+            Draw.z(pz);
+        }
+
+        BoundingResult checkBounding(Block block, int x, int y) {
+            BoundingResult should = new BoundingResult();
+            boolean done = false;
+            int build = -1;
+
+            for (int x1 = x; x1 < x + block.size; x1++) {
+                for (int y1 = y; y1 < y + block.size; y1++) {
+                    Tile tile = Vars.world.tile(x1, y1);
+                    @Nullable Block block1 = tile.block();
+                    if (block1 == null) {
+                        should.correct = false;
+                        continue;
+                    }
+                    if (!block.name.equals(block1.name)) {
+                        should.correct = false;
+                        continue;
+                    }
+                    if (!done) {
+                        done = true;
+                        build = Vars.world.tile(x1, y1).build.id;
+                    }
+                    else if (tile.build == null || tile.build.id != build) {
+                        should.correct = false;
+                        continue;
+                    }
+                    should.count++;
+                }
+            }
+            if (build != -1 && should.count == block.size * block.size) currentBuild.add(build);
+            return should;
         }
     }
 }
