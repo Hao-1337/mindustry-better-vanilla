@@ -1,10 +1,10 @@
 const { execSync } = require("child_process"), { copyFileSync, mkdirSync, readdirSync, statSync, unlinkSync } = require('fs'), { join } = require('path'), color = require('colors'), chokidar = require('chokidar');
 color.enable();
 
-const SOURCE_PATH = "C:\\Users\\QUANG HAO\\Projects\\mindustry-better-vanilla\\build\\classes\\java\\main";
-const TARGET_PATH = "C:\\Users\\QUANG HAO\\AppData\\Roaming\\Mindustry\\mods\\hao1337mindustry-better-vanilla";
-const WATCH_PATH = "C:\\Users\\QUANG HAO\\Projects\\mindustry-better-vanilla";
-const ACCSET_PATH = "C:\\Users\\QUANG HAO\\Projects\\mindustry-better-vanilla\\assets";
+const SOURCE_PATH = "C:\\Users\\hao1337\\Projects\\mindustry-better-vanilla\\build\\classes\\java\\main";
+const TARGET_PATH = "C:\\Users\\hao1337\\AppData\\Roaming\\Mindustry\\mods\\hao-1337mindustry-better-vanilla";
+const WATCH_PATH = "C:\\Users\\hao1337\\Projects\\mindustry-better-vanilla";
+const ACCSET_PATH = "C:\\Users\\hao1337\\Projects\\mindustry-better-vanilla\\assets";
 const ignored = [
   '**/node_modules/**',
   '**/gradle/**',

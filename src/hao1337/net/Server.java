@@ -2,8 +2,6 @@ package hao1337.net;
 
 import static mindustry.Vars.*;
 
-import java.util.Iterator;
-
 import arc.Core;
 import arc.Events;
 import arc.func.Cons;

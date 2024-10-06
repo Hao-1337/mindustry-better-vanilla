@@ -10,14 +10,13 @@ import arc.math.geom.Geometry;
 import arc.math.geom.Rect;
 import arc.struct.EnumSet;
 import arc.struct.IntSeq;
+import arc.struct.Seq;
 import arc.util.Eachable;
 import arc.util.Interval;
-import arc.util.Log;
 import arc.util.Nullable;
 import arc.util.Tmp;
 
 import mindustry.Vars;
-import mindustry.content.Blocks;
 import mindustry.entities.units.BuildPlan;
 import mindustry.game.Team;
 import mindustry.gen.Building;
@@ -135,9 +134,10 @@ public class MultiBlockMachine extends Block {
         public final Color errorColor = Color.red;
         public final Color doneColor = Color.rgb(0, 156, 23);
 
-        boolean isValid = false;
+        boolean isValid = false, needRebuild = true;
         IntSeq currentBuild = new IntSeq();
         Interval interval = new Interval();
+        Seq<Projector> projectors = new Seq<Projector>();
 
         @Override
         public void draw() {
@@ -147,12 +147,14 @@ public class MultiBlockMachine extends Block {
                     Color.orange,
                     () -> (float) correct / capacity));
 
-            Draw.z(80);
             BlockStatus status = status();
-            if (status == BlockStatus.active) {
-                updateProjector();
-                Drawf.dashRect(isValid ? doneColor : Pal.accent, getRect(Tmp.r1, x, y, rotation));
-            }
+            if (status != BlockStatus.active) return;
+            updateProjector();
+    
+            Draw.z(80);
+            Drawf.dashRect(isValid ? doneColor : Pal.accent, getRect(Tmp.r1, x, y, rotation));
+
+            for (Projector pr : projectors) pr.load();
             Draw.reset();
         }
 
@@ -162,7 +164,64 @@ public class MultiBlockMachine extends Block {
             Drawf.dashRect(isValid ? doneColor : Color.white, getRect(Tmp.r1, x, y, rotation));
         }
 
+        class Projector {
+            public TextureRegion region;
+            public int size;
+            public float x, y, layer;
+            public boolean error = false;
+
+            public Projector(TextureRegion region, int size, float x, float y, float layer) {
+                this.region = region;
+                this.x = x;
+                this.y = y;
+                this.layer = layer;
+                this.size = size;
+            }
+
+            public Projector(float x, float y, float layer) {
+                error = true;
+                this.x = x;
+                this.y = y;
+                this.layer = layer;
+            }
+
+            public void load() {
+                if (error) {
+                    projectorError();
+                    return;
+                }
+                projector();
+            }
+
+            void projector() {
+                float pz = Draw.z();
+                Draw.z(layer);
+                Draw.color(projectColor, 1f);
+                Draw.blend(Blending.additive);
+                Draw.rect(region, x, y, 0f);
+                Draw.blend();
+                Draw.z(layer + 10f);
+                Draw.color(projectColor, 0f);
+                Fill.square(x, y, size * 4f);
+                Draw.color();
+                Draw.z(pz);
+            }
+    
+            void projectorError() {
+                float pz = Draw.z();
+                Draw.z(layer);
+    
+                Draw.color(errorColor, 0.5f);
+                Fill.square(x, y, 4f);
+                Draw.color();
+                Draw.z(pz);
+            }
+        }
+
         void updateProjector() {
+            if (!interval.get(30f)) return;
+            projectors.clear();
+
             int rx = Geometry.d4x(rotation);
             int ry = Geometry.d4y(rotation);
 
@@ -184,7 +243,7 @@ public class MultiBlockMachine extends Block {
                     int y = b.size == 1 ? (int) Math.floor(cy / 8f) : Math.round(cy / 8f);
 
                     BoundingResult re = checkBounding(b, x, y);
-                    if (!re.correct) projector(b.region, b.size, cx + hz * pz * (rx - ry), cy + hz * pz * (ry + rx), 50f);
+                    if (!re.correct) projectors.add(new Projector(b.region, b.size, cx + hz * pz * (rx - ry), cy + hz * pz * (ry + rx), 50f));
 
                     if (!re.correct && lst)
                         lst = false;
@@ -208,14 +267,14 @@ public class MultiBlockMachine extends Block {
                         continue;
                     }
                     if (t.build == null) {
-                        projectorError(ax * 8, ay * 8, 45f);
+                        projectors.add(new Projector(ax * 8, ay * 8, 45f));
                         continue;
                     }
                     if (currentBuild.contains(t.build.id)) {
                         continue;
                     }
                     if (lst) lst = false;
-                    projectorError(ax * 8, ay * 8, 45f);
+                    projectors.add(new Projector(ax * 8, ay * 8, 45f));
                 }
             }
             isValid = lst;
@@ -225,30 +284,6 @@ public class MultiBlockMachine extends Block {
         class BoundingResult {
             public boolean correct = true;
             public int count = 0;
-        }
-
-        void projector(TextureRegion region, int size, float x, float y, float layer) {
-            float pz = Draw.z();
-            Draw.z(layer);
-            Draw.color(projectColor, 1f);
-            Draw.blend(Blending.additive);
-            Draw.rect(region, x, y, 0f);
-            Draw.blend();
-            Draw.z(layer + 10f);
-            Draw.color(projectColor, 0f);
-            Fill.square(x, y, size * 4f);
-            Draw.color();
-            Draw.z(pz);
-        }
-
-        void projectorError(float x, float y, float layer) {
-            float pz = Draw.z();
-            Draw.z(layer);
-
-            Draw.color(errorColor, 0.5f);
-            Fill.square(x, y, 4f);
-            Draw.color();
-            Draw.z(pz);
         }
 
         BoundingResult checkBounding(Block block, int x, int y) {

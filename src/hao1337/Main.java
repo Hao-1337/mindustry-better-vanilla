@@ -14,7 +14,6 @@ import hao1337.net.HaoNetPackage;
 import hao1337.net.HaoNetPackageClient;
 import hao1337.net.Server;
 import mindustry.Vars;
-import mindustry.game.EventType;
 import mindustry.game.EventType.*;
 import mindustry.mod.Mod;
 import mindustry.net.Net;

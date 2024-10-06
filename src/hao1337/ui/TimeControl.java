@@ -8,7 +8,6 @@ import arc.scene.style.TextureRegionDrawable;
 import arc.scene.ui.Label;
 import arc.scene.ui.layout.Cell;
 import arc.scene.ui.layout.Table;
-import arc.util.Interval;
 import arc.util.Nullable;
 import arc.util.Time;
 import arc.util.Tmp;
