@@ -35,10 +35,10 @@ public class Loader {
     }
 
     public void updateState(boolean state) {
-        ForceProjector.apply(state);
-        OverrideDome.apply(state);
-        Vault.apply(state);
-        ScrapWall.apply(state);
+        ForceProjector.apply(state && Core.settings.getBool("hao1337.gameplay.serpulo.better-shield"));
+        OverrideDome.apply(state && Core.settings.getBool("hao1337.gameplay.serpulo.better-override-dome"));
+        Vault.apply(state && Core.settings.getBool("hao1337.gameplay.serpulo.vault-bigger"));
+        ScrapWall.apply(state && Core.settings.getBool("hao1337.gameplay.serpulo.scrap-wall"));
         contentSwitcher(state);
     }
 

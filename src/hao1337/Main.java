@@ -19,7 +19,7 @@ import mindustry.mod.Mod;
 import mindustry.net.Net;
 
 public class Main extends Mod {
-    public static final String version = "1.7.2";
+    public static final String version = "1.7.3";
     public static final String gitapi = "https://api.github.com/repos/Hao-1337/mindustry-better-vanilla/releases";
     public static final String repoName = "hao1337/mindustry-better-vanilla";
     public static final String name = "hao1337-mod";

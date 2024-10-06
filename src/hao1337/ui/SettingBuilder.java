@@ -108,7 +108,7 @@ public class SettingBuilder {
             t.sliderPref("hao1337.sechematic.size", 64, 32, 128, n -> n + "×" + n);
             t.checkPref("hao1337.gameplay.experimental", false);
             t.checkPref("hao1337.mod.experimental", false);
-            t.checkPref("hao1337.toggle.autoupdate", false);
+            t.checkPref("hao1337.toggle.autoupdate", true);
         });
     }
 }
