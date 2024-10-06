@@ -44,8 +44,8 @@ Textures and sprites made by: [ĐạiPH](https://github.com/BackNNHH)
 ```json
 {
   "name": "RBMK Build Projector",
-  "type": "hao1337.lib.MultiBlockMachine,",
-  "category": "power,",
+  "type": "hao1337.lib.MultiBlockMachine",
+  "category": "power",
   "hasPower": true,
   "size": 3,
   "selfIsMachine": true,
@@ -71,9 +71,9 @@ Textures and sprites made by: [ĐạiPH](https://github.com/BackNNHH)
     }
   ],
   "requirements": [
-    "oxide/60,",
-    "silicon/120,",
-    "tungsten/80,",
+    "oxide/60",
+    "silicon/120",
+    "tungsten/80",
     "carbide/60"
   ]
 }
