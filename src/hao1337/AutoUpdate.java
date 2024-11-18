@@ -95,8 +95,7 @@ public class AutoUpdate {
 			download = ((Jval) json.get("assets").asArray().get(0)).getString("browser_download_url");
 			latestBuild = Integer.parseInt(json.getString("tag_name").substring(1).replace(".", ""));
 
-			Log.info("Fetch complete, version: [accent]" + latestBuild + "[]. User version: [accent]" + modBuild + "[]("
-					+ mod.meta.version + ")");
+			Log.info("Fetch complete, version: [accent]" + latestBuild + "[]. User version: [accent]" + modBuild + "[]");
 
 			if (latestBuild > modBuild)
 				showCustomConfirm(latest, versionString);

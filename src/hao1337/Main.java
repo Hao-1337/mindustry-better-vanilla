@@ -10,8 +10,11 @@ import hao1337.ui.*;
 import hao1337.content.blocks.HaoBlocks;
 import hao1337.content.items.HaoItems;
 import hao1337.content.units.HaoUnits;
+import hao1337.lib.ClientLeaveWorld;
+import hao1337.lib.ClientLeaveWorld.ClientLeaveWorldEvent;
 import hao1337.net.HaoNetPackage;
 import hao1337.net.HaoNetPackageClient;
+import hao1337.net.ModStatePackage;
 import hao1337.net.Server;
 import mindustry.Vars;
 import mindustry.game.EventType.*;
@@ -19,7 +22,7 @@ import mindustry.mod.Mod;
 import mindustry.net.Net;
 
 public class Main extends Mod {
-    public static final String version = "1.7.3";
+    public static final String version = "1.7.4";
     public static final String gitapi = "https://api.github.com/repos/Hao-1337/mindustry-better-vanilla/releases";
     public static final String repoName = "hao1337/mindustry-better-vanilla";
     public static final String name = "hao1337-mod";
@@ -28,27 +31,32 @@ public class Main extends Mod {
     private UnitsDisplay unitDisplay = new UnitsDisplay();
     private CoreItemsDisplay coreitemDisplay = new CoreItemsDisplay();
     public SettingBuilder setting = new SettingBuilder();
-    public Loader mod = new Loader();
+    public ModState mod = new ModState();
     public TimeControl timecontrol;
 
     public Main() {
         Events.on(WorldLoadEvent.class, e -> {
             unitDisplay.resetUsed();
             coreitemDisplay.resetUsed();
+            mod.applyState(Server.hasMod());
+            timecontrol.useable = Server.hasMod();
         });
-        Events.on(ClientServerConnectEvent.class, e -> {
-            timecontrol.rebuild();
-            mod.updateState(true);
+
+        Events.on(ClientServerConnectEvent.class, t -> {
+            mod.applyState(Server.hasMod());
         });
+
+        Events.on(ClientLeaveWorldEvent.class, t -> {
+            timecontrol.update();
+            mod.applyState(true);
+        });
+
         Events.on(ClientLoadEvent.class, e -> {
             Net.registerPacket(HaoNetPackage::new);
             Net.registerPacket(HaoNetPackageClient::new);
+            Net.registerPacket(ModStatePackage::new);
             Server.load();
             Init();
-        });
-        Events.on(Server.ServerStateChange.class, s -> {
-            timecontrol.useable = s.hasThisMod;
-            timecontrol.rebuild();
         });
     }
 
@@ -61,15 +69,13 @@ public class Main extends Mod {
         }
 
         loadUI();
+        ClientLeaveWorld.load();
         Server.interval();
-        mod.load();
         HaoItems.load();
         HaoBlocks.load();
         HaoUnits.load();
-        Loader.generateContent();
-
-        Vars.maxSchematicSize = Core.settings.getInt("hao1337.sechematic.size");
-        Vars.experimental = Core.settings.getBool("hao1337.gameplay.experimental");
+        mod.load();
+        mod.techTree();
     }
 
     public void loadUI() {

@@ -1,11 +1,10 @@
 package hao1337.modification;
 
-import arc.Core;
 import mindustry.content.Blocks;
 import mindustry.world.meta.BuildVisibility;
 
 public class SlagCentrifuge {
-    public static void load() {
-        Blocks.slagCentrifuge.buildVisibility = Core.settings.getBool("hao1337.gameplay.erekir.slag-centrifuge") ? BuildVisibility.shown : BuildVisibility.hidden;
+    public static void apply(boolean enable) {
+        Blocks.slagCentrifuge.buildVisibility = enable ? BuildVisibility.shown : BuildVisibility.hidden;
     }
 }

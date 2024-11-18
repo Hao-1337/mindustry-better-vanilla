@@ -5,8 +5,8 @@ import arc.util.io.Writes;
 import mindustry.net.Packet;
 
 public class HaoNetPackage extends Packet {
-    public boolean preventLoop = true;
     public String string = "";
+    public String uuid = "";
     public int tcSpeed = 1;
     public boolean tcEnable = true;
 
@@ -17,7 +17,6 @@ public class HaoNetPackage extends Packet {
 
     @Override
     public void write(Writes writer) {
-        writer.bool(preventLoop);
         writer.str(string);
         writer.i(tcSpeed);
         writer.bool(tcEnable);
@@ -25,7 +24,6 @@ public class HaoNetPackage extends Packet {
 
     @Override
     public void read(Reads reader) {
-        preventLoop = reader.bool();
         string = reader.str();
         tcSpeed = reader.i();
         tcEnable = reader.bool();

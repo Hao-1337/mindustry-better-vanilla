@@ -16,6 +16,7 @@ import arc.util.Timer.Task;
 import hao1337.Main;
 import mindustry.game.EventType;
 import mindustry.game.EventType.ClientServerConnectEvent;
+import mindustry.game.EventType.HostEvent;
 import mindustry.net.NetConnection;
 import mindustry.net.Packet;
 import mindustry.net.Packets.Disconnect;
@@ -23,7 +24,6 @@ import mindustry.net.Packets.Disconnect;
 public class Server {
     public static final float waitTime = 2f;
     public static final boolean enable = true;
-    public static boolean hasThisMod = true;
 
     private static ObjectIntMap<NetConnection> playerConnections = new ObjectIntMap<>();
     private static Seq<NetConnection> players = new Seq<>();
@@ -33,7 +33,11 @@ public class Server {
     private static Seq<Cons2<NetConnection, HaoNetPackage>> serverListen = new Seq<>();
     private static Task task, task1;
     private static boolean isClient = true;
+    private static boolean isHost = false;
+    private static boolean isSinglePlayer = true;
     protected static boolean already = false;
+    protected static boolean isConnecting = false;
+    protected static boolean hasThisMod = true;
 
     public static class ServerStateChange {
         public boolean hasThisMod = false;
@@ -77,6 +81,18 @@ public class Server {
         return isClient;
     }
 
+    public static boolean isHost() {
+        return isHost;
+    }
+
+    public static boolean isSinglePlayer() {
+        return isSinglePlayer;
+    }
+
+    public static boolean hasMod() {
+        return hasThisMod;
+    }
+
     public static void post(HaoNetPackage pack) {
         net.send(pack, true);
     }
@@ -85,7 +101,7 @@ public class Server {
         if (!enable)
             return;
 
-        // Server side handler
+        //* {Server} Server side handler
         net.handleServer(HaoNetPackage.class, new Cons2<NetConnection, HaoNetPackage>() {
             @Override
             public void get(NetConnection connection, HaoNetPackage packet) {
@@ -93,7 +109,7 @@ public class Server {
             }
         });
 
-        // Client communication
+        //* {Client} Client side handler
         net.handleClient(HaoNetPackage.class, new Cons<HaoNetPackage>() {
             @Override
             public void get(HaoNetPackage packet) {
@@ -108,7 +124,7 @@ public class Server {
         });
 
 
-        // Auth on server side
+        //* {Server} Auth on server side
         net.handleServer(HaoNetPackageClient.class, new Cons2<NetConnection, HaoNetPackageClient>() {
             @Override
             public void get(NetConnection connection, HaoNetPackageClient packet) {
@@ -134,17 +150,18 @@ public class Server {
             }
         });
 
-        // Complete auth by sending to client complete auth packet
+        //* {Client} Complete auth by sending to client complete auth packet
         net.handleClient(HaoNetPackageClient.class, new Cons<HaoNetPackageClient>() {
             @Override
             public void get(HaoNetPackageClient con) {
                 onChange(con.name.equals(Main.name));
                 Log.info("[red][Client][green] Auth succesful");
+                isConnecting = false;
                 task1.cancel();
             }
         });
 
-        // Post auth request to server
+        //* {Server} Server will store this connection and wait for a auth package
         Events.on(EventType.ConnectPacketEvent.class, e -> {
             Log.info("[green][Server][][blue] Auth for uuid '[accent]@[blue]' started", e.connection.address);
 
@@ -152,9 +169,19 @@ public class Server {
                 playerConnections.put(e.connection, 0);
             } catch (Throwable c) {}
         });
-        
-        // Client try to send the auth to server
+
+        //* {Client} Check if this is connection event is publish, not a world load event, it jsut help you skip the wait for the bad network
         Events.on(ClientServerConnectEvent.class, e -> {
+            isConnecting = true;
+            isClient = true;
+            isSinglePlayer = false;
+            isHost = false;
+        });
+
+        //* {Client} Try to send auth package
+        Events.on(EventType.WorldLoadEndEvent.class, e -> {
+            if (!isConnecting) return;
+    
             Log.info("[red][Client][blue] Now sending auth packet to server...");
 
             task = Timer.schedule(() -> {
@@ -163,15 +190,20 @@ public class Server {
 
                 Core.app.post(() -> net.send(p, false));
             }, .2f, .33f);
+
             task1 = Timer.schedule(() -> {
                 Log.info("[red][Client][scarlet] Auth failed.");
                 onChange(false);
+                isConnecting = false;
                 task.cancel();
             }, waitTime * 1.25f);
         });
 
-        Events.on(Disconnect.class, l -> {
-            onChange(true);
+        Events.on(HostEvent.class, e -> {
+            isHost = true;
+            isSinglePlayer = false;
+            isConnecting = false;
+            isClient = false;
         });
     }
 
@@ -204,7 +236,7 @@ public class Server {
                 if (cur.value > waitTime * 4 && cur.key.hasConnected) {
                     playerConnections.remove(cur.key);
                     cur.key.kick(
-                            "[scarlet]Connection couldn't be authenticated.[]\nThis server need you to install [accent][Better Vanilla] - ("
+                            "[scarlet]Connection couldn't be authenticated.[]\n\nThis server need you to install [accent][Better Vanilla] - ("
                                     + Main.version + ")[] to play!",
                             10);
                     continue;
