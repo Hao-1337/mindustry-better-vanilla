@@ -174,7 +174,7 @@ public class TimeControl extends Table {
 
     void netRegister() {
         Server.addHandleClient(packet -> {
-            if (uuid == packet.uuid) return;
+            if (uuid.equals(packet.uuid)) return;
             useable = packet.tcEnable;
             Vars.player.sendUnformatted(packet.string);
             setSnapshot(packet.tcSpeed);
