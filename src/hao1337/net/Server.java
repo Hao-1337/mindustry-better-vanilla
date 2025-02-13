@@ -19,7 +19,6 @@ import mindustry.game.EventType.ClientServerConnectEvent;
 import mindustry.game.EventType.HostEvent;
 import mindustry.net.NetConnection;
 import mindustry.net.Packet;
-import mindustry.net.Packets.Disconnect;
 
 public class Server {
     public static final float waitTime = 2f;
@@ -37,6 +36,7 @@ public class Server {
     private static boolean isSinglePlayer = true;
     protected static boolean already = false;
     protected static boolean isConnecting = false;
+    protected static boolean isGameOver = false;
     protected static boolean hasThisMod = true;
 
     public static class ServerStateChange {
@@ -172,14 +172,25 @@ public class Server {
 
         //* {Client} Check if this is connection event is publish, not a world load event, it jsut help you skip the wait for the bad network
         Events.on(ClientServerConnectEvent.class, e -> {
+            // Log.info("Connect event");
+            if (isGameOver) {
+                isGameOver = false;
+                return;
+            }
             isConnecting = true;
             isClient = true;
             isSinglePlayer = false;
             isHost = false;
         });
 
+        Events.on(EventType.GameOverEvent.class, e -> {
+            // Log.info("Gameover event");
+            isGameOver = true;
+        });
+
         //* {Client} Try to send auth package
         Events.on(EventType.WorldLoadEndEvent.class, e -> {
+            // Log.info("World load end event");
             if (!isConnecting) return;
     
             Log.info("[red][Client][blue] Now sending auth packet to server...");

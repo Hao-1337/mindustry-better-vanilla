@@ -16,6 +16,7 @@ import hao1337.net.HaoNetPackage;
 import hao1337.net.HaoNetPackageClient;
 import hao1337.net.ModStatePackage;
 import hao1337.net.Server;
+import hao1337.net.Server.ServerStateChange;
 import mindustry.Vars;
 import mindustry.game.EventType.*;
 import mindustry.mod.Mod;
@@ -35,19 +36,25 @@ public class Main extends Mod {
     public TimeControl timecontrol;
 
     public Main() {
-        Events.on(WorldLoadEvent.class, e -> {
+        Events.on(WorldLoadEndEvent.class, e -> {
+            // Log.info("World load event");
             unitDisplay.resetUsed();
             coreitemDisplay.resetUsed();
+        });
+
+        Events.on(ServerStateChange.class,  e -> {
             mod.applyState(Server.hasMod());
             timecontrol.useable = Server.hasMod();
         });
 
         Events.on(ClientServerConnectEvent.class, t -> {
+            // Log.info("Client connect event");
             mod.applyState(Server.hasMod());
         });
 
         Events.on(ClientLeaveWorldEvent.class, t -> {
-            timecontrol.update();
+            // Log.info("Client leave event");
+            timecontrol.update(false);
             mod.applyState(true);
         });
 
@@ -68,6 +75,7 @@ public class Main extends Mod {
             AutoUpdate.check();
         }
 
+        // Vars.port =
         loadUI();
         ClientLeaveWorld.load();
         Server.interval();

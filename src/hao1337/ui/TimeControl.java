@@ -157,6 +157,12 @@ public class TimeControl extends Table {
         updateSnapshot();
     }
 
+    public void update(boolean useSnapshot) {
+        time = 1;
+        timeUpdate();
+        if (useSnapshot) updateSnapshot();
+    }
+
     public void update() {
         time = 1;
         timeUpdate();
