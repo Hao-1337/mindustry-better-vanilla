@@ -8,7 +8,6 @@ import arc.func.Cons;
 import arc.func.Cons2;
 import arc.struct.ObjectIntMap;
 import arc.struct.ObjectIntMap.Entry;
-import arc.struct.ObjectIntMap.Entries;
 import arc.struct.Seq;
 import arc.util.Log;
 import arc.util.Timer;
@@ -21,16 +20,18 @@ import mindustry.net.NetConnection;
 import mindustry.net.Packet;
 
 public class Server {
-    public static final float waitTime = 4f;
-    public static final boolean enable = true;
+    public static final float WAIT_TIME = 8f;
+    public static final boolean ENABLE = true;
+    private static final int AUTH_TIMEOUT_TICKS = (int) (WAIT_TIME * 4);
 
-    private static ObjectIntMap<NetConnection> playerConnections = new ObjectIntMap<>();
-    private static Seq<NetConnection> players = new Seq<>();
-    private static Seq<HaoNetPackage> clientQueue = new Seq<>();
-    private static Seq<HaoNetPackage> sender = new Seq<>();
-    private static Seq<Cons<HaoNetPackage>> clientListen = new Seq<>();
-    private static Seq<Cons2<NetConnection, HaoNetPackage>> serverListen = new Seq<>();
-    private static Task task, task1;
+    private static final ObjectIntMap<NetConnection> playerConnections = new ObjectIntMap<>();
+    private static final Seq<NetConnection> players = new Seq<>();
+    private static final Seq<HaoNetPackage> clientQueue = new Seq<>();
+    private static final Seq<HaoNetPackage> sender = new Seq<>();
+    private static final Seq<Cons<HaoNetPackage>> clientListen = new Seq<>();
+    private static final Seq<Cons2<NetConnection, HaoNetPackage>> serverListen = new Seq<>();
+    private static Task authSendTask;
+    private static Task authTimeoutTask;
     private static boolean isClient = true;
     private static boolean isHost = false;
     private static boolean isSinglePlayer = true;
@@ -40,30 +41,32 @@ public class Server {
     protected static boolean hasThisMod = true;
 
     public static class ServerStateChange {
-        public boolean hasThisMod = false;
-        public ServerStateChange(boolean ne) {
-            hasThisMod = ne;
+        public final boolean hasThisMod;
+        public ServerStateChange(boolean hasMod) {
+            this.hasThisMod = hasMod;
         }
     }
 
-    public static void onChange(boolean c) {
-        hasThisMod = c;
-        Events.fire(new ServerStateChange(c));
+    public static void onChange(boolean hasMod) {
+        hasThisMod = hasMod;
+        Events.fire(new ServerStateChange(hasMod));
     }
 
-    static void handleClient(HaoNetPackage packet) {
+    private static void handleClient(HaoNetPackage packet) {
         try {
-            for (Cons<HaoNetPackage> c : clientListen)
-                c.get(packet);
+            for (Cons<HaoNetPackage> listener : clientListen) {
+                listener.get(packet);
+            }
         } catch (Throwable e) {
             Log.err(e);
         }
     }
 
-    static void handleServer(NetConnection connection, HaoNetPackage packet) {
+    private static void handleServer(NetConnection connection, HaoNetPackage packet) {
         try {
-            for (Cons2<NetConnection, HaoNetPackage> c : serverListen)
-                c.get(connection, packet);
+            for (Cons2<NetConnection, HaoNetPackage> listener : serverListen) {
+                listener.get(connection, packet);
+            }
         } catch (Throwable e) {
             Log.err(e);
         }
@@ -98,83 +101,64 @@ public class Server {
     }
 
     public static void load() {
-        if (!enable)
-            return;
+        if (!ENABLE) return;
 
-        //* {Server} Server side handler
-        net.handleServer(HaoNetPackage.class, new Cons2<NetConnection, HaoNetPackage>() {
-            @Override
-            public void get(NetConnection connection, HaoNetPackage packet) {
-                handleServer(connection, packet);
+        // Server side handler for general packets
+        net.handleServer(HaoNetPackage.class, Server::handleServer);
+
+        // Client side handler for general packets
+        net.handleClient(HaoNetPackage.class, packet -> {
+            if (authSendTask != null) {
+                Timer.schedule(() -> {
+                    Log.info("Auth send task cancelled");
+                    authSendTask.cancel();
+                    authSendTask = null;
+                }, WAIT_TIME * 1.2f);
+            }
+
+            if (packet.getPriority() == Packet.priorityHigh) {
+                handleClient(packet);
+            } else {
+                clientQueue.add(packet);
             }
         });
 
-        //* {Client} Client side handler
-        net.handleClient(HaoNetPackage.class, new Cons<HaoNetPackage>() {
-            @Override
-            public void get(HaoNetPackage packet) {
-                if (task != null) Timer.schedule(() -> {
-                    Log.info("Task get cancel");
-                    task.cancel();
-                }, waitTime * 2f);
+        // Server side auth handler
+        net.handleServer(HaoNetPackageClient.class, (connection, packet) -> {
+            if (!playerConnections.containsKey(connection)) return;
 
-                if (packet.getPriority() == Packet.priorityHigh)
-                    handleClient(packet);
-                else
-                    clientQueue.add(packet);
+            Log.info("[green][Server][][blue] Received auth packet from uuid '[accent]@[]'", connection.uuid);
+            if (!packet.name.equals(Main.name)) return;
+
+            if (!packet.version.equals(Main.version)) {
+                connection.kick("Mod version required: [accent]" + Main.version + "[]. Your version: [accent]" + packet.version + "[]");
+                return;
             }
+
+            playerConnections.remove(connection);
+            players.add(connection);
+
+            HaoNetPackageClient response = new HaoNetPackageClient();
+            connection.send(response, true);
+            Log.info("[green][Server][][blue] Auth completed for uuid '[accent]@[]'", connection.uuid);
         });
 
-
-        //* {Server} Auth on server side
-        net.handleServer(HaoNetPackageClient.class, new Cons2<NetConnection, HaoNetPackageClient>() {
-            @Override
-            public void get(NetConnection connection, HaoNetPackageClient packet) {
-                if (!playerConnections.containsKey(connection))
-                    return;
-
-                Log.info("[green][Server][][blue] Get auth packet from uuid '[accent]@[blue]'", connection.uuid);
-                if (!packet.name.equals(Main.name))
-                    return;
-
-                if (!packet.version.equals(Main.version)) {
-                    connection.kick("Mod version request: [accent]" + Main.version + "[]. You version is: [accent]"
-                            + packet.version + "[]");
-                    return;
-                }
-
-                playerConnections.remove(connection);
-                players.add(connection);
-
-                HaoNetPackageClient p = new HaoNetPackageClient();
-                connection.send(p, true);
-                Log.info("[green][Server][][blue] Auth complete for uuid '[accent]@[blue]'", connection.uuid);
-            }
+        // Client side auth completion handler
+        net.handleClient(HaoNetPackageClient.class, con -> {
+            onChange(con.name.equals(Main.name));
+            Log.info("[red][Client][green] Auth successful");
+            isConnecting = false;
+            authTimeoutTask.cancel();
         });
 
-        //* {Client} Complete auth by sending to client complete auth packet
-        net.handleClient(HaoNetPackageClient.class, new Cons<HaoNetPackageClient>() {
-            @Override
-            public void get(HaoNetPackageClient con) {
-                onChange(con.name.equals(Main.name));
-                Log.info("[red][Client][green] Auth succesful");
-                isConnecting = false;
-                task1.cancel();
-            }
-        });
-
-        //* {Server} Server will store this connection and wait for a auth package
+        // Server: Start auth on connection
         Events.on(EventType.ConnectPacketEvent.class, e -> {
-            Log.info("[green][Server][][blue] Auth for uuid '[accent]@[blue]' started", e.connection.address);
-
-            try {
-                playerConnections.put(e.connection, 0);
-            } catch (Throwable c) {}
+            Log.info("[green][Server][][blue] Auth started for uuid '[accent]@[]'", e.connection.uuid);
+            playerConnections.put(e.connection, 0);
         });
 
-        //* {Client} Check if this is connection event is publish, not a world load event, it jsut help you skip the wait for the bad network
+        // Client: Detect connection start
         Events.on(ClientServerConnectEvent.class, e -> {
-            // Log.info("Connect event");
             if (isGameOver) {
                 isGameOver = false;
                 return;
@@ -186,31 +170,30 @@ public class Server {
         });
 
         Events.on(EventType.GameOverEvent.class, e -> {
-            // Log.info("Gameover event");
             isGameOver = true;
         });
 
-        //* {Client} Try to send auth package
+        // Client: Send auth on world load
         Events.on(EventType.WorldLoadEndEvent.class, e -> {
-            Log.info("World load end event");
             if (!isConnecting) return;
-    
-            Log.info("[red][Client][blue] Now sending auth packet to server...");
 
-            task = Timer.schedule(() -> {
-                // if (!netClient.isConnecting()) return;
+            Log.info("[red][Client][blue] Sending auth packet to server...");
+
+            authSendTask = Timer.schedule(() -> {
                 HaoNetPackageClient p = new HaoNetPackageClient();
+                Core.app.post(() -> net.send(p, false));
+            }, 1f, 0.5f);
 
-                Core.app.post(() -> net.send(p, true));
-            }, 1f, 1f);
-
-            task1 = Timer.schedule(() -> {
+            authTimeoutTask = Timer.schedule(() -> {
                 Log.info("[red][Client][scarlet] Auth failed.");
                 onChange(false);
                 isConnecting = false;
-                task.cancel();
-                Log.info("Task get cancel due to abort");
-            }, waitTime * 1.25f);
+                if (authSendTask != null) {
+                    authSendTask.cancel();
+                    authSendTask = null;
+                }
+                Log.info("Auth send task cancelled due to timeout");
+            }, WAIT_TIME * 1.25f);
         });
 
         Events.on(HostEvent.class, e -> {
@@ -222,12 +205,11 @@ public class Server {
     }
 
     public static void interval() {
-        if (already || !enable)
-            return;
+        if (already || !ENABLE) return;
         already = true;
 
         Timer.schedule(() -> {
-            // Check if any host here
+            // Update client/host state
             isClient = !net.server();
 
             if (isClient) {
@@ -238,46 +220,53 @@ public class Server {
                 return;
             }
 
-            // Auth timeout
-            Entries<NetConnection> queue = playerConnections.entries();
-            while (queue.hasNext()) {
-                Entry<NetConnection> cur = queue.next();
-                if (cur.key.hasDisconnected) {
-                    playerConnections.remove(cur.key);
+            // Process auth timeouts safely
+            Seq<NetConnection> connections = playerConnections.keys().toArray();
+            Seq<NetConnection> toRemove = new Seq<>();
+            Seq<NetConnection> toKick = new Seq<>();
+            ObjectIntMap<NetConnection> toIncrement = new ObjectIntMap<>();
+
+            for (NetConnection con : connections) {
+                int value = playerConnections.get(con);
+                if (con.hasDisconnected) {
+                    toRemove.add(con);
                     continue;
                 }
-
-                if (cur.value > waitTime * 4 && cur.key.hasConnected) {
-                    playerConnections.remove(cur.key);
-                    cur.key.kick(
-                            "[scarlet]Connection couldn't be authenticated.[]\n\nThis server need you to install [accent][Better Vanilla] - ("
-                                    + Main.version + ")[] to play!",
-                            10);
+                if (value > AUTH_TIMEOUT_TICKS && con.hasConnected) {
+                    toKick.add(con);
                     continue;
                 }
-
-                playerConnections.remove(cur.key);
-                playerConnections.put(cur.key, cur.value + 1);
+                toIncrement.put(con, value + 1);
             }
 
-            // Send data packet to client
-            if (!isClient && sender.size > 0) {
+            for (NetConnection con : toRemove) {
+                playerConnections.remove(con);
+            }
+
+            for (NetConnection con : toKick) {
+                playerConnections.remove(con);
+                con.kick("[scarlet]Connection couldn't be authenticated.[]\n\nThis server requires [accent][Better Vanilla] - (" + Main.version + ")[] to play!", 10);
+            }
+
+            for (Entry<NetConnection> entry : toIncrement.entries()) {
+                playerConnections.put(entry.key, entry.value);
+            }
+
+            // Broadcast queued packets
+            if (sender.size > 0) {
                 HaoNetPackage pak = sender.get(0);
                 sender.remove(0);
-
                 forEachPlayer(player -> player.send(pak, true));
             }
         }, 0f, 0.25f);
     }
 
-    /**
-     * Run action on every player
-     * @param cons Function that should loop to every player
-     */
     public static void forEachPlayer(Cons<NetConnection> cons) {
-        for (NetConnection con : players) {
+        for (int i = 0; i < players.size; i++) {
+            NetConnection con = players.get(i);
             if (con.hasDisconnected) {
-                players.remove(players.indexOf(con));
+                players.remove(i);
+                i--;
                 continue;
             }
             cons.get(con);
