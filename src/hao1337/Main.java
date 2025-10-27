@@ -7,6 +7,7 @@ import arc.scene.ui.layout.Table;
 import arc.scene.ui.layout.WidgetGroup;
 import arc.util.*;
 import hao1337.ui.*;
+// import hao1337.addons.AutoDrill;
 import hao1337.content.blocks.HaoBlocks;
 import hao1337.content.items.HaoItems;
 import hao1337.content.units.HaoUnits;
@@ -19,11 +20,12 @@ import hao1337.net.Server;
 import hao1337.net.Server.ServerStateChange;
 import mindustry.Vars;
 import mindustry.game.EventType.*;
+// import mindustry.gen.Tex;
 import mindustry.mod.Mod;
 import mindustry.net.Net;
 
 public class Main extends Mod {
-    public static final String version = "1.7.5";
+    public static final String version = "1.8.0";
     public static final String gitapi = "https://api.github.com/repos/Hao-1337/mindustry-better-vanilla/releases";
     public static final String repoName = "hao1337/mindustry-better-vanilla";
     public static final String name = "hao1337-mod";
@@ -43,8 +45,8 @@ public class Main extends Mod {
         });
 
         Events.on(ServerStateChange.class,  e -> {
-            mod.applyState(Server.hasMod());
-            timecontrol.useable = Server.hasMod();
+            mod.applyState(e.hasThisMod);
+            timecontrol.useable = e.hasThisMod;
         });
 
         Events.on(ClientServerConnectEvent.class, t -> {
@@ -63,11 +65,13 @@ public class Main extends Mod {
             Net.registerPacket(HaoNetPackageClient::new);
             Net.registerPacket(ModStatePackage::new);
             Server.load();
-            Init();
+            loadUI();
+            ClientLeaveWorld.load();
         });
     }
 
-    public void Init() {
+    @Override
+    public void init() {
         Log.info("[Hao1337: Better Vanilla] is launching.");
         AutoUpdate.load(gitapi, name, repoName, unzipName, version);
 
@@ -76,8 +80,6 @@ public class Main extends Mod {
         }
 
         // Vars.port =
-        loadUI();
-        ClientLeaveWorld.load();
         Server.interval();
         HaoItems.load();
         HaoBlocks.load();
@@ -117,6 +119,8 @@ public class Main extends Mod {
             t.bottom().left();
             t.name = "Hao137 TimeControl";
 
+            // t.table(Tex.pane, e -> AutoDrill.register(e));
+            // t.row();
             t.table(null, e -> e.top().left().collapser(timecontrol, () -> Core.settings.getBool("hao1337.ui.timecontrol.enable")));
             if (Vars.mobile)
                 t.moveBy(0, Scl.scl(46));

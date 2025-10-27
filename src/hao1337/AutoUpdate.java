@@ -90,6 +90,7 @@ public class AutoUpdate {
 			versions = ((Seq<Jval>) Jval.read(res.getResultAsString()).asArray());
 
 			Jval json = versions.get(0);
+			Log.info("@", ((Jval) json.get("assets").asArray().get(0)));
 
 			latest = json.getString("tag_name").substring(1);
 			download = ((Jval) json.get("assets").asArray().get(0)).getString("browser_download_url");

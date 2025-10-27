@@ -1,0 +1,35 @@
+name: Wireless Core Container
+description: Just a normal container, but it link with core without touching it! Require enegry for working.
+
+type: "hao1337.lib.CoreStorageBlock"
+category: effect
+
+size: 3
+health: 1500
+
+needPower: true
+powerRequire: 0.5
+minwarmup: 1.0
+warmupSpeed: 0.005
+rotateSpeed: 5.25
+rotationOffset: 60
+
+requirements: [
+    copper/1200
+    silicon/200
+    titanium/500
+    thorium/250
+    plastanium/50
+]
+
+research: {
+    parent: vault
+    requirements: [
+        titanium/30000
+        thorium/15000
+        copper/250000
+        silicon/20000
+        lead/300000
+        plastanium/20000
+    ]
+}

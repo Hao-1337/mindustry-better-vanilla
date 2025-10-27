@@ -10,19 +10,20 @@ hasItems: true
 itemCapacity: 30000
 
 requirements: [
-copper/2200
-titanium/1800
-thorium/700
-plastanium/530
-phase-fabric/120
+    copper/2200
+    titanium/1800
+    thorium/700
+    plastanium/530
+    phase-fabric/120
 ]
 research: {
-     parent: silo
-     requirements: [
-         titanium/30000
-         thorium/15000
-         copper/25000
-         lead/30000
-         plastanium/20000
-     ]
+    parent: silo
+    requirements: [
+        titanium/30000
+        thorium/15000
+        silicon/7000
+        copper/25000
+        lead/30000
+        plastanium/20000
+    ]
 }

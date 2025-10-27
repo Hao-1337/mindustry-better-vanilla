@@ -7,7 +7,7 @@ import mindustry.world.blocks.production.GenericCrafter;
 
 public class HaoBlocks {
     // Storage blocks - serpulo
-    public static Block box, silo, ultraVault, valveUnloader, giganticDome;
+    public static Block box, silo, ultraVault, valveUnloader, giganticDome, noConnectContainer;
     // Conveyor - serpulo
     public static Block thoriumConveyor, armoredThoriumConveyor, surgeConveyor, armoredSurgeConveyor;
     // Constructor - serpulo
@@ -20,6 +20,7 @@ public class HaoBlocks {
 
     public static void load() {
         // Use json for bypass content loader
+        noConnectContainer = Vars.content.block("hao1337-mod-no-connect-container");
         box = Vars.content.block("hao1337-mod-box");
         silo = Vars.content.block("hao1337-mod-silo");
         ultraVault = Vars.content.block("hao1337-mod-ultra-vault");

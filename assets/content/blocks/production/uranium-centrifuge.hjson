@@ -24,11 +24,6 @@
     {
       type: DrawRegion,
       suffix: -top
-    },
-    {
-      type: DrawBlurSpin,
-      suffix: -rotator,
-      rotateSpeed: 0.1
     }
   ],
   requirements: [

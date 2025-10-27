@@ -82,6 +82,7 @@ public class SettingBuilder {
             t.checkPref("hao1337.gameplay.serpulo.surge-conveyor", true);
             t.checkPref("hao1337.gameplay.serpulo.box", true);
             t.checkPref("hao1337.gameplay.serpulo.silo", true);
+            t.checkPref("hao1337.gameplay.serpulo.no-connect-container", true);
             t.checkPref("hao1337.gameplay.serpulo.ultra-vault", true);
             t.checkPref("hao1337.gameplay.serpulo.gigantic-dome", true);
             t.checkPref("hao1337.gameplay.serpulo.valve-unloader", true);

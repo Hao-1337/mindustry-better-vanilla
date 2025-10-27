@@ -30,6 +30,7 @@ public class ModState {
     public boolean silo;
     public boolean ultraVault;
     public boolean valveUnloader;
+    public boolean noConnectContainer;
     public boolean leviathanReconstructor;
 
     public boolean dropper;
@@ -69,6 +70,7 @@ public class ModState {
 
         box = Core.settings.getBool("hao1337.gameplay.serpulo.box");
         silo = Core.settings.getBool("hao1337.gameplay.serpulo.silo");
+        noConnectContainer = Core.settings.getBool("hao1337.gameplay.serpulo.no-connect-container");
         ultraVault = Core.settings.getBool("hao1337.gameplay.serpulo.ultra-vault");
         valveUnloader = Core.settings.getBool("hao1337.gameplay.serpulo.valve-unloader");
         leviathanReconstructor = Core.settings.getBool("hao1337.gameplay.serpulo.leviathan-reconstructor");
@@ -113,6 +115,7 @@ public class ModState {
         HaoBlocks.m1014.buildVisibility = check(shouldEnable, m1014);
         HaoBlocks.dropper.buildVisibility = check(shouldEnable, dropper);
         HaoBlocks.giganticDome.buildVisibility = check(shouldEnable, giganticDome);
+        HaoBlocks.noConnectContainer.buildVisibility = check(shouldEnable, noConnectContainer);
         
         Vars.maxSchematicSize = sechematicSize;
         Vars.experimental = experimental;
@@ -124,6 +127,7 @@ public class ModState {
 
     public void techTree() {
         TechTreeModification.margeNode(Blocks.phaseHeater, Blocks.heatReactor, ItemStack.with(Items.beryllium, 2000, Items.oxide, 1500, Items.silicon, 3000), Seq.with(new Objectives.SectorComplete(SectorPresets.stronghold)));
+        // TechTreeModification.margeNode(Blocks.vault, HaoBlocks.noConnectContainer, ItemStack.with(Items.copper, 20000, Items.graphite, 15000, Items.silicon, 30000, Items.titanium, 10000, Items.thorium, 5000), Seq.with(new Objectives.SectorComplete(SectorPresets.impact0078)));
         TechTreeModification.margeNodeProduce(Items.thorium, Items.fissileMatter, 1);
         TechTreeModification.margeNodeProduce(Items.fissileMatter, HaoItems.uranium, 0);
     }

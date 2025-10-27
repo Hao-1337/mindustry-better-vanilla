@@ -1,4 +1,44 @@
 {
     "java.jdt.ls.vmargs": "-XX:+UseParallelGC -XX:GCTimeRatio=4 -XX:AdaptiveSizePolicyWeight=90 -Dsun.zip.disableMemoryMapping=true -Xmx4G -Xms100m -Xlog:disable",
-    "java.configuration.updateBuildConfiguration": "interactive"
+    "java.configuration.updateBuildConfiguration": "interactive",
+    
+    "editor.tokenColorCustomizations": {
+        "comments": "#4c9440"
+    },
+    "workbench.colorCustomizations": {
+        "sideBar.background": "#000000",
+        "sideBar.border": "#3c3c3c",
+        "sideBarSectionHeader.background":"#121212",
+        "sideBarSectionHeader.border": "#494949",
+        "editor.background": "#0d0e12",
+        "activityBar.foreground": "#d7e2f4",
+        "activityBar.activeBackground": "#3a353585",
+        "activityBar.background": "#08080b",
+        "menu.background":"#1a1b1c",
+        "menu.border": "#3c3c3c",
+        "activityBar.border": "#3c3c3c",
+        "terminal.background": "#121111",
+        "terminal.border": "#3c3c3c",
+        "panel.background": "#090b0e",
+        "panel.border": "#3c3c3c",
+        "tab.activeBackground": "#212938",
+        "tab.activeBorder": "#3c3c3c",
+        "tab.border": "#3c3c3c",
+        "tab.inactiveBackground": "#0b0c0e",
+        "tab.inactiveBorder": "#3c3c3c",
+        "editorGroupHeader.border": "#3c3c3c",
+        "editorGroupHeader.tabsBackground": "#141416",
+        "editorGroupHeader.noTabsBackground":"#1f1f1f",
+        "tab.hoverBackground":"#151515",
+        "titleBar.activeBackground": "#0d0e12",
+        "selection.background":"default",
+        "titleBar.inactiveBackground": "#0b0c0e",
+        "titleBar.border": "#3c3c3c",
+        "statusBar.background": "#0f1318",
+        "statusBar.border": "#3c3c3c",
+        "terminal.foreground": "#b5b5b5",
+        "statusBar.debuggingBackground": "#12161d",
+        "statusBarItem.remoteBackground": "#131313",
+        "button.background": "#2a4c8e"
+    },
 }
