@@ -61,9 +61,6 @@ public class Main extends Mod {
         });
 
         Events.on(ClientLoadEvent.class, e -> {
-            Net.registerPacket(HaoNetPackage::new);
-            Net.registerPacket(HaoNetPackageClient::new);
-            Net.registerPacket(ModStatePackage::new);
             Server.load();
             loadUI();
             ClientLeaveWorld.load();
@@ -72,6 +69,10 @@ public class Main extends Mod {
 
     @Override
     public void init() {
+        Net.registerPacket(HaoNetPackage::new);
+        Net.registerPacket(HaoNetPackageClient::new);
+        Net.registerPacket(ModStatePackage::new);
+
         Log.info("[Hao1337: Better Vanilla] is launching.");
         AutoUpdate.load(gitapi, name, repoName, unzipName, version);
 

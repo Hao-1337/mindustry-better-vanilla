@@ -5,7 +5,7 @@ import arc.util.io.Writes;
 import hao1337.Main;
 import mindustry.net.Packet;
 
-public class HaoNetPackageClient extends HaoNetPackage {
+public class HaoNetPackageClient extends Packet {
     public String name = Main.name;
     public String version = Main.version;
 

@@ -21,7 +21,7 @@ import mindustry.net.NetConnection;
 import mindustry.net.Packet;
 
 public class Server {
-    public static final float waitTime = 2f;
+    public static final float waitTime = 4f;
     public static final boolean enable = true;
 
     private static ObjectIntMap<NetConnection> playerConnections = new ObjectIntMap<>();
@@ -113,8 +113,10 @@ public class Server {
         net.handleClient(HaoNetPackage.class, new Cons<HaoNetPackage>() {
             @Override
             public void get(HaoNetPackage packet) {
-                if (task != null)
+                if (task != null) Timer.schedule(() -> {
+                    Log.info("Task get cancel");
                     task.cancel();
+                }, waitTime * 2f);
 
                 if (packet.getPriority() == Packet.priorityHigh)
                     handleClient(packet);
@@ -190,7 +192,7 @@ public class Server {
 
         //* {Client} Try to send auth package
         Events.on(EventType.WorldLoadEndEvent.class, e -> {
-            // Log.info("World load end event");
+            Log.info("World load end event");
             if (!isConnecting) return;
     
             Log.info("[red][Client][blue] Now sending auth packet to server...");
@@ -199,14 +201,15 @@ public class Server {
                 // if (!netClient.isConnecting()) return;
                 HaoNetPackageClient p = new HaoNetPackageClient();
 
-                Core.app.post(() -> net.send(p, false));
-            }, .2f, .33f);
+                Core.app.post(() -> net.send(p, true));
+            }, 1f, 1f);
 
             task1 = Timer.schedule(() -> {
                 Log.info("[red][Client][scarlet] Auth failed.");
                 onChange(false);
                 isConnecting = false;
                 task.cancel();
+                Log.info("Task get cancel due to abort");
             }, waitTime * 1.25f);
         });
 
