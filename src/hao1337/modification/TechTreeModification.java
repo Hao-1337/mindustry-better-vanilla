@@ -23,8 +23,20 @@ public class TechTreeModification {
         TechTree.all.find((t) -> t.content == parent).children.add(TechTree.node(child, child.researchRequirements(), objectives, () -> {}));
     }
 
-    @SuppressWarnings("deprecation")
+    // @SuppressWarnings("deprecation")
     public static void margeNodeProduce(UnlockableContent parent, UnlockableContent child, int index) {
-        TechTree.all.filter(t -> t.content == parent).get(index).children.add(TechTree.nodeProduce(child, () -> {}));
+        // Yeah it gone!
+        // `Caused by: java.lang.NoSuchMethodError: 'arc.struct.Seq arc.struct.Seq.filter(arc.func.Boolf)'`
+        // TechTree.all.filter(t -> t.content == parent).get(index).children.add(TechTree.nodeProduce(child, () -> {}));
+        Seq<TechTree.TechNode> filtered = new Seq<>(TechTree.TechNode.class);
+        for (Object o : TechTree.all) {
+            if (o instanceof TechTree.TechNode t && t.content == parent) {
+                filtered.add(t);
+            }
+        }
+
+        if (index < 0 || index >= filtered.size) return; 
+        TechTree.TechNode target = filtered.get(index);
+        target.children.add(TechTree.nodeProduce(child, () -> {}));
     }
 }
