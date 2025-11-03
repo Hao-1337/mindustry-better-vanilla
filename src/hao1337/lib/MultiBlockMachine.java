@@ -324,7 +324,7 @@ public class MultiBlockMachine extends Block {
             correct -= solidCount - c;
         }
 
-        static class BoundingResult {
+        class BoundingResult {
             public boolean correct = true;
             public int count = 0;
         }
