@@ -118,8 +118,10 @@ public class ModState {
         HaoBlocks.noConnectContainer.buildVisibility = check(shouldEnable, noConnectContainer);
         
         Vars.maxSchematicSize = sechematicSize;
-        // It also gone!
-        // Vars.experimental = experimental;
+        try {
+            // It also gone!
+            Vars.experimental = experimental;
+        } catch (Throwable ex) {}
     }
 
     BuildVisibility check(boolean shouldEnable, boolean state) {

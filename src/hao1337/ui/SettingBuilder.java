@@ -2,7 +2,7 @@ package hao1337.ui;
 
 import arc.Core;
 import arc.scene.style.TextureRegionDrawable;
-import arc.scene.ui.Label;
+import arc.util.Align;
 import mindustry.*;
 import mindustry.gen.Icon;
 import mindustry.gen.Tex;
@@ -24,7 +24,7 @@ public class SettingBuilder {
             table.table(t -> {}).fillX().minHeight(10f);
             table.row();
 
-            Label l = ((Label) table.labelWrap(desc).fillX().center().get());
+            arc.scene.ui.Label l = ((arc.scene.ui.Label) table.labelWrap(desc).fillX().center().get());
 
             l.setWrap(true);
             l.setColor(Pal.accent);
@@ -61,6 +61,21 @@ public class SettingBuilder {
             table.row();
         }
     }
+    public class Label extends SettingsMenuDialog.SettingsTable.Setting {
+        public String content;
+
+        public Label() {
+            super((String) null);
+        }
+
+        public void add(SettingsMenuDialog.SettingsTable table) {
+            table.align(Align.left);
+            table.table(t -> {
+                t.label(() -> content).align(Align.left);
+            }).fillX();
+            table.row();
+        }
+    }
 
 
     public void build() {
@@ -72,6 +87,7 @@ public class SettingBuilder {
 
 
             t.pref(new SettingTitle(){{ desc = Core.bundle.format("hao1337.setting.category.gameplay.serpulo"); }});
+            t.pref(new Label(){{ content = Core.bundle.format("setting.hao1337.ui.restart.label"); }});
             t.checkPref("hao1337.gameplay.serpulo.vault-bigger", false);
             t.checkPref("hao1337.gameplay.serpulo.better-override-dome", false);
             t.checkPref("hao1337.gameplay.serpulo.better-shield", false);
@@ -92,6 +108,7 @@ public class SettingBuilder {
 
 
             t.pref(new SettingTitle(){{ desc = Core.bundle.format("hao1337.setting.category.gameplay.erekir"); }});
+            t.pref(new Label(){{ content = Core.bundle.format("setting.hao1337.ui.restart.label"); }});
             t.checkPref("hao1337.gameplay.erekir.vault-bigger", false);
             t.checkPref("hao1337.gameplay.erekir.heat-generator", false);
             t.checkPref("hao1337.gameplay.erekir.slag-centrifuge", false);

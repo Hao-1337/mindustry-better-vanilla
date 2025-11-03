@@ -1,5 +1,7 @@
 package hao1337.lib;
 
+import java.util.Arrays;
+
 import arc.Core;
 import arc.graphics.Blending;
 import arc.graphics.Color;
@@ -17,6 +19,8 @@ import arc.util.Nullable;
 import arc.util.Tmp;
 
 import mindustry.Vars;
+
+import static mindustry.Vars.*;
 import mindustry.entities.units.BuildPlan;
 import mindustry.game.Team;
 import mindustry.gen.Building;
@@ -29,6 +33,11 @@ import mindustry.world.meta.BlockStatus;
 import mindustry.world.meta.BuildVisibility;
 
 public class MultiBlockMachine extends Block {
+    public static class InvalidSize extends Exception {
+        public InvalidSize() { super(); }
+        public InvalidSize(String mess) { super(mess); }
+    }
+
     // ObjectMap that contains build schematic
     public MBMPlan[] build;
     // Build size
@@ -44,7 +53,6 @@ public class MultiBlockMachine extends Block {
     // to keep the machine
     @Nullable
     public String mergeInto = null;
-    private int correct = 0;
     @Nullable
     private Block[] blockIndex;
     private int solidCount = 0;
@@ -66,9 +74,13 @@ public class MultiBlockMachine extends Block {
         outputsPayload = false;
         rotate = true;
         offset = 0f;
+        consumePower(5f);
+        updateClipRadius(areaSize * tilesize);
+
+        super.init();
+
         buildVisibility = Core.settings.getBool("hao1337.gameplay.experimental") ? BuildVisibility.shown
                 : BuildVisibility.hidden;
-        consumePower(5f);
 
         if (selfIsMachine) {
             offsetX += size * 8;
@@ -78,23 +90,40 @@ public class MultiBlockMachine extends Block {
         capacity = areaSize * areaSize;
         blockIndex = new Block[build.length];
 
+        if (size % 2 == 0)
+            throw new RuntimeException("Multi block machine size must be a odd number");
+
+        int[] overlap = new int[capacity];
+        Arrays.fill(overlap, 0);
+    
         for (int i = 0; i < build.length; i++) {
             MBMPlan plan = build[i];
+            var oi = i + 1;
             blockIndex[i] = Vars.content.block(plan.block);
+            if (blockIndex[i] == null) throw new RuntimeException("Invalid block id: " + plan.block);
 
             for (MBMBuildIndex index : plan.pos) {
-                if (index.x >= areaSize || index.y >= areaSize) {
-                    Vars.ui.showException(new Throwable("Invalid position (outside of bounding box)"));
-                    return; // Exit early if there’s an error
+                if (index.x >= areaSize || index.y >= areaSize)
+                    throw new RuntimeException("Block position out of bound!");
+
+                for (int j = index.y; j < index.y + blockIndex[i].size; j++) {
+                    for (int i1 = index.x; i1 < index.x + blockIndex[i].size; i1++) {
+                        int idx = (areaSize - 1 - j) * areaSize + i1;
+
+                        if (idx > capacity)
+                            throw new RuntimeException("Block position out of bound!");
+                        if (overlap[idx] != 0)
+                            throw new RuntimeException("Block: " + plan.block + "(" + index.x + ", " + index.y + ") overlap with other block: " + blockIndex[overlap[idx] - 1].name + "(" + i + ", " + j + ")");
+                        overlap[idx] = oi;
+                    }
                 }
             }
             solidCount += blockIndex[i].size * blockIndex[i].size;
         }
-        super.init();
     }
 
     public boolean canPlaceOn(Tile tile, Team team, int rotation) {
-        Rect rect = getRect(Tmp.r1, tile.worldx() + this.offset, tile.worldy() + this.offset, rotation).grow(0.1F);
+        Rect rect = getRect(Tmp.r1, tile.worldx() + this.offset, tile.worldy() + this.offset, rotation).grow(0.1f);
         return !Vars.indexer.getFlagged(team, flag).contains(b -> getRect(Tmp.r2, b.x, b.y, b.rotation).overlaps(rect));
     }
 
@@ -102,9 +131,9 @@ public class MultiBlockMachine extends Block {
         int rx = Geometry.d4x(rotation);
         int ry = Geometry.d4y(rotation);
 
-        rect.setCentered(x, y, areaSize * 8);
+        rect.setCentered(x, y, areaSize * tilesize);
 
-        float len = 4f * (areaSize + size);
+        float len = tilesize / 2f * (areaSize + size);
         rect.x += (rx - ry) * len + (ry - rx) * offsetX;
         rect.y += (ry + rx) * len - (ry + rx) * offsetY;
 
@@ -118,8 +147,8 @@ public class MultiBlockMachine extends Block {
 
     public void drawPlace(int x, int y, int rotation, boolean valid) {
         super.drawPlace(x, y, rotation, valid);
-        int worldX = x * 8 + Math.round(offset);
-        int worldY = y * 8 + Math.round(offset);
+        int worldX = x * tilesize + Math.round(offset);
+        int worldY = y * tilesize + Math.round(offset);
         Rect rect = getRect(Tmp.r1, worldX, worldY, rotation);
         Drawf.dashRect(valid ? Pal.accent : Pal.remove, rect);
     }
@@ -134,6 +163,7 @@ public class MultiBlockMachine extends Block {
         public final Color errorColor = Color.red;
         public final Color doneColor = Color.rgb(0, 156, 23);
 
+        int correct = 0;
         boolean isValid = false, needRebuild = true;
         IntSeq currentBuild = new IntSeq();
         Interval interval = new Interval();
@@ -234,16 +264,29 @@ public class MultiBlockMachine extends Block {
             for (MBMPlan plan : build) {
                 for (MBMBuildIndex index : plan.pos) {
                     Block b = blockIndex[i];
-                    float hz = (float) b.size / 2;
-                    float pz = b.size % 2 == 1 ? b.size == 1 ? -8f : 8f : 4f;
 
-                    float cx = x + 8 * ((index.x - hz) * rx + (hz - index.y) * ry);
-                    float cy = y + 8 * ((index.x - hz) * ry + (index.y - hz) * rx);
-                    int x = b.size == 1 ? (int) Math.floor(cx / 8f) : Math.round(cx / 8f);
-                    int y = b.size == 1 ? (int) Math.floor(cy / 8f) : Math.round(cy / 8f);
+                    float
+                        hz = b.size / 2f,
+                        pz = b.size % 2 == 1 ? b.size == 1 ? -tilesize : tilesize : tilesize / 2f,
+                        cx = x + tilesize * ((index.x - hz) * rx + (hz - index.y) * ry),
+                        cy = y + tilesize * ((index.x - hz) * ry + (index.y - hz) * rx),
+                        px = cx + hz * pz * (rx - ry),
+                        py = cy + hz * pz * (ry + rx);
+                    int
+                        lz = Math.max(0, (b.size > 2 ? (int) Math.floor(hz) : 0) - (b.size % 2 == 0 ? 1 : 0)),
+                        lx = (int)(px / tilesize) - lz,
+                        ly = (int)(py / tilesize) - lz;
 
-                    BoundingResult re = checkBounding(b, x, y);
-                    if (!re.correct) projectors.add(new Projector(b.region, b.size, cx + hz * pz * (rx - ry), cy + hz * pz * (ry + rx), 50f));
+                    BoundingResult re = checkBounding(b, lx, ly);
+                    if (!re.correct) projectors.add(
+                        new Projector(
+                            b.region,
+                            b.size,
+                            cx + hz * pz * (rx - ry),
+                            cy + hz * pz * (ry + rx),
+                            50f
+                        )
+                    );
 
                     if (!re.correct && lst)
                         lst = false;
@@ -254,10 +297,10 @@ public class MultiBlockMachine extends Block {
             }
             Rect rec = getRect(Tmp.r1, x, y, rotation);
 
-            int lx = Math.round(rec.x / 8);
-            int ly = Math.round(rec.y / 8);
-            int hx = (int) Math.floor((rec.height + rec.x) / 8);
-            int hy = (int) Math.floor((rec.width + rec.y) / 8);
+            int lx = Math.round(rec.x / tilesize);
+            int ly = Math.round(rec.y / tilesize);
+            int hx = (int) Math.floor((rec.height + rec.x) / tilesize);
+            int hy = (int) Math.floor((rec.width + rec.y) / tilesize);
 
             for (int ax = lx; ax <= hx; ax++) {
                 for (int ay = ly; ay <= hy; ay++) {
@@ -267,21 +310,21 @@ public class MultiBlockMachine extends Block {
                         continue;
                     }
                     if (t.build == null) {
-                        projectors.add(new Projector(ax * 8, ay * 8, 45f));
+                        projectors.add(new Projector(ax * tilesize, ay * tilesize, 45f));
                         continue;
                     }
                     if (currentBuild.contains(t.build.id)) {
                         continue;
                     }
                     if (lst) lst = false;
-                    projectors.add(new Projector(ax * 8, ay * 8, 45f));
+                    projectors.add(new Projector(ax * tilesize, ay * tilesize, 45f));
                 }
             }
             isValid = lst;
             correct -= solidCount - c;
         }
 
-        class BoundingResult {
+        static class BoundingResult {
             public boolean correct = true;
             public int count = 0;
         }
