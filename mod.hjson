@@ -2,6 +2,12 @@ name: "hao1337-mod"
 displayName: "[[] Better Vanilla []]"
 author: "[royal]Hao1337[]"
 description: '''
+[red]DUE TO VERSION MISMATCH, THIS VERSION IS USING FOR MOBILE ONLY
+[]- For windows/steam/beta version please look up on github:
+[accent]https://github.com/Hao-1337/mindustry-better-vanilla/releases/
+[green] Thanks yall to support us!
+[]
+
 Add something helpful for vanilla. Also have some better UI.
 
 - Coreitem display for mobile.
@@ -21,7 +27,7 @@ Add something helpful for vanilla. Also have some better UI.
 [scarlet]Warning:[] The mod under development, any contributions would be gratefully appreciated. See github for more details.
 '''
 version: "1.0.0"
-minGameVersion: 147
+minGameVersion: 154
 java: true
 hidden: true
 main: "hao1337.Main"
