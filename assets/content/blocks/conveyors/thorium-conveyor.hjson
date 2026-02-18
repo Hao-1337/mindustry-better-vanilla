@@ -1,6 +1,6 @@
 {
   name: Thorium Conveyor,
-  description: High-grade conveyor, transporting a large number of item. Faster than 2× titanium conveyor,
+  description: High-speed conveyor, able to transport a large number of items. Faster than titanium conveyors.,
   type: Conveyor,
   category: distribution,
   hasShadow: true,
@@ -15,12 +15,9 @@
   research: {
     parent: titanium-conveyor,
     requirements: [
-      titanium/3400,
-      plastanium/4200,
-      silicon/5100,
-      thorium/4600,
-      surge-alloy/1500,
-      phase-fabric/800
+      titanium/500,
+      thorium/300,
+      copper/1000,
     ]
   }
 }
