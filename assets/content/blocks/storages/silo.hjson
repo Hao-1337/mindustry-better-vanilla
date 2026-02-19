@@ -1,5 +1,5 @@
 name: Silo
-description: It can store more 2 times of the normal vault. Contents inside the container can be retrieved with unloader.
+description: Stores huge amounts of all item types. Expands storage when placed next to a core. Contents can be retrieved with an unloader.
 
 type: StorageBlock
 category: effect
@@ -14,7 +14,7 @@ requirements: [
     titanium/800
     thorium/500
     plastanium/150
-    phase-fabric/80
+    lead/2000
 ]
 research: {
     parent: vault

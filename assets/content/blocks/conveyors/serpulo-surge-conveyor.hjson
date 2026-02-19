@@ -1,6 +1,6 @@
 {
   name: Surge Conveyor,
-  description: High-grade conveyor, transporting a large number of item. Faster than 3× titanium conveyor.,
+  description: Ultra-high-speed conveyer that transports resouces extremly quickly. Fastest conveyer available, exceeding even Thorium conveyers in speed.,
   type: Conveyor,
   category: distribution,
   hasShadow: true,
@@ -16,15 +16,10 @@
   research: {
     parent: thorium-conveyor,
     requirements: [
-      copper/6000,
-      titanium/4300,
-      lead/2000,
-      graphite/1000,
-      plastanium/4200,
-      silicon/5100,
-      thorium/4000,
-      surge-alloy/1500,
-      phase-fabric/2600
+      titanium/1200,
+      thorium/500,
+      copper/3000,
+      surge-alloy/100
     ]
   }
 }

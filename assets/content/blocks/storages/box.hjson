@@ -1,6 +1,6 @@
 {
   name: Box,
-  description: Compact box for storing resources.,
+  description: Stores a small amount of items of each type. Expands storage when placed next to a core. Contents can be retrieved with an unloader.,
   type: StorageBlock,
   category: effect,
   size: 1,

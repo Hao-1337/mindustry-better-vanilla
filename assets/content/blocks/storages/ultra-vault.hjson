@@ -1,5 +1,5 @@
-name: Ultra Vault
-description: One of the largest blocks for storing resources. Contents inside the container can be retrieved.
+name: Warehouse
+description: Stores a massive amount of items of each type. Expands storage when placed next to a core. Contents can be retrieved with an unloader.
 
 type: StorageBlock
 category: effect
@@ -14,14 +14,13 @@ requirements: [
     titanium/1800
     thorium/700
     plastanium/530
-    phase-fabric/120
+    lead/2500
 ]
 research: {
     parent: silo
     requirements: [
         titanium/30000
         thorium/15000
-        silicon/7000
         copper/25000
         lead/30000
         plastanium/20000

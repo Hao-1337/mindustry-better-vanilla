@@ -3,7 +3,7 @@
 
   name: M1014,
   localizedName: M1014,
-  description: A true shootgun. A bigger version of fuse one!,
+  description: Large and powerful shotgun turret. Fires multiple prjectiles in an arc.,
   category: turret,
 
   health: 5690,
@@ -207,12 +207,10 @@
   research: {
     parent: fuse,
     requirements: [
-      titanium/34000,
+      titanium/25000,
+      graphite/10000,
       plastanium/4000,
-      silicon/10000,
       thorium/4600,
-      surge-alloy/4000,
-      phase-fabric/2000
     ]
   }
 }

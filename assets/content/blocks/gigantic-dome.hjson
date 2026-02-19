@@ -1,6 +1,6 @@
 {
-  name: Gigantic Dome,
-  description: Dome but extremely large. Consumes a lot of resources,
+  name: Overdrive Emitter,
+  description: Signifigantly increases speed of buildings in a wide area. requires large amounts of Phase Fabric and Silicon to run.,
   type: OverdriveProjector,
   category: effect,
   group: projectors,
@@ -20,8 +20,6 @@
       items: [
         phase-fabric/3,
         silicon/2,
-        plastanium/1,
-        surge-alloy/1
       ]
     },
     liquid: {
@@ -32,29 +30,20 @@
     }
   },
   requirements: [
-    copper/8200,
-    titanium/3400,
-    lead/2200,
-    graphite/1800,
-    plastanium/4200,
-    silicon/5100,
-    thorium/3220,
-    metaglass/1600,
+    plastanium/5000,
+    silicon/5000,
+    thorium/4000,
     surge-alloy/1500,
-    phase-fabric/2600
+    phase-fabric/2500
   ],
   research: {
     parent: overdrive-dome,
     requirements: [
-      copper/62000,
-      titanium/34000,
-      lead/22000,
-      graphite/18000,
-      plastanium/42000,
-      silicon/51000,
-      thorium/46000,
+      plastanium/40000,
+      silicon/32000,
+      thorium/45000,
       surge-alloy/15000,
-      phase-fabric/26000
+      phase-fabric/25000
     ]
   }
 }
