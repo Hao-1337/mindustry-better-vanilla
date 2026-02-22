@@ -25,7 +25,7 @@ description: '''
 [scarlet]Warning:[] The mod under development, any contributions would be gratefully appreciated. See github for more details.
 '''
 version: "1.0.0"
-minGameVersion: 147
+minGameVersion: 154
 java: true
 hidden: true
 main: "hao1337.Main"

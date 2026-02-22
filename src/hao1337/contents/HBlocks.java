@@ -1,11 +1,11 @@
-package hao1337.content.blocks;
+package hao1337.contents;
 
 import mindustry.Vars;
 import mindustry.world.Block;
 import mindustry.world.blocks.defense.turrets.Turret;
 import mindustry.world.blocks.production.GenericCrafter;
 
-public class HaoBlocks {
+public class HBlocks {
     // Storage blocks - serpulo
     public static Block box, silo, ultraVault, valveUnloader, giganticDome, noConnectContainer;
     // Conveyor - serpulo
@@ -18,7 +18,11 @@ public class HaoBlocks {
     // Crafting - erekir
     public static GenericCrafter uraniumCentrifuge;
 
+    static boolean loaded = false;
     public static void load() {
+        if (loaded) return;
+        loaded = true;
+
         // Use json for bypass content loader
         noConnectContainer = Vars.content.block("hao1337-mod-no-connect-container");
         box = Vars.content.block("hao1337-mod-box");

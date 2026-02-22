@@ -1,11 +1,15 @@
 package hao1337;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+
 import arc.Core;
 import arc.Events;
-import arc.func.Cons;
 import arc.struct.Seq;
-import hao1337.content.blocks.HaoBlocks;
-import hao1337.content.items.HaoItems;
+import hao1337.contents.HBlocks;
+import hao1337.contents.HItems;
 import hao1337.modification.ForceProjector;
 import hao1337.modification.HeatReactor;
 import hao1337.modification.Liquids;
@@ -13,15 +17,21 @@ import hao1337.modification.OverrideDome;
 import hao1337.modification.SlagCentrifuge;
 import hao1337.modification.TechTreeModification;
 import hao1337.modification.Vault;
-import hao1337.net.ModStatePackage;
+import hao1337.net.IORouter;
+import hao1337.net.Protocol.PlayerAuthSuccess;
+
+import static hao1337.net.Net.*;
 import mindustry.Vars;
 import mindustry.content.Blocks;
 import mindustry.content.Items;
 import mindustry.content.SectorPresets;
 import mindustry.game.Objectives;
-import mindustry.game.EventType.PlayerJoin;
+import mindustry.net.NetConnection;
 import mindustry.type.ItemStack;
 import mindustry.world.meta.BuildVisibility;
+import arc.util.io.Reads;
+import arc.util.io.Writes;
+
 public class ModState {
     public boolean thoriumConveyor;
     public boolean surgeConveyor;
@@ -51,9 +61,7 @@ public class ModState {
     public int sechematicSize;
     public boolean experimental;
 
-    public ModState() {
-        netWorking();
-    }
+    public ModState() { netWorking(); }
 
     public void load() {
         ForceProjector.load();
@@ -103,19 +111,19 @@ public class ModState {
         Liquids.apply(shouldEnable && !hiddenLiquids);
         hao1337.modification.Items.apply(shouldEnable && !hiddenItems);
 
-        HaoBlocks.armoredThoriumConveyor.buildVisibility =
-        HaoBlocks.thoriumConveyor.buildVisibility = check(shouldEnable, thoriumConveyor);
-        HaoBlocks.surgeConveyor.buildVisibility =
-        HaoBlocks.armoredSurgeConveyor.buildVisibility = check(shouldEnable, surgeConveyor);
-        HaoBlocks.box.buildVisibility = check(shouldEnable, box);
-        HaoBlocks.silo.buildVisibility = check(shouldEnable, silo);
-        HaoBlocks.ultraVault.buildVisibility = check(shouldEnable, ultraVault);
-        HaoBlocks.valveUnloader.buildVisibility =  check(shouldEnable, valveUnloader);
-        HaoBlocks.leviathanReconstructor.buildVisibility = check(shouldEnable, leviathanReconstructor);
-        HaoBlocks.m1014.buildVisibility = check(shouldEnable, m1014);
-        HaoBlocks.dropper.buildVisibility = check(shouldEnable, dropper);
-        HaoBlocks.giganticDome.buildVisibility = check(shouldEnable, giganticDome);
-        HaoBlocks.noConnectContainer.buildVisibility = check(shouldEnable, noConnectContainer);
+        HBlocks.armoredThoriumConveyor.buildVisibility =
+        HBlocks.thoriumConveyor.buildVisibility = check(shouldEnable, thoriumConveyor);
+        HBlocks.surgeConveyor.buildVisibility =
+        HBlocks.armoredSurgeConveyor.buildVisibility = check(shouldEnable, surgeConveyor);
+        HBlocks.box.buildVisibility = check(shouldEnable, box);
+        HBlocks.silo.buildVisibility = check(shouldEnable, silo);
+        HBlocks.ultraVault.buildVisibility = check(shouldEnable, ultraVault);
+        HBlocks.valveUnloader.buildVisibility =  check(shouldEnable, valveUnloader);
+        HBlocks.leviathanReconstructor.buildVisibility = check(shouldEnable, leviathanReconstructor);
+        HBlocks.m1014.buildVisibility = check(shouldEnable, m1014);
+        HBlocks.dropper.buildVisibility = check(shouldEnable, dropper);
+        HBlocks.giganticDome.buildVisibility = check(shouldEnable, giganticDome);
+        HBlocks.noConnectContainer.buildVisibility = check(shouldEnable, noConnectContainer);
         
         Vars.maxSchematicSize = sechematicSize;
         try {
@@ -132,61 +140,71 @@ public class ModState {
         TechTreeModification.margeNode(Blocks.phaseHeater, Blocks.heatReactor, ItemStack.with(Items.beryllium, 2000, Items.oxide, 1500, Items.silicon, 3000), Seq.with(new Objectives.SectorComplete(SectorPresets.stronghold)));
         // TechTreeModification.margeNode(Blocks.vault, HaoBlocks.noConnectContainer, ItemStack.with(Items.copper, 20000, Items.graphite, 15000, Items.silicon, 30000, Items.titanium, 10000, Items.thorium, 5000), Seq.with(new Objectives.SectorComplete(SectorPresets.impact0078)));
         TechTreeModification.margeNodeProduce(Items.thorium, Items.fissileMatter, 1);
-        TechTreeModification.margeNodeProduce(Items.fissileMatter, HaoItems.uranium, 0);
+        TechTreeModification.margeNodeProduce(Items.fissileMatter, HItems.uranium, 0);
     }
 
     public void netWorking() {
-        Vars.net.handleClient(ModStatePackage.class, new Cons<ModStatePackage>() {
-            @Override
-            public void get(ModStatePackage pack) {
-                thoriumConveyor = pack.thoriumConveyor;
-                surgeConveyor = pack.surgeConveyor;
-                box = pack.box;
-                silo = pack.silo;
-                ultraVault = pack.ultraVault;
-                valveUnloader = pack.valveUnloader;
-                leviathanReconstructor = pack.leviathanReconstructor;
-                dropper = pack.dropper;
-                m1014 = pack.m1014;
-                giganticDome = pack.giganticDome;
-                slagCentrifuge = pack.slagCentrifuge;
-                heatReactor = pack.heatReactor;
-                betterShield = pack.betterShield;
-                betterOverrideDome = pack.betterOverrideDome;
-                betterSerpuloVault = pack.betterSerpuloVault;
-                betterErekirVault = pack.betterErekirVault;
-                hiddenLiquids = pack.hiddenLiquids;
-                hiddenItems = pack.hiddenItems;
-                sechematicSize = pack.sechematicSize;
-                experimental = pack.experimental;
+        router.register(HVars.modStateNetChannel, new IORouter.ChannelHandler() {
+            public void handleClient(byte[] payload) {
+                var i = new DataInputStream(new ByteArrayInputStream(payload));
+                Reads r = new Reads(i);
+
+                thoriumConveyor = r.bool();
+                surgeConveyor = r.bool();
+                box = r.bool();
+                silo = r.bool();
+                ultraVault = r.bool();
+                valveUnloader = r.bool();
+                leviathanReconstructor = r.bool();
+                dropper = r.bool();
+                m1014 = r.bool();
+                giganticDome = r.bool();
+                slagCentrifuge = r.bool();
+                heatReactor = r.bool();
+                betterShield = r.bool();
+                betterOverrideDome = r.bool();
+                betterSerpuloVault = r.bool();
+                betterErekirVault = r.bool();
+                hiddenLiquids = r.bool();
+                hiddenItems = r.bool();
+                sechematicSize = r.i();
+                experimental = r.bool();
+
+                r.close();
             }
+
+            public void handleServer(NetConnection connection, byte[] payload) {}
         });
 
-        Events.on(PlayerJoin.class, t -> {
-            ModStatePackage pack = new ModStatePackage();
+        Events.on(PlayerAuthSuccess.class, t -> {
+            ByteArrayOutputStream bos = new ByteArrayOutputStream();
+            DataOutputStream s = new DataOutputStream(bos);
+            Writes w = new Writes(s);
 
-            pack.thoriumConveyor = thoriumConveyor;
-            pack.surgeConveyor = surgeConveyor;
-            pack.box = box;
-            pack.silo = silo;
-            pack.ultraVault = ultraVault;
-            pack.valveUnloader = valveUnloader;
-            pack.leviathanReconstructor = leviathanReconstructor;
-            pack.dropper = dropper;
-            pack.m1014 = m1014;
-            pack.giganticDome = giganticDome;
-            pack.slagCentrifuge = slagCentrifuge;
-            pack.heatReactor = heatReactor;
-            pack.betterShield = betterShield;
-            pack.betterOverrideDome = betterOverrideDome;
-            pack.betterSerpuloVault = betterSerpuloVault;
-            pack.betterErekirVault = betterErekirVault;
-            pack.hiddenLiquids = hiddenLiquids;
-            pack.hiddenItems = hiddenItems;
-            pack.sechematicSize = sechematicSize;
-            pack.experimental = experimental;
+            w.bool(thoriumConveyor);
+            w.bool(surgeConveyor);
+            w.bool(box);
+            w.bool(silo);
+            w.bool(ultraVault);
+            w.bool(valveUnloader);
+            w.bool(leviathanReconstructor);
+            w.bool(dropper);
+            w.bool(m1014);
+            w.bool(giganticDome);
+            w.bool(slagCentrifuge);
+            w.bool(heatReactor);
+            w.bool(betterShield);
+            w.bool(betterOverrideDome);
+            w.bool(betterSerpuloVault);
+            w.bool(betterErekirVault);
+            w.bool(hiddenLiquids);
+            w.bool(hiddenItems);
+            w.i(sechematicSize);
+            w.bool(experimental);
 
-            Core.app.post(() -> t.player.con.send(pack, true));
+            var auto = bos.toByteArray();
+            w.close();
+            router.sendTo(t.connection, HVars.modStateNetChannel, auto);
         });
     }
 }

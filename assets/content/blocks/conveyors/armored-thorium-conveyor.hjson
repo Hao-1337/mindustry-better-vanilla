@@ -1,6 +1,6 @@
 {
   name: Armored Thorium Conveyor,
-  description: High-grade conveyor, transporting a large number of item. Faster than 2× titanium conveyor. Prevent item from sides.,
+  description: High-speed conveyor, able to transport a large number of items. Faster than titanium conveyors. Does not accept input form the sides.,
   type: ArmoredConveyor,
   category: distribution,
   hasShadow: true,
@@ -15,12 +15,10 @@
   research: {
     parent: thorium-conveyor,
     requirements: [
-      titanium/34000,
-      plastanium/42000,
-      silicon/51000,
-      thorium/46000,
-      surge-alloy/15000,
-      phase-fabric/8000
+      titanium/2200,
+      copper/2000,
+      thorium/1200,
+
     ]
   }
 }
