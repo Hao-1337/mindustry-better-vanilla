@@ -9,15 +9,11 @@
 
 Add enhancements and improvements to Mindustry's vanilla experience, including better UI and useful features for players.
 
+> [!WARNING]
+> **This mod is under active development. It may crash, have errors, or not work as intended. Please report any issues so they can be addressed quickly.**
+
 ### Textures and Sprites
 Created by: [ĐạiPH](https://github.com/BackNNHH)
-
----
-
-> **WARNING:**
-> This mod is under active development. It may crash, have errors, or not work as intended. Please report any issues so they can be addressed quickly.
-
----
 
 ## Features
 
@@ -35,7 +31,16 @@ Created by: [ĐạiPH](https://github.com/BackNNHH)
   - "T6" units.
 - Unlocks some hidden content.
 
----
+
+# Screenshots
+
+| Unit Counter and Core Item Display (Mobile) | Time Control |
+|---|---|
+| ![Preview](https://github.com/Hao-1337/mindustry-better-vanilla/assets/108588018/72654879-1a5b-4f70-a443-d9b362eb2136) | ![Time Control](https://github.com/user-attachments/assets/bdd6a206-f10e-4bb1-8e9a-3388cb74d5b7) |
+
+### Leviathan Reconstructor
+
+![Leviathan Reconstructor](https://github.com/user-attachments/assets/c54194e3-9136-45f5-86eb-ea750f8912ed)
 
 # Experimental Section
 
@@ -79,20 +84,3 @@ Example JSON configuration for a multi-block machine:
   ]
 }
 ```
-
----
-
-# Screenshots
-
-### Unit Counter and Core Item Display (Mobile)
-
-![Preview](https://github.com/Hao-1337/mindustry-better-vanilla/assets/108588018/72654879-1a5b-4f70-a443-d9b362eb2136)
-
-### Time Control
-
-![Time Control](https://github.com/user-attachments/assets/bdd6a206-f10e-4bb1-8e9a-3388cb74d5b7)
-
-### Leviathan Reconstructor
-
-![Leviathan Reconstructor](https://github.com/user-attachments/assets/c54194e3-9136-45f5-86eb-ea750f8912ed)
-
