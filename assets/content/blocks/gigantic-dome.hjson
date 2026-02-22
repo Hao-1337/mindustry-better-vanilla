@@ -16,17 +16,13 @@
   liquidCapacity: 60,
   consumes: {
     power: 40,
-    items: {
-      items: [
-        phase-fabric/3,
-        silicon/2,
-      ]
-    },
+    items: [
+      phase-fabric/3,
+      silicon/2,
+    ],
     liquid: {
       liquid: cryofluid,
-      amount: 0.16,
-      booster: true,
-      optional: true
+      amount: 0.1
     }
   },
   requirements: [
