@@ -8,6 +8,7 @@ import arc.scene.ui.layout.Scl;
 import arc.scene.ui.layout.Table;
 import arc.scene.ui.layout.WidgetGroup;
 import arc.util.Nullable;
+import arc.scene.Element;
 import arc.scene.Group;
 import mindustry.Vars;
 import mindustry.game.EventType.ClientLoadEvent;
@@ -112,11 +113,16 @@ public class HVars {
             @Nullable TextButton button = hud.find(e -> e instanceof TextButton btn && btn.getChildren().contains(t -> t instanceof Label l && l.toString().contains(getText("@command.queue"))));
 
             if (button != null && button.parent instanceof Table t && t.parent != null) {
-                hud = (WidgetGroup) t;
-                t.table(null, e -> {
-                    e.name = "Hao137 TimeControl";
-                    e.top().left().collapser(timecontrol, () -> Core.settings.getBool("hao1337.ui.timecontrol.enable"));
-                });
+                WidgetGroup bottomLeftGroup = (WidgetGroup) t.parent;
+                var firstChild = bottomLeftGroup.getChildren().get(0);
+                Table tcTable = new Table();
+
+                tcTable.name = "Hao137 TimeControl";
+                tcTable.setFillParent(true);
+                tcTable.visible(() -> Core.settings.getBool("hao1337.ui.timecontrol.enable"));
+                tcTable.add(timecontrol);
+
+                bottomLeftGroup.addChildBefore(firstChild, tcTable);
                 return;
             }
         }
