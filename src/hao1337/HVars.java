@@ -113,8 +113,7 @@ public class HVars {
             @Nullable TextButton button = hud.find(e -> e instanceof TextButton btn && btn.getChildren().contains(t -> t instanceof Label l && l.toString().contains(getText("@command.queue"))));
 
             if (button != null && button.parent instanceof Table t && t.parent != null) {
-                WidgetGroup bottomLeftGroup = (WidgetGroup) t.parent;
-                var firstChild = bottomLeftGroup.getChildren().get(0);
+                var firstChild = t.getChildren().get(0);
                 Table tcTable = new Table();
 
                 tcTable.name = "Hao137 TimeControl";
@@ -122,8 +121,9 @@ public class HVars {
                 tcTable.setFillParent(true);
                 tcTable.visible(() -> Core.settings.getBool("hao1337.ui.timecontrol.enable"));
                 tcTable.add(timecontrol).width(155f);
+                tcTable.row();
 
-                bottomLeftGroup.addChildBefore(firstChild, tcTable);
+                t.addChildBefore(firstChild, tcTable);
                 return;
             }
         }
