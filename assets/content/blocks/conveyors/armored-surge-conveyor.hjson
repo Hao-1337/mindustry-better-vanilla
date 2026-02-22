@@ -1,6 +1,6 @@
 {
   name: Armored Surge Conveyor,
-  description: High-grade conveyor, transporting a large number of item. Faster than 3× titanium conveyor. Prevent item from sides.,
+  description: Ultra-high-speed conveyer that transports resouces extremly quickly. Fastest conveyer available, exceeding even Thorium conveyers in speed. Does not accept input form the sides.,
   type: ArmoredConveyor,
   category: distribution,
   hasShadow: true,
@@ -16,15 +16,10 @@
   research: {
     parent: serpulo-surge-conveyor,
     requirements: [
-      copper/60000,
-      titanium/43000,
-      lead/20000,
-      graphite/10000,
-      plastanium/42000,
-      silicon/51000,
-      thorium/40000,
-      surge-alloy/15000,
-      phase-fabric/26000
+      copper/5000,
+      titanium/1500,
+      thorium/1000,
+      surge-alloy/500,
     ]
   }
 }

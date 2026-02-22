@@ -69,10 +69,10 @@
   research: {
     parent: salvo,
     requirements: [
-      titanium/3500,
-      plastanium/300,
-      silicon/1000,
-      thorium/460
+      titanium/1500,
+      copper/3500,
+      lead/2000,
+      graphite/1000
     ]
   }
 }

@@ -3,6 +3,7 @@ color.enable();
 
 const SOURCE_PATH = "D:\\Projects\\mindustry-better-vanilla\\build\\classes\\java\\main";
 const TARGET_PATH = "C:\\Users\\hao1337\\AppData\\Roaming\\Mindustry\\mods\\hao-1337mindustry-better-vanilla";
+const TARGET_STEAM_PART = "D:\\Program Files (x86)\\Steam\\steamapps\\common\\Mindustry\\saves\\mods\\hao-1337mindustry-better-vanilla";
 const WATCH_PATH = "D:\\Projects\\mindustry-better-vanilla";
 const ACCSET_PATH = "D:\\Projects\\mindustry-better-vanilla\\assets";
 const ignored = [
@@ -73,12 +74,14 @@ function javaChange(data) {
 
   console.timeEnd("Complie completed in: ");
   __ = false;
-  copyFiles(SOURCE_PATH, TARGET_PATH);
+  // copyFiles(SOURCE_PATH, TARGET_PATH);
+  copyFiles(SOURCE_PATH, TARGET_STEAM_PART);
 };
 
 function accestChange(data) {
   console.log("Detect accest change at: ".green, data.yellow.underline);
-  copyFiles(ACCSET_PATH, TARGET_PATH);
+  // copyFiles(ACCSET_PATH, TARGET_PATH);
+  copyFiles(ACCSET_PATH, TARGET_STEAM_PART);
 };
 
 const java_watch = chokidar.watch(WATCH_PATH, {
