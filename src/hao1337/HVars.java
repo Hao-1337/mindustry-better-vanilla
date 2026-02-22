@@ -6,6 +6,7 @@ import arc.scene.ui.Label;
 import arc.scene.ui.TextButton;
 import arc.scene.ui.layout.Scl;
 import arc.scene.ui.layout.Table;
+import arc.scene.ui.layout.Spacer;
 import arc.scene.ui.layout.WidgetGroup;
 import arc.util.Nullable;
 import arc.scene.Element;
@@ -110,11 +111,15 @@ public class HVars {
         // Add time control
         // If failed to get mobile layout then go back to desktop one
         if (Vars.mobile) {
-            @Nullable TextButton button = hud.find(e -> e instanceof TextButton btn && btn.getChildren().contains(t -> t instanceof Label l && l.toString().contains(getText("@command.queue"))));
+            @Nullable TextButton button = getButtonByI18NText(hud, "@command.queue");
 
             if (button != null && button.parent instanceof Table t && t.parent != null) {
-                var firstChild = t.getChildren().get(0);
+                var parent = t.parent;
+                var firstChild = parent.getChildren().get(0);
                 Table tcTable = new Table();
+                parent.forEach(e -> {
+                    ((Table) e).row().spacerY(() -> tcTable.getHeight());
+                });
 
                 tcTable.name = "Hao137 TimeControl";
                 tcTable.bottom().left();
@@ -123,7 +128,7 @@ public class HVars {
                 tcTable.add(timecontrol).width(155f);
                 tcTable.row();
 
-                t.addChildBefore(firstChild, tcTable);
+                parent.addChildBefore(firstChild, tcTable);
                 return;
             }
         }
@@ -139,12 +144,14 @@ public class HVars {
         });
     }
 
-    String getText(String newText){
-        if (Core.bundle != null && newText != null && newText.length() > 0 && (newText.charAt(0) == '$' || newText.charAt(0) == '@')) {
-            String out = newText.toString().substring(1);
-            return Core.bundle.get(out, newText.toString());
-        } else {
-            return newText;
+    @Nullable TextButton getButtonByI18NText(Group elementGroup, String name) {
+        if (Core.bundle != null && name != null && name.length() > 0 && (name.charAt(0) == '$' || name.charAt(0) == '@')) {
+            String out = name.toString().substring(1);
+            String newName = Core.bundle.get(out, name.toString());
+
+            return elementGroup.find(e -> e instanceof TextButton btn && btn.getChildren().contains(t -> t instanceof Label l && l.toString().contains(newName)));
         }
+
+        return elementGroup.find(e -> e instanceof TextButton btn && btn.getChildren().contains(t -> t instanceof Label l && l.toString().contains(name)));
     }
 }
