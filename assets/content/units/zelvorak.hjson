@@ -1,470 +1,469 @@
- {
-  localizedName: Zelvorak,
-  description: '''[orange]The heavy gunner class titan unit. Equipped four gunners and four heavy gunners, and it is equipped with missike launchers. Can fire devastating energy orb that deals massive damage on impact, empowers nearby allies.''',
-  details: Rule the skies and destroy the land.,
+singleTarget: true
+drawShields: false
+research: eclipse
 
-  singleTarget: true,
-  drawShields: false,
-  research: eclipse,
+lightRadius: 250
+fallSpeed: 0.006
+rotateSpeed: 0.7
+crashDamageMultiplier: 3
 
-  lightRadius: 250,
-  fallSpeed: 0.006,
-  rotateSpeed: 0.7,
+speed: 0.35
+accel: 0.4
+drag: 0.4
+range: 430
+maxRange: 430
+aimDst: 430
+faceTarget: true
+flying: true
+health: 100000
+hitSize: 140
+armor: 60
+engineOffset: 52
+targetFlags: [
+  reactor
+]
 
-  crashDamageMultiplier: 3,
-  speed: 0.35,
-  accel: 0.4,
-  drag: 0.4,
-  range: 430,
-  maxRange: 430,
-  aimDst: 430,
-  faceTarget: true,
-  flying: true,
-  health: 100000,
-  hitSize: 140,
-  armor: 60,
-  engineOffset: 52,
+engineSize: 8.5
+lowAltitude: true
+targetAir: true
 
-  targetFlags: [
-    reactor
-  ],
+immunities: [
+  blasted
+  wet
+  tarred
+]
 
-  engineSize: 8.5,
-  lowAltitude: true,
-  targetAir: true,
-  immunities: [
-    blasted,
-    wet,
-    tarred
-  ],
-  weapons: [
-    {
-      name: zelvorak-gun,
-      shootCone: 15,
-      mirror: true,
-      alternate: true,
-      rotateSpeed: 5,
-      rotate: true,
-      shootY: 8,
-      y: 35,
-      x: 10,
-      reload: 9,
-      recoil: 1,
-      ejectEffect: casing2,
-      shootSound: bang,
-      shoot: {
-        shots: 1
-      },
-      shake: 1,
-      bullet: {
-        splashDamage: 30,
-        splashDamageRadius: 20,
-        type: BasicBulletType,
-        hitEffect: blastExplosion,
-        knockback: 1,
-        shootEffect: shootBig2,
-        despawnEffect: blastExplosion,
-        lifetime: 90,
-        damage: 80,
-        speed: 4,
-        width: 10,
-        height: 10
-      }
-    },
-    {
-      name: zelvorak-gun,
-      shootCone: 15,
-      shootY: 8,
-      mirror: true,
-      alternate: true,
-      rotateSpeed: 5,
-      rotate: true,
-      y: 15,
-      x: 15,
-      reload: 9,
-      recoil: 1,
-      ejectEffect: casing2,
-      shootSound: bang,
-      shoot: {
-        shots: 1
-      },
-      shake: 1,
-      bullet: {
-        splashDamage: 30,
-        splashDamageRadius: 20,
-        knockback: 1,
-        type: BasicBulletType,
-        hitEffect: blastExplosion,
-        shootEffect: shootBig2,
-        despawnEffect: blastExplosion,
-        lifetime: 90,
-        damage: 80,
-        speed: 4,
-        width: 10,
-        height: 10
-      }
-    },
-    {
-      name: zelvorak-artillery,
-      top: true,
-      mirror: true,
-      alternate: true,
-      y: 5,
-      x: 22,
-      shoot: {
-        shotDelay: 5,
-        shots: 3
-      },
-      rotate: true,
-      rotateSpeed: 4,
-      inaccuracy: 5,
-      shootY: 10,
-      reload: 16,
-      recoil: 1,
-      shake: 0.5,
-      ejectEffect: casing2,
-      shootSound: shootBig,
-      bullet: {
-        type: BasicBulletType,
-        hitEffect: flakExplosion,
-        shootEffect: shootBig2,
-        despawnEffect: flakExplosion,
-        pierce: true,
-        pierceCap: 1,
-        knockback: 1.8,
-        statusDuration: 80,
-        status: blasted,
-        lifetime: 90,
-        damage: 200,
-        speed: 4,
-        width: 14,
-        height: 14,
-        splashDamage: 20,
-        splashDamageRadius: 20
-      }
-    },
-    {
-      name: zelvorak-artillery,
-      top: true,
-      mirror: true,
-      alternate: true,
-      y: -12,
-      x: 28,
-      shoot: {
-        shotDelay: 5,
-        shots: 3
-      },
-      rotate: true,
-      rotateSpeed: 4,
-      inaccuracy: 5,
-      shootY: 10,
-      reload: 16,
-      recoil: 1,
-      shake: 0.5,
-      ejectEffect: casing2,
-      shootSound: shootBig,
-      bullet: {
-        type: BasicBulletType,
-        hitEffect: flakExplosion,
-        shootEffect: shootBig2,
-        despawnEffect: flakExplosion,
-        pierce: true,
-        pierceCap: 1,
-        knockback: 1.8,
-        statusDuration: 80,
-        status: blasted,
-        lifetime: 90,
-        damage: 200,
-        speed: 4,
-        width: 14,
-        height: 14,
-        splashDamage: 20,
-        splashDamageRadius: 20
-      }
-    },
-    {
-      name: zelvorak-missile,
-      x: 35,
-      y: -28,
-      shootCone: 25,
-      alternate: true,
-      mirror: true,
-      top: true,
-      rotate: true,
-      rotateSpeed: 2.9,
-      reload: 15,
-      recoil: 0.5,
-      shoot: {
-        shotDelay: 1,
-        shots: 2
-      },
-      shootY: 8,
-      inaccuracy: 10,
-      xRand: 11,
-      shootSound: missile,
-      velocityRnd: 0.4,
-      bullet: {
-        keepVelocity: false,
-        type: MissileBulletType,
-        hitEffect: explosion,
-        despawnEffect: explosion,
-        shootEffect: shootBig,
-        damage: 135,
-        speed: 4,
-        lifetime: 120,
-        homingPower: 0.0567,
-        homingRange: 100,
-        weaveScale: 5,
-        weaveMag: 5,
-        height: 12,
-        width: 8,
-        splashDamageRadius: 20,
-        splashDamage: 38
-      }
-    },
-    {
-      name: zelvorak-nuke,
-      x: 0,
-      y: 0,
-      alternate: false,
-      mirror: false,
-      top: false,
-      rotate: false,
-      shootY: 34,
-      cooldownTime: 80,
-      reload: 1200,
-      shoot: {
-        shots: 1,
-        firstShotDelay: 120,
-        shotDelay: 110
-      },
-      shootStatus: unmoving,
-      shootStatusDuration: 60,
+weapons: [
+  {
+    name: zelvorak-gun
+    shootCone: 15
+    mirror: true
+    alternate: true
+    rotateSpeed: 5
+    rotate: true
+    shootY: 8
+    y: 35
+    x: 10
+    reload: 9
+    recoil: 1
+    ejectEffect: casing2
+    shootSound: bang
+    shoot: {
+      shots: 1
+    }
+    shake: 1
+    bullet: {
+      splashDamage: 30
+      splashDamageRadius: 20
+      type: BasicBulletType
+      hitEffect: blastExplosion
+      knockback: 1
+      shootEffect: shootBig2
+      despawnEffect: blastExplosion
+      lifetime: 90
+      damage: 80
+      speed: 4
+      width: 10
+      height: 10
+    }
+  }
 
-      smoothReloadSpeed: 0.01,
-      shootWarmupSpeed: 0.02,
-      linearWarmup: false,
-      minWarmup: 0.95,
-      heatColor: ff2515,
-      parts: [
-        {
-          type: RegionPart,
-          name: '-1',
-          progress: {
-            type: warmup,
-            blending: additive,
-            heatColor: purple,
-            delay: 0.2
-          }
-        },
-        {
-          type: RegionPart,
-          name: '-1',
-          progress: {
-            type: warmup,
-            heatProgress: {
-               type: heat,
-               delay: 5.0
-            },
-            heatColor: scarlet,
-            delay: 12.0
-          }
-        }
-      ],
+  {
+    name: zelvorak-gun
+    shootCone: 15
+    shootY: 8
+    mirror: true
+    alternate: true
+    rotateSpeed: 5
+    rotate: true
+    y: 15
+    x: 15
+    reload: 9
+    recoil: 1
+    ejectEffect: casing2
+    shootSound: bang
+    shoot: {
+      shots: 1
+    }
+    shake: 1
+    bullet: {
+      splashDamage: 30
+      splashDamageRadius: 20
+      knockback: 1
+      type: BasicBulletType
+      hitEffect: blastExplosion
+      shootEffect: shootBig2
+      despawnEffect: blastExplosion
+      lifetime: 90
+      damage: 80
+      speed: 4
+      width: 10
+      height: 10
+    }
+  }
 
-      shake: 3,
-      shootSound: bigLaserShoot,
-      ejectEffect: none,
-      bullet: {
-        type: BasicBulletType,
-        sprite: missile-large,
-        status: melting,
-        statusDuration: 300,
-        damage: 1080,
-        splashDamage: 520,
-        splashDamageRadius: 100,
-        makeFire: true,
-        incendChance: 140,
-        incendSpread: 18,
-        incendAmount: 4,
-        height: 40,
-        width: 30,
-        speed: 2.0,
-        lifetime: 165,
-        homingPower: 0.00756,
-        homingRange: 160,
-        shrinkX: 0,
-        shrinkY: 0,
-        hitEffect: {
-          type: multiEffect,
-          effects: [
-            {
-              type: ParticleEffect,
-              line: true,
-              particles: 35,
-              lifetime: 30,
-              offset: 60,
-              length: 115,
-              cone: -360,
-              strokeFrom: 0,
-              strokeTo: 3.5,
-              sizeFrom: 8,
-              sizeTo: 0,
-              colorFrom: fff8e8,
-              colorTo: f9c27a
-            },
-            {
-              type: ParticleEffect,
-              particles: 35,
-              offset: 30,
-              sizeFrom: 4,
-              sizeTo: 0,
-              length: 105,
-              lifetime: 30,
-              colorFrom: fff8e8,
-              colorTo: f9c27a,
-              cone: 360
-            },
-            {
-              type: ParticleEffect,
-              particles: 45,
-              sizeFrom: 7,
-              sizeTo: 0.3,
-              offset: 60,
-              length: 100,
-              lifetime: 200,
-              colorFrom: fff8e8,
-              colorTo: f9c2AA,
-              cone: 360
-            },
-            {
-              type: WaveEffect,
-              lifetime: 50,
-              sizeFrom: 0,
-              sizeTo: 95,
-              strokeFrom: 8,
-              strokeTo: 0,
-              colorFrom: fff8e8,
-              colorTo: f9c27a
-            }
-          ]
-        },
-        despawnEffect: {
-          type: ParticleEffect,
-          particles: 30,
-          length: 60,
-          lifetime: 46,
-          interp: circleOut,
-          cone: 360,
-          colorFrom: fff8e8,
-          colorTo: f9c27a,
-          sizeFrom: 6,
-          sizeTo: 0
-        },
-        shootEffect: {
-          type: multiEffect,
-          lifetime: 120,
-          effects: [
-            {
-              type: ParticleEffect,
-              particles: 35,
-              offset: 15,
-              baseLength: -105,
-              sizeFrom: 0,
-              sizeTo: 5,
-              length: 60,
-              lifetime: 100,
-              colorFrom: f9c27a,
-              colorTo: fff8e8,
-              cone: 360
-            },
-            {
-              type: ParticleEffect,
-              particles: 1,
-              sizeFrom: 0.25,
-              sizeTo: 10,
-              length: 0,
-              lifetime: 110,
-              colorFrom: f9c27a,
-              colorTo: fff8e8,
-              cone: 360
-            },
-            {
-              type: WaveEffect,
-              lifetime: 105,
-              sizeFrom: 95,
-              sizeTo: 0,
-              strokeFrom: 0,
-              strokeTo: 8,
-              colorFrom: f9c27a,
-              colorTo: fff8e8
-            }
-          ]
-        },
-        trailEffect: {
-          type: ParticleEffect,
-          particles: 15,
-          length: 8,
-          baseLength: 8,
-          lifetime: 25,
-          interp: circleOut,
-          cone: 360,
-          offset: 5,
-          colorFrom: fff8e8,
-          colorTo: f9c27a,
-          sizeFrom: 7,
-          sizeTo: 0
-        },
-        pierce: false,
-        absorbable: true,
-        trailChance: 1,
-        buildingDamageMultiplier: 0.4,
-        smokeEffect: blastExplosion,
-        frontColor: fff8e8,
-        backColor: f9c27a,
-        fragBullets: 32,
-        fragBullet: {
-          type: LiquidBulletType,
-          liquid: slag,
-          status: melting,
-          lifetime: 60,
-          makeFire: true,
-          incendChance: 140,
-          incendSpread: 18,
-          incendAmount: 4,
-          puddleSize: 8,
-          orbSize: 4.5,
-          speed: 3,
-          damage: 10
+  {
+    name: zelvorak-artillery
+    top: true
+    mirror: true
+    alternate: true
+    y: 5
+    x: 22
+    shoot: {
+      shotDelay: 5
+      shots: 3
+    }
+    rotate: true
+    rotateSpeed: 4
+    inaccuracy: 5
+    shootY: 10
+    reload: 16
+    recoil: 1
+    shake: 0.5
+    ejectEffect: casing2
+    shootSound: shootBig
+    bullet: {
+      type: BasicBulletType
+      hitEffect: flakExplosion
+      shootEffect: shootBig2
+      despawnEffect: flakExplosion
+      pierce: true
+      pierceCap: 1
+      knockback: 1.8
+      statusDuration: 80
+      status: blasted
+      lifetime: 90
+      damage: 200
+      speed: 4
+      width: 14
+      height: 14
+      splashDamage: 20
+      splashDamageRadius: 20
+    }
+  }
+
+  {
+    name: zelvorak-artillery
+    top: true
+    mirror: true
+    alternate: true
+    y: -12
+    x: 28
+    shoot: {
+      shotDelay: 5
+      shots: 3
+    }
+    rotate: true
+    rotateSpeed: 4
+    inaccuracy: 5
+    shootY: 10
+    reload: 16
+    recoil: 1
+    shake: 0.5
+    ejectEffect: casing2
+    shootSound: shootBig
+    bullet: {
+      type: BasicBulletType
+      hitEffect: flakExplosion
+      shootEffect: shootBig2
+      despawnEffect: flakExplosion
+      pierce: true
+      pierceCap: 1
+      knockback: 1.8
+      statusDuration: 80
+      status: blasted
+      lifetime: 90
+      damage: 200
+      speed: 4
+      width: 14
+      height: 14
+      splashDamage: 20
+      splashDamageRadius: 20
+    }
+  }
+
+  {
+    name: zelvorak-missile
+    x: 35
+    y: -28
+    shootCone: 25
+    alternate: true
+    mirror: true
+    top: true
+    rotate: true
+    rotateSpeed: 2.9
+    reload: 15
+    recoil: 0.5
+    shoot: {
+      shotDelay: 1
+      shots: 2
+    }
+    shootY: 8
+    inaccuracy: 10
+    xRand: 11
+    shootSound: missile
+    velocityRnd: 0.4
+    bullet: {
+      keepVelocity: false
+      type: MissileBulletType
+      hitEffect: explosion
+      despawnEffect: explosion
+      shootEffect: shootBig
+      damage: 135
+      speed: 4
+      lifetime: 120
+      homingPower: 0.0567
+      homingRange: 100
+      weaveScale: 5
+      weaveMag: 5
+      height: 12
+      width: 8
+      splashDamageRadius: 20
+      splashDamage: 38
+    }
+  }
+
+  {
+    name: zelvorak-nuke
+    x: 0
+    y: 0
+    alternate: false
+    mirror: false
+    top: false
+    rotate: false
+    shootY: 34
+    cooldownTime: 80
+    reload: 1200
+    shoot: {
+      shots: 1
+      firstShotDelay: 120
+      shotDelay: 110
+    }
+    shootStatus: unmoving
+    shootStatusDuration: 60
+    smoothReloadSpeed: 0.01
+    shootWarmupSpeed: 0.02
+    linearWarmup: false
+    minWarmup: 0.95
+    heatColor: ff2515
+    parts: [
+      {
+        type: RegionPart
+        name: '-1'
+        progress: {
+          type: warmup
+          blending: additive
+          heatColor: purple
+          delay: 0.2
         }
       }
+      {
+        type: RegionPart
+        name: '-1'
+        progress: {
+          type: warmup
+          heatProgress: {
+            type: heat
+            delay: 5.0
+          }
+          heatColor: scarlet
+          delay: 12.0
+        }
+      }
+    ]
+    shake: 3
+    shootSound: bigLaserShoot
+    ejectEffect: none
+    bullet: {
+      type: BasicBulletType
+      sprite: missile-large
+      status: melting
+      statusDuration: 300
+      damage: 1080
+      splashDamage: 520
+      splashDamageRadius: 100
+      makeFire: true
+      incendChance: 140
+      incendSpread: 18
+      incendAmount: 4
+      height: 40
+      width: 30
+      speed: 2.0
+      lifetime: 165
+      homingPower: 0.00756
+      homingRange: 160
+      shrinkX: 0
+      shrinkY: 0
+      hitEffect: {
+        type: multiEffect
+        effects: [
+          {
+            type: ParticleEffect
+            line: true
+            particles: 35
+            lifetime: 30
+            offset: 60
+            length: 115
+            cone: -360
+            strokeFrom: 0
+            strokeTo: 3.5
+            sizeFrom: 8
+            sizeTo: 0
+            colorFrom: fff8e8
+            colorTo: f9c27a
+          }
+          {
+            type: ParticleEffect
+            particles: 35
+            offset: 30
+            sizeFrom: 4
+            sizeTo: 0
+            length: 105
+            lifetime: 30
+            colorFrom: fff8e8
+            colorTo: f9c27a
+            cone: 360
+          }
+          {
+            type: ParticleEffect
+            particles: 45
+            sizeFrom: 7
+            sizeTo: 0.3
+            offset: 60
+            length: 100
+            lifetime: 200
+            colorFrom: fff8e8
+            colorTo: f9c2AA
+            cone: 360
+          }
+          {
+            type: WaveEffect
+            lifetime: 50
+            sizeFrom: 0
+            sizeTo: 95
+            strokeFrom: 8
+            strokeTo: 0
+            colorFrom: fff8e8
+            colorTo: f9c27a
+          }
+        ]
+      }
+      despawnEffect: {
+        type: ParticleEffect
+        particles: 30
+        length: 60
+        lifetime: 46
+        interp: circleOut
+        cone: 360
+        colorFrom: fff8e8
+        colorTo: f9c27a
+        sizeFrom: 6
+        sizeTo: 0
+      }
+      shootEffect: {
+        type: multiEffect
+        lifetime: 120
+        effects: [
+          {
+            type: ParticleEffect
+            particles: 35
+            offset: 15
+            baseLength: -105
+            sizeFrom: 0
+            sizeTo: 5
+            length: 60
+            lifetime: 100
+            colorFrom: f9c27a
+            colorTo: fff8e8
+            cone: 360
+          }
+          {
+            type: ParticleEffect
+            particles: 1
+            sizeFrom: 0.25
+            sizeTo: 10
+            length: 0
+            lifetime: 110
+            colorFrom: f9c27a
+            colorTo: fff8e8
+            cone: 360
+          }
+          {
+            type: WaveEffect
+            lifetime: 105
+            sizeFrom: 95
+            sizeTo: 0
+            strokeFrom: 0
+            strokeTo: 8
+            colorFrom: f9c27a
+            colorTo: fff8e8
+          }
+        ]
+      }
+      trailEffect: {
+        type: ParticleEffect
+        particles: 15
+        length: 8
+        baseLength: 8
+        lifetime: 25
+        interp: circleOut
+        cone: 360
+        offset: 5
+        colorFrom: fff8e8
+        colorTo: f9c27a
+        sizeFrom: 7
+        sizeTo: 0
+      }
+      pierce: false
+      absorbable: true
+      trailChance: 1
+      buildingDamageMultiplier: 0.4
+      smokeEffect: blastExplosion
+      frontColor: fff8e8
+      backColor: f9c27a
+      fragBullets: 32
+      fragBullet: {
+        type: LiquidBulletType
+        liquid: slag
+        status: melting
+        lifetime: 60
+        makeFire: true
+        incendChance: 140
+        incendSpread: 18
+        incendAmount: 4
+        puddleSize: 8
+        orbSize: 4.5
+        speed: 3
+        damage: 10
+      }
     }
-  ],
-  abilities: [
-    {
-      type: mindustry.entities.abilities.StatusFieldAbility,
-      range: 100,
-      reload: 340,
-      duration: 250,
-      effect: overclock
-    },
-    {
-      type: mindustry.entities.abilities.RegenAbility,
-      amount: 10
-    },
-    {
-      type: mindustry.entities.abilities.UnitSpawnAbility,
-      unit: horizon,
-      spawnTime: 820,
-      spawnX: 45,
-      spawnY: 4
-    },
-    {
-      type: mindustry.entities.abilities.UnitSpawnAbility,
-      unit: horizon,
-      spawnTime: 820,
-      spawnX: -45,
-      spawnY: 4
-    }
-  ]
- }
+  }
+]
+
+abilities: [
+  {
+    type: mindustry.entities.abilities.StatusFieldAbility
+    range: 100
+    reload: 340
+    duration: 250
+    effect: overclock
+  }
+  {
+    type: mindustry.entities.abilities.RegenAbility
+    amount: 10
+  }
+  {
+    type: mindustry.entities.abilities.UnitSpawnAbility
+    unit: horizon
+    spawnTime: 820
+    spawnX: 45
+    spawnY: 4
+  }
+  {
+    type: mindustry.entities.abilities.UnitSpawnAbility
+    unit: horizon
+    spawnTime: 820
+    spawnX: -45
+    spawnY: 4
+  }
+]
