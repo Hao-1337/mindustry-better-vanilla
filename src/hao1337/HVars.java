@@ -112,7 +112,7 @@ public class HVars {
             @Nullable TextButton button = hud.find(e -> e instanceof TextButton btn && btn.getChildren().contains(t -> t instanceof Label l && l.toString().contains(getText("@command.queue"))));
 
             if (button != null && button.parent instanceof Table t && t.parent != null) {
-                hud = (WidgetGroup) t.parent;
+                hud = (WidgetGroup) t;
             }
         }
 
