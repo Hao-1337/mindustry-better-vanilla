@@ -2,9 +2,12 @@ package hao1337;
 
 import arc.Core;
 import arc.Events;
+import arc.scene.ui.Label;
+import arc.scene.ui.TextButton;
 import arc.scene.ui.layout.Scl;
 import arc.scene.ui.layout.Table;
 import arc.scene.ui.layout.WidgetGroup;
+import arc.util.Nullable;
 import arc.scene.Group;
 import mindustry.Vars;
 import mindustry.game.EventType.ClientLoadEvent;
@@ -45,7 +48,10 @@ public class HVars {
     /** Net channel for time control UI state */
     public static final short tcNetChannel = 23555;
 
-    public HVars() { eventsLoader(); }
+    public HVars() {
+        Htex.load(name);
+        eventsLoader();
+    }
 
     void eventsLoader() {
         Events.on(WorldLoadEndEvent.class, e -> {
@@ -99,16 +105,34 @@ public class HVars {
             t.collapser(unitDisplay, () -> Core.settings.getBool("hao1337.ui.unitinf.enable")
                     && (!Vars.ui.hudfrag.shown || !Vars.ui.minimapfrag.shown())).top();
         });
+
         // Add time control
+        // If failed to get mobile layout then go back to desktop one
+        if (Vars.mobile) {
+            @Nullable TextButton button = hud.find(e -> e instanceof TextButton btn && btn.getChildren().contains(t -> t instanceof Label l && l.toString().contains(getText("@command.queue"))));
+
+            if (button != null && button.parent instanceof Table t && t.parent != null) {
+                hud = (WidgetGroup) t.parent;
+            }
+        }
+
         hud.fill(t -> {
             t.bottom().left();
             t.name = "Hao137 TimeControl";
-
             // t.table(Tex.pane, e -> AutoDrill.register(e));
             // t.row();
             t.table(null, e -> e.top().left().collapser(timecontrol, () -> Core.settings.getBool("hao1337.ui.timecontrol.enable")));
             if (Vars.mobile)
                 t.moveBy(0, Scl.scl(46));
         });
+    }
+
+    String getText(String newText){
+        if (Core.bundle != null && newText != null && newText.length() > 0 && (newText.charAt(0) == '$' || newText.charAt(0) == '@')) {
+            String out = newText.toString().substring(1);
+            return Core.bundle.get(out, newText.toString());
+        } else {
+            return newText;
+        }
     }
 }
