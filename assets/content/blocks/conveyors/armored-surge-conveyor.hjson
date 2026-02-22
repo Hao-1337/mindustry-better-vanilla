@@ -1,25 +1,24 @@
-{
-  name: Armored Surge Conveyor,
-  description: Ultra-high-speed conveyer that transports resouces extremly quickly. Fastest conveyer available, exceeding even Thorium conveyers in speed. Does not accept input form the sides.,
-  type: ArmoredConveyor,
-  category: distribution,
-  hasShadow: true,
-  health: 100,
-  speed: 0.24,
-  displayedSpeed: 33.3,
+type: ArmoredConveyor
+category: distribution
+
+hasShadow: true
+health: 100
+speed: 0.24
+displayedSpeed: 33.3
+
+requirements: [
+  surge-alloy/3
+  thorium/5
+  titanium/3
+  copper/10
+]
+
+research: {
+  parent: serpulo-surge-conveyor
   requirements: [
-    surge-alloy/3,
-    thorium/5,
-    titanium/3,
-    copper/10
-  ],
-  research: {
-    parent: serpulo-surge-conveyor,
-    requirements: [
-      copper/5000,
-      titanium/1500,
-      thorium/1000,
-      surge-alloy/500,
-    ]
-  }
+    copper/5000
+    titanium/1500
+    thorium/1000
+    surge-alloy/500
+  ]
 }

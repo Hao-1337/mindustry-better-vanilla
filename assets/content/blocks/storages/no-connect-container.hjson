@@ -1,6 +1,3 @@
-name: Teleport Gate
-description: Transmits resources to and from the Core over arbitrary distances instantly. Requires large amount of power to operate. Does not expand Core Storage.,
-
 type: "hao1337.lib.CoreStorageBlock"
 category: effect
 

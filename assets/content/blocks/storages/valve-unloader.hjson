@@ -1,24 +1,23 @@
-{
-  name: Valve Unloader,
-  description: Rapidly unloads items from storages.,
-  type: Unloader,
-  category: effect,
-  group: transportation,
-  speed: 10,
-  health: 330,
+type: Unloader
+category: effect
+group: transportation
+
+speed: 10
+health: 330
+
+requirements: [
+  lead/95
+  titanium/70
+  silicon/55
+  surge-alloy/25
+]
+
+research: {
+  parent: unloader
   requirements: [
-    lead/95,
-    titanium/70,
-    silicon/55,
-    surge-alloy/25
-  ],
-  research: {
-    parent: unloader,
-    requirements: [
-      titanium/2500,
-      lead/3200,
-      silicon/1200,
-      surge-alloy/1000,
-    ]
-  }
+    titanium/2500
+    lead/3200
+    silicon/1200
+    surge-alloy/1000
+  ]
 }

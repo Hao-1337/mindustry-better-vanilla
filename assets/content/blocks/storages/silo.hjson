@@ -1,6 +1,3 @@
-name: Silo
-description: Stores huge amounts of all item types. Expands storage when placed next to a core. Contents can be retrieved with an unloader.
-
 type: StorageBlock
 category: effect
 
@@ -16,6 +13,7 @@ requirements: [
     plastanium/150
     lead/2000
 ]
+
 research: {
     parent: vault
     requirements: [

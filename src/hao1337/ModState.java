@@ -128,7 +128,7 @@ public class ModState {
         Vars.maxSchematicSize = sechematicSize;
         try {
             // It also gone!
-            Vars.experimental = experimental;
+            // Vars.experimental = experimental;
         } catch (Throwable ex) {}
     }
 

@@ -1,24 +1,22 @@
-{
-  name: Armored Thorium Conveyor,
-  description: High-speed conveyor, able to transport a large number of items. Faster than titanium conveyors. Does not accept input form the sides.,
-  type: ArmoredConveyor,
-  category: distribution,
-  hasShadow: true,
-  health: 100,
-  speed: 0.16,
-  displayedSpeed: 22.2,
-  requirements: [
-    thorium/5,
-    titanium/2,
-    copper/5
-  ],
-  research: {
-    parent: thorium-conveyor,
-    requirements: [
-      titanium/2200,
-      copper/2000,
-      thorium/1200,
+type: ArmoredConveyor
+category: distribution
 
-    ]
-  }
+hasShadow: true
+health: 100
+speed: 0.16
+displayedSpeed: 22.2
+
+requirements: [
+  thorium/5
+  titanium/2
+  copper/5
+]
+
+research: {
+  parent: thorium-conveyor
+  requirements: [
+    titanium/2200
+    copper/2000
+    thorium/1200
+  ]
 }
