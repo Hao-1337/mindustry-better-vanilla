@@ -113,6 +113,11 @@ public class HVars {
 
             if (button != null && button.parent instanceof Table t && t.parent != null) {
                 hud = (WidgetGroup) t;
+                t.table(null, e -> {
+                    e.name = "Hao137 TimeControl";
+                    e.top().left().collapser(timecontrol, () -> Core.settings.getBool("hao1337.ui.timecontrol.enable"));
+                });
+                return;
             }
         }
 
@@ -121,7 +126,7 @@ public class HVars {
             t.name = "Hao137 TimeControl";
             // t.table(Tex.pane, e -> AutoDrill.register(e));
             // t.row();
-            t.table(null, e -> e.top().left().collapser(timecontrol, () -> Core.settings.getBool("hao1337.ui.timecontrol.enable")));
+            t.collapser(timecontrol, () -> Core.settings.getBool("hao1337.ui.timecontrol.enable"));
             if (Vars.mobile)
                 t.moveBy(0, Scl.scl(46));
         });
