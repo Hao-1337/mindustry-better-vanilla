@@ -69,10 +69,8 @@ Created by: [ĐạiPH](https://github.com/BackNNHH)
 # Experimental Section
 ### Multi-block Machines
 
-![Multi-block Machine](https://github.com/user-attachments/assets/d14f5326-0bb2-4662-b880-f4ee980e549e)
-
 > [!WARNING]
-> ** Only prototypes are available currently. This get hidden by default **
+> **Only prototypes are available currently. This get hidden by default**
 
 Example JSON configuration for a multi-block machine:
 
@@ -107,3 +105,6 @@ Example JSON configuration for a multi-block machine:
   ]
 }
 ```
+
+![Multi-block Machine](https://github.com/user-attachments/assets/d14f5326-0bb2-4662-b880-f4ee980e549e)
+
