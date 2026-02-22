@@ -14,6 +14,7 @@ import arc.scene.Group;
 import mindustry.Vars;
 import mindustry.game.EventType.ClientLoadEvent;
 import mindustry.game.EventType.WorldLoadEndEvent;
+import mindustry.input.MobileInput;
 import hao1337.contents.HBlocks;
 import hao1337.contents.HItems;
 import hao1337.contents.HUnits;
@@ -110,22 +111,34 @@ public class HVars {
 
         // Add time control
         // If failed to get mobile layout then go back to desktop one
-        if (Vars.mobile) {
+        if (Vars.mobile && Vars.control.input instanceof MobileInput control) {
             @Nullable TextButton button = getButtonByI18NText(hud, "@command.queue");
 
             if (button != null && button.parent instanceof Table t && t.parent != null) {
                 var parent = t.parent;
                 var firstChild = parent.getChildren().get(0);
                 Table tcTable = new Table();
-                parent.forEach(e -> {
-                    ((Table) e).row().spacerY(() -> tcTable.getHeight());
-                });
+
+                for (Element e : parent.getChildren()) {
+                    if (e instanceof Table w) {
+                        // remove any default spacer first!
+                        boolean haveDefaultSpacer = false;
+                        for (Element e1 : w.getChildren())
+                            if (e1 instanceof Spacer) {
+                                w.removeChild(e1);
+                                haveDefaultSpacer = true;
+                            }
+
+                        if (haveDefaultSpacer) w.spacerY(() -> (control.showCancel() ? 150f : 100f) - (tcTable.visible ? 1 : 100));
+                        if (getButtonByI18NText(w, "@cancel") != null) w.spacerY(() -> tcTable.visible ? 249f : 0);
+                    }
+                };
 
                 tcTable.name = "Hao137 TimeControl";
                 tcTable.bottom().left();
                 tcTable.setFillParent(true);
                 tcTable.visible(() -> Core.settings.getBool("hao1337.ui.timecontrol.enable"));
-                tcTable.add(timecontrol).width(155f);
+                tcTable.add(timecontrol).width(155f).height(100F);
                 tcTable.row();
 
                 parent.addChildBefore(firstChild, tcTable);
