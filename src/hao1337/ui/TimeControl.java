@@ -1,5 +1,9 @@
 package hao1337.ui;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.util.UUID;
 
 import arc.Core;
@@ -12,14 +16,18 @@ import arc.scene.ui.layout.Cell;
 import arc.scene.ui.layout.Table;
 import arc.util.Time;
 import arc.util.Tmp;
-import hao1337.net.HaoNetPackage;
-import hao1337.net.Server;
+import arc.util.io.Reads;
+import arc.util.io.Writes;
+import hao1337.HVars;
+import static hao1337.net.Net.*;
+import hao1337.net.IORouter;
+import hao1337.net.Protocol.PlayerAuthSuccess;
 import mindustry.Vars;
-import mindustry.game.EventType.PlayerJoin;
 import mindustry.gen.Icon;
 import mindustry.gen.Tex;
 import mindustry.graphics.Pal;
 import mindustry.input.InputHandler;
+import mindustry.net.NetConnection;
 import mindustry.ui.Styles;
 
 public class TimeControl extends Table {
@@ -175,45 +183,71 @@ public class TimeControl extends Table {
     }
 
     boolean isEnable() {
-        return Server.isSinglePlayer() || Vars.player.admin;
+        return HVars.net.isSinglePlayer() || Vars.player.admin;
     }
 
     void netRegister() {
-        Server.addHandleClient(packet -> {
-            if (uuid.equals(packet.uuid)) return;
-            useable = packet.tcEnable;
-            Vars.player.sendUnformatted(packet.string);
-            setSnapshot(packet.tcSpeed);
-        });
+        router.register(HVars.tcNetChannel, new IORouter.ChannelHandler() {
+            public void handleClient(byte[] payload) {
+                var i = new DataInputStream(new ByteArrayInputStream(payload));
+                Reads r = new Reads(i);
 
-        Server.addHandleServer((connection, packet) -> {
-            setSnapshot(packet.tcSpeed);
-            Server.forEachPlayer(cons -> cons.send(packet, true));
-            useable = packet.tcEnable;
-        });
+                try  {
+                    String Fuuid = r.str();
+                    if (uuid.equals(Fuuid)) return;
+                    useable = r.bool();
 
-        Events.on(PlayerJoin.class, player -> {
-            HaoNetPackage packet = new HaoNetPackage();
-    
-            packet.tcEnable = Core.settings.getBool("hao1337.ui.timecontrol.enable");
-            packet.tcSpeed = time;
+                    String mes = r.str();
+                    if (mes.length() > 0) Vars.player.sendUnformatted(mes);
+                    setSnapshot(r.i());
+                } finally {
+                    r.close();
+                }
+            }
+            public void handleServer(NetConnection connection, byte[] payload) {
+                var i = new DataInputStream(new ByteArrayInputStream(payload));
+                Reads r = new Reads(i);
 
-            player.player.con.send(packet, true);
+                try  {
+                    // Server config is highest
+                    String Fuuid = r.str();
+                    if (uuid.equals(Fuuid)) return;
+                    /** useable = */r.bool();
+                    String mes = r.str();
+                    if (mes.length() > 0) Vars.player.sendUnformatted(mes);
+                    setSnapshot(r.i());
+
+                    router.broadcast(HVars.tcNetChannel, payload);
+                } finally {
+                    r.close();
+                }
+            }
         });
+        
+        Events.on(PlayerAuthSuccess.class, e -> router.sendTo(e.connection, HVars.tcNetChannel, exportConfigPacket("")));
+    }
+
+    byte[] exportConfigPacket(String mes) {
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        DataOutputStream s = new DataOutputStream(bos);
+        Writes w = new Writes(s);
+
+        try {
+            w.str(uuid);
+            w.bool(Core.settings.getBool("hao1337.ui.timecontrol.enable"));
+            w.str(mes);
+            w.i(time);
+
+            return bos.toByteArray();
+        } finally {
+            w.close();
+        }
     }
 
     void updateSnapshot() {
-        HaoNetPackage packet = new HaoNetPackage();
-
-        packet.tcEnable = Core.settings.getBool("hao1337.ui.timecontrol.enable");
-        packet.tcSpeed = time;
-
         try {
-            packet.string = "[orange][" + Vars.player.name + "][] Set time control to [accent]" + (time < 0 ? "×1/" : "×") + displaytime;
-            packet.uuid = uuid;
-            Vars.player.sendUnformatted(packet.string);
+            byte[] payload = exportConfigPacket( "[orange][" + Vars.player.name + "][] Set time control to [accent]" + (time < 0 ? "×1/" : "×") + displaytime);
+            router.send(HVars.tcNetChannel, payload);
         } catch (Throwable e) {}
-
-        Server.post(packet);
     }
 }
