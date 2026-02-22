@@ -25,7 +25,6 @@ import hao1337.net.Protocol.PlayerAuthSuccess;
 import mindustry.Vars;
 import mindustry.game.EventType.ResetEvent;
 import mindustry.gen.Icon;
-import mindustry.gen.Tex;
 import mindustry.graphics.Pal;
 import mindustry.input.InputHandler;
 import mindustry.net.NetConnection;
