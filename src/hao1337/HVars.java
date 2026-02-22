@@ -118,9 +118,10 @@ public class HVars {
                 Table tcTable = new Table();
 
                 tcTable.name = "Hao137 TimeControl";
+                tcTable.bottom().left();
                 tcTable.setFillParent(true);
                 tcTable.visible(() -> Core.settings.getBool("hao1337.ui.timecontrol.enable"));
-                tcTable.add(timecontrol);
+                tcTable.add(timecontrol).width(155f);
 
                 bottomLeftGroup.addChildBefore(firstChild, tcTable);
                 return;
