@@ -81,6 +81,7 @@ public class SettingBuilder {
     public void build() {
         Vars.ui.settings.addCategory("Better Vanilla", new TextureRegionDrawable(Icon.settingsSmall), (t) -> {
             t.pref(new SettingTitle(){{ desc = Core.bundle.format("hao1337.setting.category.ui"); height = 0f; }});
+            t.pref(new Label(){{ content = Core.bundle.format("setting.hao1337.ui.landscape"); }});
             t.checkPref("hao1337.ui.coreinf.enable", true);
             t.checkPref("hao1337.ui.unitinf.enable", true);
             t.checkPref("hao1337.ui.timecontrol.enable", true);
@@ -124,7 +125,6 @@ public class SettingBuilder {
 	         * at mindustry.game.Schematics.loadFile(Schematics.java:138)
              */
             t.sliderPref("hao1337.sechematic.size", 64, 32, 128, n -> n + "×" + n);
-            t.checkPref("hao1337.gameplay.experimental", false);
             t.checkPref("hao1337.mod.experimental", false);
             t.checkPref("hao1337.toggle.autoupdate", true);
         });

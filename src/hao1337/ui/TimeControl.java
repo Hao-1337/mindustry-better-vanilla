@@ -23,8 +23,8 @@ import static hao1337.net.Net.*;
 import hao1337.net.IORouter;
 import hao1337.net.Protocol.PlayerAuthSuccess;
 import mindustry.Vars;
+import mindustry.game.EventType.ResetEvent;
 import mindustry.gen.Icon;
-import mindustry.gen.Tex;
 import mindustry.graphics.Pal;
 import mindustry.input.InputHandler;
 import mindustry.net.NetConnection;
@@ -73,7 +73,7 @@ public class TimeControl extends Table {
 
     public void build() {
         name = "hao1337-timecontrol-ui";
-        background(Tex.pane);
+        background(Htex.paneTopRight);
         top();
 
         table(null, table -> {
@@ -225,6 +225,7 @@ public class TimeControl extends Table {
         });
         
         Events.on(PlayerAuthSuccess.class, e -> router.sendTo(e.connection, HVars.tcNetChannel, exportConfigPacket("")));
+        Events.on(ResetEvent.class, e -> update(false));
     }
 
     byte[] exportConfigPacket(String mes) {

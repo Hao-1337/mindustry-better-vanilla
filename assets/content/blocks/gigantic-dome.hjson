@@ -1,45 +1,44 @@
-{
-  name: Overdrive Emitter,
-  description: Signifigantly increases speed of buildings in a wide area. requires large amounts of Phase Fabric and Silicon to run.,
-  type: OverdriveProjector,
-  category: effect,
-  group: projectors,
-  hasBoost: true,
-  hasPower: true,
-  hasLiquids: true,
-  hasItems: true,
-  size: 6,
-  speedBoost: 3.25,
-  range: 960,
-  itemCapacity: 80,
-  health: 1820,
-  liquidCapacity: 60,
-  consumes: {
-    power: 40,
-    items: [
-      phase-fabric/3,
-      silicon/2,
-    ],
-    liquid: {
-      liquid: cryofluid,
-      amount: 0.1
-    }
-  },
-  requirements: [
-    plastanium/5000,
-    silicon/5000,
-    thorium/4000,
-    surge-alloy/1500,
-    phase-fabric/2500
-  ],
-  research: {
-    parent: overdrive-dome,
-    requirements: [
-      plastanium/40000,
-      silicon/32000,
-      thorium/45000,
-      surge-alloy/15000,
-      phase-fabric/25000
-    ]
+category: effect
+group: projectors
+
+hasBoost: true
+hasPower: true
+hasLiquids: true
+hasItems: true
+size: 6
+speedBoost: 3.25
+range: 960
+itemCapacity: 80
+health: 1820
+liquidCapacity: 60
+
+consumes: {
+  power: 40
+  items: [
+    phase-fabric/3
+    silicon/2
+  ]
+  liquid: {
+    liquid: cryofluid
+    amount: 0.1
   }
+}
+
+requirements: [
+  plastanium/5000
+  silicon/5000
+  thorium/4000
+  surge-alloy/1500
+  phase-fabric/2500
+]
+
+research: {
+  parent: overdrive-dome
+  requirements: [
+    plastanium/40000
+    silicon/32000
+    thorium/45000
+    surge-alloy/15000
+    phase-fabric/25000
+  ]
 }

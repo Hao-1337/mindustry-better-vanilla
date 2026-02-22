@@ -1,6 +1,3 @@
-name: Warehouse
-description: Stores a massive amount of items of each type. Expands storage when placed next to a core. Contents can be retrieved with an unloader.
-
 type: StorageBlock
 category: effect
 
@@ -16,6 +13,7 @@ requirements: [
     plastanium/530
     lead/2500
 ]
+
 research: {
     parent: silo
     requirements: [

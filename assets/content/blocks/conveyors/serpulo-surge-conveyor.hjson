@@ -1,25 +1,24 @@
-{
-  name: Surge Conveyor,
-  description: Ultra-high-speed conveyer that transports resouces extremly quickly. Fastest conveyer available, exceeding even Thorium conveyers in speed.,
-  type: Conveyor,
-  category: distribution,
-  hasShadow: true,
-  health: 100,
-  speed: 0.24,
-  displayedSpeed: 33.3,
+type: Conveyor
+category: distribution
+
+hasShadow: true
+health: 100
+speed: 0.24
+displayedSpeed: 33.3
+
+requirements: [
+  surge-alloy/1
+  thorium/5
+  titanium/3
+  copper/10
+]
+
+research: {
+  parent: thorium-conveyor
   requirements: [
-    surge-alloy/1,
-    thorium/5,
-    titanium/3,
-    copper/10
-  ],
-  research: {
-    parent: thorium-conveyor,
-    requirements: [
-      titanium/1200,
-      thorium/500,
-      copper/3000,
-      surge-alloy/100
-    ]
-  }
+    titanium/1200
+    thorium/500
+    copper/3000
+    surge-alloy/100
+  ]
 }

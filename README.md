@@ -9,15 +9,11 @@
 
 Add enhancements and improvements to Mindustry's vanilla experience, including better UI and useful features for players.
 
+> [!WARNING]
+> **This mod is under active development. It may crash, have errors, or not work as intended. Please report any issues so they can be addressed quickly.**
+
 ### Textures and Sprites
 Created by: [ĐạiPH](https://github.com/BackNNHH)
-
----
-
-> **WARNING:**
-> This mod is under active development. It may crash, have errors, or not work as intended. Please report any issues so they can be addressed quickly.
-
----
 
 ## Features
 
@@ -35,16 +31,46 @@ Created by: [ĐạiPH](https://github.com/BackNNHH)
   - "T6" units.
 - Unlocks some hidden content.
 
----
+
+# Screenshots
+<table>
+  <tr>
+    <td style="text-align: center;"><strong>Core Items & Units Display</strong></td>
+    <td style="text-align: center;"><strong>Core Link</strong></td>
+  </tr>
+  <tr>
+    <td><img width="100%" height="auto" alt="Core items and units display" src="https://github.com/user-attachments/assets/b4ad2b7e-aa8d-4e80-8dea-c983450d03a4" /></td>
+    <td><img width="100%" height="auto" alt="Core Link" src="https://github.com/user-attachments/assets/32b75a2c-7828-481d-9727-4c231bbfbba9" /></td>
+  </tr>
+  <tr>
+    <td style="text-align: center;"><strong>Leviathan Reconstructor</strong></td>
+    <td style="text-align: center;"><strong>Time Control (Single Player)</strong></td>
+  </tr>
+  <tr>
+    <td><img width="100%" height="auto" alt="Leviathan Reconstructor" src="https://github.com/user-attachments/assets/8edecd5e-771f-4bef-ab83-4f58337d9b4c" /></td>
+    <td><img width="100%" height="auto" alt="Time control single player" src="https://github.com/user-attachments/assets/28757101-10c5-4579-a8b4-d7e1f40889b0" /></td>
+  </tr>
+  <tr>
+    <td style="text-align: center;"><strong>Time Control (Multiplayer)</strong></td>
+    <td style="text-align: center;"><strong>Turret: M1014</strong></td>
+  </tr>
+  <tr>
+    <td><img width="100%" height="auto" alt="Time control multiplayer" src="https://github.com/user-attachments/assets/7035d38c-15f8-4650-b779-211d88989314" /></td>
+    <td><img width="100%" height="auto" alt="M1014 Turret" src="https://github.com/user-attachments/assets/3cd612c5-2484-4d6f-8ab8-0bef1d91ca06" /></td>
+  </tr>
+  <tr>
+    <td colspan="2" style="text-align: center;"><strong>Mobile View</strong></td>
+  </tr>
+  <tr>
+    <td colspan="2"><img width="100%" height="auto" alt="Mobile screenshot" src="https://github.com/user-attachments/assets/6ccaa84f-b426-4c5a-a79e-f758703d94bc" /></td>
+  </tr>
+</table>
 
 # Experimental Section
-
 ### Multi-block Machines
 
-![Multi-block Machine](https://github.com/user-attachments/assets/d14f5326-0bb2-4662-b880-f4ee980e549e)
-
-> **NOTE:**
-> Only prototypes are available currently.
+> [!WARNING]
+> **Only prototypes are available currently. This get hidden by default**
 
 Example JSON configuration for a multi-block machine:
 
@@ -80,19 +106,5 @@ Example JSON configuration for a multi-block machine:
 }
 ```
 
----
-
-# Screenshots
-
-### Unit Counter and Core Item Display (Mobile)
-
-![Preview](https://github.com/Hao-1337/mindustry-better-vanilla/assets/108588018/72654879-1a5b-4f70-a443-d9b362eb2136)
-
-### Time Control
-
-![Time Control](https://github.com/user-attachments/assets/bdd6a206-f10e-4bb1-8e9a-3388cb74d5b7)
-
-### Leviathan Reconstructor
-
-![Leviathan Reconstructor](https://github.com/user-attachments/assets/c54194e3-9136-45f5-86eb-ea750f8912ed)
+![Multi-block Machine](https://github.com/user-attachments/assets/d14f5326-0bb2-4662-b880-f4ee980e549e)
 
