@@ -2,13 +2,19 @@ package hao1337;
 
 import arc.Core;
 import arc.Events;
+import arc.scene.ui.Label;
+import arc.scene.ui.TextButton;
 import arc.scene.ui.layout.Scl;
 import arc.scene.ui.layout.Table;
+import arc.scene.ui.layout.Spacer;
 import arc.scene.ui.layout.WidgetGroup;
+import arc.util.Nullable;
+import arc.scene.Element;
 import arc.scene.Group;
 import mindustry.Vars;
 import mindustry.game.EventType.ClientLoadEvent;
 import mindustry.game.EventType.WorldLoadEndEvent;
+import mindustry.input.MobileInput;
 import hao1337.contents.HBlocks;
 import hao1337.contents.HItems;
 import hao1337.contents.HUnits;
@@ -17,7 +23,7 @@ import hao1337.ui.*;
 
 public class HVars {
     /** Mod version */
-    public static final String version = "1.8.2";
+    public static final String version = "1.8.4";
     /** Github API url to this mod repo */
     public static final String gitapi = "https://api.github.com/repos/Hao-1337/mindustry-better-vanilla/releases";
     /** Github repo name */
@@ -45,7 +51,10 @@ public class HVars {
     /** Net channel for time control UI state */
     public static final short tcNetChannel = 23555;
 
-    public HVars() { eventsLoader(); }
+    public HVars() {
+        Htex.load(name);
+        eventsLoader();
+    }
 
     void eventsLoader() {
         Events.on(WorldLoadEndEvent.class, e -> {
@@ -99,16 +108,63 @@ public class HVars {
             t.collapser(unitDisplay, () -> Core.settings.getBool("hao1337.ui.unitinf.enable")
                     && (!Vars.ui.hudfrag.shown || !Vars.ui.minimapfrag.shown())).top();
         });
+
         // Add time control
+        // If failed to get mobile layout then go back to desktop one
+        if (Vars.mobile && Vars.control.input instanceof MobileInput control) {
+            @Nullable TextButton button = getButtonByI18NText(hud, "@command.queue");
+
+            if (button != null && button.parent instanceof Table t && t.parent != null) {
+                var parent = t.parent;
+                var firstChild = parent.getChildren().get(0);
+                Table tcTable = new Table();
+
+                for (Element e : parent.getChildren()) {
+                    if (e instanceof Table w) {
+                        // remove any default spacer first!
+                        boolean haveDefaultSpacer = false;
+                        for (Element e1 : w.getChildren())
+                            if (e1 instanceof Spacer) {
+                                w.removeChild(e1);
+                                haveDefaultSpacer = true;
+                            }
+
+                        if (haveDefaultSpacer) w.spacerY(() -> (control.showCancel() ? 150f : 100f) - (tcTable.visible ? 1 : 100));
+                        if (getButtonByI18NText(w, "@cancel") != null) w.spacerY(() -> tcTable.visible ? 249f : 0);
+                    }
+                };
+
+                tcTable.name = "Hao137 TimeControl";
+                tcTable.bottom().left();
+                tcTable.setFillParent(true);
+                tcTable.visible(() -> Core.settings.getBool("hao1337.ui.timecontrol.enable"));
+                tcTable.add(timecontrol).width(155f).height(100F);
+                tcTable.row();
+
+                parent.addChildBefore(firstChild, tcTable);
+                return;
+            }
+        }
+
         hud.fill(t -> {
             t.bottom().left();
             t.name = "Hao137 TimeControl";
-
             // t.table(Tex.pane, e -> AutoDrill.register(e));
             // t.row();
-            t.table(null, e -> e.top().left().collapser(timecontrol, () -> Core.settings.getBool("hao1337.ui.timecontrol.enable")));
+            t.collapser(timecontrol, () -> Core.settings.getBool("hao1337.ui.timecontrol.enable"));
             if (Vars.mobile)
                 t.moveBy(0, Scl.scl(46));
         });
+    }
+
+    @Nullable TextButton getButtonByI18NText(Group elementGroup, String name) {
+        if (Core.bundle != null && name != null && name.length() > 0 && (name.charAt(0) == '$' || name.charAt(0) == '@')) {
+            String out = name.toString().substring(1);
+            String newName = Core.bundle.get(out, name.toString());
+
+            return elementGroup.find(e -> e instanceof TextButton btn && btn.getChildren().contains(t -> t instanceof Label l && l.toString().contains(newName)));
+        }
+
+        return elementGroup.find(e -> e instanceof TextButton btn && btn.getChildren().contains(t -> t instanceof Label l && l.toString().contains(name)));
     }
 }
