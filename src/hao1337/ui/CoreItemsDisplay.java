@@ -10,6 +10,24 @@ import mindustry.world.blocks.storage.CoreBlock.*;
 
 import static mindustry.Vars.*;
 
+/**
+ * A UI table that displays items currently stored in the player's core.
+ * 
+ * <p>This class dynamically tracks which items are present in the core and displays them
+ * in a grid layout with their respective quantities. Items are only shown once they are
+ * detected in the core inventory.
+ * 
+ * <p>Features:
+ * <ul>
+ *   <li>Automatically detects and tracks items added to the core</li>
+ *   <li>Displays item icons with formatted quantity labels</li>
+ *   <li>Arranges items in rows of 4 columns</li>
+ *   <li>Shows tooltips with item names on hover</li>
+ *   <li>Updates in real-time as the core inventory changes</li>
+ * </ul>
+ * 
+ * @author Hao-1337
+ */
 public class CoreItemsDisplay extends Table {
     private final ObjectSet<Item> usedItems = new ObjectSet<>();
     private CoreBuild core;

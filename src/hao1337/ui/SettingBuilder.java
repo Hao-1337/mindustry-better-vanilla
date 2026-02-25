@@ -9,6 +9,15 @@ import mindustry.gen.Tex;
 import mindustry.graphics.Pal;
 import mindustry.ui.dialogs.SettingsMenuDialog;
 
+/**
+ * SettingBuilder manages the creation and organization of settings for the "Better Vanilla" mod category.
+ * 
+ * This class provides a fluent API for building custom UI settings elements including titles, labels,
+ * spacing, and divider lines. It organizes settings into logical categories for UI customization,
+ * gameplay enhancements on Serpulo and Erekir planets, and miscellaneous options.
+ *
+ * @see SettingsMenuDialog.SettingsTable.Setting
+ */
 public class SettingBuilder {
     public class SettingTitle extends SettingsMenuDialog.SettingsTable.Setting {
         public String desc;

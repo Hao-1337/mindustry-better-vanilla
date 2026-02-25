@@ -24,6 +24,14 @@ import mindustry.ui.Styles;
 import mindustry.ui.dialogs.BaseDialog;
 import mindustry.ui.fragments.LoadingFragment;
 
+/**
+ * AutoUpdate class handles automatic mod updates for Mindustry mods.
+ * 
+ * This class manages checking for new versions of a mod from a remote repository,
+ * displaying update information to the user, and downloading/installing updates.
+ * 
+ * @author Hao-1337
+ */
 public class AutoUpdate {
 	public static String repo;
 	public static String packname;
