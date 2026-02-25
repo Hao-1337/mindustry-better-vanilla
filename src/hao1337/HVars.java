@@ -15,6 +15,7 @@ import mindustry.Vars;
 import mindustry.game.EventType.ClientLoadEvent;
 import mindustry.game.EventType.WorldLoadEndEvent;
 import mindustry.input.MobileInput;
+import hao1337.addons.autodrill.ui.AutoDrill;
 import hao1337.contents.HBlocks;
 import hao1337.contents.HItems;
 import hao1337.contents.HUnits;
@@ -45,6 +46,8 @@ public class HVars {
     public static final TimeControl timecontrol = new TimeControl();
     /** Internal mod networking */
     public static final hao1337.net.Net net = new hao1337.net.Net();
+    /** Auto drill addons */
+    public static final AutoDrill autoDrill = new AutoDrill();
 
     /** Net channel for mod state */
     public static final short modStateNetChannel = 23554;
@@ -76,6 +79,7 @@ public class HVars {
     }
 
     void contentsLoader() {
+        autoDrill.register();
         HItems.load();
         HBlocks.load();
         HUnits.load();
@@ -149,8 +153,10 @@ public class HVars {
         hud.fill(t -> {
             t.bottom().left();
             t.name = "Hao137 TimeControl";
-            // t.table(Tex.pane, e -> AutoDrill.register(e));
-            // t.row();
+            Table t1 = new Table();
+            autoDrill.buildTable(t1);
+            t.add(t1).width(158f);
+            t.row();
             t.collapser(timecontrol, () -> Core.settings.getBool("hao1337.ui.timecontrol.enable"));
             if (Vars.mobile)
                 t.moveBy(0, Scl.scl(46));
