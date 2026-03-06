@@ -25,7 +25,7 @@ import hao1337.ui.*;
 
 public class HVars {
     /** Mod version */
-    public static final String version = "1.8.4";
+    public static final String version = "1.8.5";
     /** Github API url to this mod repo */
     public static final String gitapi = "https://api.github.com/repos/Hao-1337/mindustry-better-vanilla/releases";
     /** Github repo name */
