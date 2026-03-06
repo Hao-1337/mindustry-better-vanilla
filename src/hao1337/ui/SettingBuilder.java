@@ -101,7 +101,7 @@ public class SettingBuilder {
             t.checkPref("hao1337.gameplay.serpulo.vault-bigger", false);
             t.checkPref("hao1337.gameplay.serpulo.better-override-dome", false);
             t.checkPref("hao1337.gameplay.serpulo.better-shield", false);
-            t.checkPref("hao1337.gameplay.serpulo.scrap-wall", false);
+            // t.checkPref("hao1337.gameplay.serpulo.scrap-wall", false); // GONE
 
             t.pref(new Padding(){{ height = 40f; }});
             t.checkPref("hao1337.gameplay.serpulo.thorium-conveyor", true);
