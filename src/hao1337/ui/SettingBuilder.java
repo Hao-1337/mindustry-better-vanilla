@@ -94,7 +94,9 @@ public class SettingBuilder {
             t.checkPref("hao1337.ui.coreinf.enable", true);
             t.checkPref("hao1337.ui.unitinf.enable", true);
             t.checkPref("hao1337.ui.timecontrol.enable", true);
-
+            if (Core.settings.getBool("hao1337.mod.experimental")) {
+                t.checkPref("hao1337.ui.autodrill.enable", true);
+            }
 
             t.pref(new SettingTitle(){{ desc = Core.bundle.format("hao1337.setting.category.gameplay.serpulo"); }});
             t.pref(new Label(){{ content = Core.bundle.format("setting.hao1337.ui.restart.label"); }});

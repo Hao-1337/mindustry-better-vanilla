@@ -11,6 +11,7 @@ import arc.scene.ui.layout.WidgetGroup;
 import arc.util.Nullable;
 import arc.scene.Element;
 import arc.scene.Group;
+import arc.scene.style.Drawable;
 import mindustry.Vars;
 import mindustry.game.EventType.ClientLoadEvent;
 import mindustry.game.EventType.WorldLoadEndEvent;
@@ -87,12 +88,15 @@ public class HVars {
         modState.techTree();
     }
     
+    private @Nullable TextButton toggleSeqButton = null;
+
     void UILoader() {
         unitDisplay.name = "unit-display";
         coreitemDisplay.name = "coreitem-display";
 
         timecontrol.rebuild();
         setting.build();
+        autoDrill.buildTable();
 
         Group hud = Vars.ui.hudGroup;
         WidgetGroup coreinfo = (WidgetGroup) hud.find("coreinfo");
@@ -133,8 +137,10 @@ public class HVars {
                                 haveDefaultSpacer = true;
                             }
 
-                        if (haveDefaultSpacer) w.spacerY(() -> (control.showCancel() ? 150f : 100f) - (tcTable.visible ? 1 : 100));
-                        if (getButtonByI18NText(w, "@cancel") != null) w.spacerY(() -> tcTable.visible ? 249f : 0);
+                        if (haveDefaultSpacer) w.spacerY(() -> (control.showCancel() ? 149.5f : 100f) - (tcTable.visible ? 0f : 100f) + (autoDrill.uiTable.visible ? 48f : 0f));
+                        if (getButtonByI18NText(w, "@cancel") != null) w.spacerY(() -> (tcTable.visible ? 249f : autoDrill.uiTable.visible ? 48.5f : 0f) + (autoDrill.uiTable.visible ? 96f : 0f));
+                        var btn = getButtonByI18NText(w, "@command.queue");
+                        if (btn != null) toggleSeqButton = btn;
                     }
                 };
 
@@ -142,10 +148,19 @@ public class HVars {
                 tcTable.bottom().left();
                 tcTable.setFillParent(true);
                 tcTable.visible(() -> Core.settings.getBool("hao1337.ui.timecontrol.enable"));
-                tcTable.add(timecontrol).width(155f).height(100F);
+                tcTable.add(timecontrol).width(155f).height(100f);
                 tcTable.row();
 
                 parent.addChildBefore(firstChild, tcTable);
+
+                Table autoDrillTable = new Table((Drawable) null);
+                autoDrillTable.bottom().left();
+                autoDrillTable.setFillParent(true);
+                autoDrillTable.add(autoDrill.uiTable).width(155f);
+                autoDrillTable.spacerY(() -> tcTable.visible ? 248f : 0f);
+    
+                parent.addChildBefore(firstChild, autoDrillTable);
+
                 return;
             }
         }
@@ -153,9 +168,7 @@ public class HVars {
         hud.fill(t -> {
             t.bottom().left();
             t.name = "Hao137 TimeControl";
-            Table t1 = new Table();
-            autoDrill.buildTable(t1);
-            t.add(t1).width(158f);
+            t.add(autoDrill.uiTable).width(158f);
             t.row();
             t.collapser(timecontrol, () -> Core.settings.getBool("hao1337.ui.timecontrol.enable"));
             if (Vars.mobile)
