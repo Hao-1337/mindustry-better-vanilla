@@ -10,6 +10,23 @@ import mindustry.world.blocks.production.GenericCrafter;
 import mindustry.world.meta.BlockStatus;
 import mindustry.world.meta.BuildVisibility;
 
+/**
+ * A GenericCrafter extension that adds warmup mechanics and rotating visual effects.
+ * <br>
+ * This class provides a crafting block that gradually warms up when active and displays
+ * a rotating sprite overlay. The warmup state is preserved across save/load cycles.
+ * <br>
+ * 
+ * <strong>Features:</strong>
+ * <ul>
+ * <li>- Configurable warmup speed for state transitions</li>
+ * <li>- Rotating visual indicator with customizable speed and offset</li>
+ * <li>- Automatic serialization of warmup state</li>
+ * <li>- Integration with experimental gameplay settings for visibility control</li>
+ * </ul>
+ * 
+ * @author Hao-1337
+ */
 public class WarmupGenericCrafter extends GenericCrafter {
     /** Warmup speed */
     public float warmupSpeed = 0.02f;

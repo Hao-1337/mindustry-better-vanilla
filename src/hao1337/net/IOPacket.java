@@ -4,12 +4,30 @@ import arc.util.io.Reads;
 import arc.util.io.Writes;
 import mindustry.net.Packet;
 
+/**
+ * Generic packet that wraps arbitrary byte payloads sent over a
+ * {@code short}-identified channel.  Used by the custom I/O router to carry
+ * messages between clients and server.
+ * 
+ * @author Hao-1337
+ */
 public class IOPacket extends Packet {
+    /** channel identifier for routing. */
     public short channel;
+    /** raw byte payload sent on the channel. */
     public byte[] payload;
 
+    /**
+     * No-arg constructor required by the packet instantiation mechanism.
+     */
     public IOPacket(){}
 
+    /**
+     * Simple initializer.
+     *
+     * @param channel channel id
+     * @param payload message bytes
+     */
     public IOPacket(short channel, byte[] payload){
         this.channel = channel;
         this.payload = payload;

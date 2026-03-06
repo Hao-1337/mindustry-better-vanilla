@@ -2,6 +2,8 @@
 
 > [!NOTE]
 > **Current languages bundle is created by Gemini Pro (expect English & Vietnamese)**
+> [!NOTE]
+> **Current Javadoc by Github Copilot Pro**
 
 Thank you for contributing. Please follow these guidelines to keep the project stable and maintainable.
 

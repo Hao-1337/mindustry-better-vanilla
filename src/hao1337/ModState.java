@@ -32,6 +32,20 @@ import mindustry.world.meta.BuildVisibility;
 import arc.util.io.Reads;
 import arc.util.io.Writes;
 
+/**
+ * ModState manages the configuration state for the Mindustry Better Vanilla mod.
+ * 
+ * <p>This class handles:
+ * <ul>
+ * <li>Loading and storing mod feature toggle states from game settings</li>
+ * <li>Applying feature states to modify block visibility and game mechanics</li>
+ * <li>Synchronizing mod state between server and client via networking</li>
+ * <li>Managing technology tree modifications</li>
+ * </ul>
+ * 
+ * <p>The class automatically registers network handlers on instantiation to synchronize state 
+ * between clients and server, ensuring all players have consistent mod configurations.
+ */
 public class ModState {
     public boolean thoriumConveyor;
     public boolean surgeConveyor;

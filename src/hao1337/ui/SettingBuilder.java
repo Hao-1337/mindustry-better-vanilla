@@ -9,6 +9,15 @@ import mindustry.gen.Tex;
 import mindustry.graphics.Pal;
 import mindustry.ui.dialogs.SettingsMenuDialog;
 
+/**
+ * SettingBuilder manages the creation and organization of settings for the "Better Vanilla" mod category.
+ * 
+ * This class provides a fluent API for building custom UI settings elements including titles, labels,
+ * spacing, and divider lines. It organizes settings into logical categories for UI customization,
+ * gameplay enhancements on Serpulo and Erekir planets, and miscellaneous options.
+ *
+ * @see SettingsMenuDialog.SettingsTable.Setting
+ */
 public class SettingBuilder {
     public class SettingTitle extends SettingsMenuDialog.SettingsTable.Setting {
         public String desc;
@@ -85,14 +94,16 @@ public class SettingBuilder {
             t.checkPref("hao1337.ui.coreinf.enable", true);
             t.checkPref("hao1337.ui.unitinf.enable", true);
             t.checkPref("hao1337.ui.timecontrol.enable", true);
-
+            if (Core.settings.getBool("hao1337.mod.experimental")) {
+                t.checkPref("hao1337.ui.autodrill.enable", true);
+            }
 
             t.pref(new SettingTitle(){{ desc = Core.bundle.format("hao1337.setting.category.gameplay.serpulo"); }});
             t.pref(new Label(){{ content = Core.bundle.format("setting.hao1337.ui.restart.label"); }});
             t.checkPref("hao1337.gameplay.serpulo.vault-bigger", false);
             t.checkPref("hao1337.gameplay.serpulo.better-override-dome", false);
             t.checkPref("hao1337.gameplay.serpulo.better-shield", false);
-            t.checkPref("hao1337.gameplay.serpulo.scrap-wall", false);
+            // t.checkPref("hao1337.gameplay.serpulo.scrap-wall", false); // GONE
 
             t.pref(new Padding(){{ height = 40f; }});
             t.checkPref("hao1337.gameplay.serpulo.thorium-conveyor", true);

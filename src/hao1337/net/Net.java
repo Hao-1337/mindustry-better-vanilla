@@ -1,5 +1,10 @@
 package hao1337.net;
 
+/**
+ * Custom low level networking system.
+ * 
+ * @author Hao-1337
+ */
 public class Net {
     static {
         mindustry.net.Net.registerPacket(IOPacket::new);

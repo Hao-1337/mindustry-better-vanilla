@@ -30,24 +30,46 @@ import mindustry.input.InputHandler;
 import mindustry.net.NetConnection;
 import mindustry.ui.Styles;
 
+/**
+ * UI widget that allows the player to control the game time speed.
+ * Provides buttons for slowing down, resetting and speeding up the simulation,
+ * and synchronizes its state across network connections in multiplayer.
+ *
+ * <p>The value of {@code time} may be negative to indicate reverse playback
+ * at fractional speeds.  Changes are propagated using a custom packet router
+ * defined in {@link hao1337.net.Net}.</p>
+ */
 public class TimeControl extends Table {
+    /** unique identifier used in network packets to avoid processing our own changes. */
     private static final String uuid = UUID.randomUUID().toString();
+    /** maximum allowed time multiplier. */
     private static final int MAX_SPEED = 8;
+    /** minimum allowed time multiplier (negative for slow-reverse). */
     private static final int MIN_SPEED = -7;
+    /** colour gradient used for the speed label when rendering. */
     private static final Color[] GRADIENT = { Pal.lancerLaser, Pal.accent, Color.valueOf("cc6eaf") };
 
-    // If player in multiplayer game. When speedup client side game, it make game out of sync
+    /**
+     * When {@code true} clients in multiplayer are permitted to request a speed
+     * increase.  Turning this off prevents out‑of‑sync issues at the cost of
+     * disabling user control of time on clients.
+     */
     public boolean enableSpeedUp = true;
-    // If false, disable speed control
+    /**
+     * If {@code false} the entire control widget is disabled (no buttons are
+     * shown and speed cannot be changed).
+     */
     public boolean useable = true;
-    // Current speed
+    /** current multiplier setting. Positive values speed up, negative values
+     * slow or reverse; 1 is normal real-time.
+     */
     public int time = 1;
 
-    // Icon for speeddown button
+    /** Icon used by the slowdown button. */
     public Drawable left = new TextureRegionDrawable(Icon.left);
-    // Icon for speedup button
+    /** Icon for the speedup button. */
     public Drawable right = new TextureRegionDrawable(Icon.right);
-    // Icon for reset speed button
+    /** Icon for the reset button. */
     public Drawable reset = new TextureRegionDrawable(Icon.refresh);
 
     private int displaytime = 1;
@@ -57,11 +79,24 @@ public class TimeControl extends Table {
     private boolean IEnableState = true;
     private boolean needRebuild = false;
 
+    /**
+     * Construct a new TimeControl widget and register its network handlers.
+     */
     public TimeControl() {
         super();
         netRegister();
     }
     
+    /**
+     * Helper to build a styled button with padding and tooltip.
+     *
+     * @param t        parent table where the button is added
+     * @param action   runnable to execute when clicked
+     * @param texture  icon to display on the button
+     * @param toolTip  localization key for the tooltip text
+     * @param padLeft  left padding in pixels
+     * @param padRight right padding in pixels
+     */
     void buildButton(Table t, Runnable action, Drawable texture, String toolTip, float padLeft, float padRight) {
         t.button(texture, 10f, action)
         .height(40f)
@@ -71,6 +106,10 @@ public class TimeControl extends Table {
         .style(Styles.outlineLabel));
     }
 
+    /**
+     * Layout the UI elements and initialise labels/buttons based on the
+     * current usability and admin state.
+     */
     public void build() {
         name = "hao1337-timecontrol-ui";
         background(Htex.paneTopRight);
@@ -101,6 +140,11 @@ public class TimeControl extends Table {
         });
     }
 
+    /**
+     * Reconstruct the UI when global state changes (e.g. usability toggled or
+     * admin rights lost).  Automatically schedules itself to run again if
+     * further changes occur during the rebuild.
+     */
     public void rebuild() {
         reset();
         build();
@@ -129,11 +173,22 @@ public class TimeControl extends Table {
         });
     }
 
+    /**
+     * Decide whether the time control UI should be hidden based on various
+     * conditions (settings, HUD visibility, current input state).
+     *
+     * @return {@code true} if the widget should be disabled and hidden
+     */
     boolean shouldDisable() {
         InputHandler input = Vars.control.input;
-        return !Core.settings.getBool("hao1337.ui.timecontrol.enable") || !Vars.ui.hudfrag.shown || Vars.ui.minimapfrag.shown() || input.lastSchematic != null || !input.selectPlans.isEmpty();
+        return !Core.settings.getBool("hao1337.ui.timecontrol.enable") || !Vars.ui.hudfrag.shown || Vars.ui.minimapfrag.shown() || input.lastSchematic != null; //|| !input.selectPlans.isEmpty();
     }
 
+    /**
+     * Recalculate derived values after the {@link #time} field changes.  Thiswwssasasas
+     * method updates the display label, adjusts the game time scaling via the
+     * {@code Time} API, and colours the label according to the speed.
+     */
     void timeUpdate() {
         gametime = Math.abs(time);
         displaytime = (int) (time < 0 ? gametime + 1 : gametime);
@@ -143,6 +198,12 @@ public class TimeControl extends Table {
         if (label != null) label.color(Tmp.c1.lerp(GRADIENT, (time + MAX_SPEED) / (2 * MIN_SPEED)));
     }
 
+    /**
+     * Change the current speed by a relative step, enforce bounds, and send
+     * updates if the value actually changed.
+     *
+     * @param step positive to speed up, negative to slow/reverse
+     */
     void update(int step) {
         if (step > 0 && !enableSpeedUp) {
             Vars.ui.showInfoToast(Core.bundle.format("hao1337.ui.speedup.error"), 5f);
@@ -165,27 +226,52 @@ public class TimeControl extends Table {
         updateSnapshot();
     }
 
+    /**
+     * Reset speed to 1 (normal) and optionally send a network snapshot.
+     *
+     * @param useSnapshot whether to broadcast the new speed to other clients
+     */
     public void update(boolean useSnapshot) {
         time = 1;
         timeUpdate();
         if (useSnapshot) updateSnapshot();
     }
 
+    /**
+     * Convenience variant of {@link #update(boolean)} that always sends a
+     * snapshot.
+     */
     public void update() {
         time = 1;
         timeUpdate();
         updateSnapshot();
     }
 
+    /**
+     * Apply a received speed value from the network without rebroadcasting.
+     *
+     * @param speed new time multiplier to adopt
+     */
     void setSnapshot(int speed) {
         time = speed;
         timeUpdate();
     }
 
+    /**
+     * Check whether the current player is allowed to use the control (either
+     * in single-player mode or as an admin on a server).
+     *
+     * @return {@code true} if the control should be interactive for this user
+     */
     boolean isEnable() {
         return HVars.net.isSinglePlayer() || Vars.player.admin;
     }
 
+    /**
+     * Register network handlers for time control packets and attach relevant
+     * game event listeners.  The client handler applies incoming snapshots,
+     * while the server handler rebroadcasts them to all connected clients.
+     */
     void netRegister() {
         router.register(HVars.tcNetChannel, new IORouter.ChannelHandler() {
             public void handleClient(byte[] payload) {
@@ -228,6 +314,13 @@ public class TimeControl extends Table {
         Events.on(ResetEvent.class, e -> update(false));
     }
 
+    /**
+     * Build a packet containing the current configuration and an optional
+     * message.  The packet is later sent via the custom router.
+     *
+     * @param mes text message to include (displayed on receipt)
+     * @return serialized packet payload
+     */
     byte[] exportConfigPacket(String mes) {
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
         DataOutputStream s = new DataOutputStream(bos);
@@ -245,6 +338,10 @@ public class TimeControl extends Table {
         }
     }
 
+    /**
+     * Broadcast the current speed setting to all peers, including a chat message
+     * identifying the player who made the change.
+     */
     void updateSnapshot() {
         try {
             byte[] payload = exportConfigPacket( "[orange][" + Vars.player.name + "][] Set time control to [accent]" + (time < 0 ? "×1/" : "×") + displaytime);

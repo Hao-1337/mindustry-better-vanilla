@@ -5,6 +5,10 @@ import arc.util.Log;
 import mindustry.mod.Mod;
 import static hao1337.HVars.*;
 
+/**
+ * HERE WE GO!! Yippeeeeeeeeeeeeeeeeeee :)))
+ * @author Hao-1337
+ */
 public class Main extends Mod {
     @Override
     public void init() {
