@@ -3,6 +3,7 @@ package hao1337.addons.autodrill.ui;
 import arc.Core;
 import arc.Events;
 import arc.math.geom.Vec2;
+import arc.scene.style.Drawable;
 import arc.scene.ui.TextButton;
 import arc.scene.ui.layout.Scl;
 import arc.scene.ui.layout.Table;
@@ -27,21 +28,23 @@ import mindustry.world.blocks.distribution.ItemBridge;
 import mindustry.world.blocks.production.BeamDrill;
 
 public class AutoDrill {
-    public static final float buttonSize = Scl.scl(40f);
+    public static final float buttonSize = Scl.scl(20f);
     public static final boolean heuristicPathFinder = false;
 
     final public DrillTable selectTable = new DrillTable();
     final public DirectionTable directionTable = new DirectionTable();
+    final public Table uiTable = new Table((Drawable) null);
 
     Tile selectedTile;
     Block selectDrill;
-    ItemBridge bridge = (ItemBridge)Blocks.phaseConveyor;
+    ItemBridge bridge = (ItemBridge)Blocks.itemBridge;
     Direction outputDirection;
     boolean toggled = false;
 
-    public void buildTable(Table uiTable) {
+    public void buildTable() {
+        uiTable.visible(() -> Core.settings.getBool("hao1337.ui.autodrill.enable", false));
         uiTable.margin(0);
-        uiTable.name = "Hao137 AutoDrill";
+        uiTable.name = "hao137-auto-drill";
         uiTable.top();
         uiTable.background(Htex.paneTopRight);
 

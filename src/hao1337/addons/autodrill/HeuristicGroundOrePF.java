@@ -20,18 +20,24 @@ import mindustry.world.blocks.distribution.ItemBridge;
 import mindustry.world.blocks.production.Drill;
 
 /**
- * A heuristic-based pathfinder for automatically placing drills and bridges to harvest connected ore clusters.
+ * A heuristic-based pathfinder for automatically placing drills and bridges to
+ * harvest connected ore clusters.
  * <br>
  * <br>
  * <strong>Limitations and notes:</strong>
  * <ul>
- * <li>Ore cluster detection is capped at 200 tiles to prevent performance degradation on very large deposits.</li>
- * <li>The pathfinder does not force bridges to avoid jumping over buildings, which can potentially block future drill placements.</li>
- * <li>Water extractors are only considered for drills larger than 2×2 blocks.</li>
- * <li>All placement operations respect the player's current team and the engine's build validity rules.</li>
+ * <li>Ore cluster detection is capped at 200 tiles to prevent performance
+ * degradation on very large deposits.</li>
+ * <li>The pathfinder does not force bridges to avoid jumping over buildings,
+ * which can potentially block future drill placements.</li>
+ * <li>Water extractors are only considered for drills larger than 2×2
+ * blocks.</li>
+ * <li>All placement operations respect the player's current team and the
+ * engine's build validity rules.</li>
  * </ul>
  * 
  * TODO still incomplete, but work!
+ * 
  * @see GroundOrePathFinding
  * @author Hao-1337
  */
@@ -220,17 +226,21 @@ public class HeuristicGroundOrePF extends GroundOrePathFinding {
     /**
      * Generate a sequence of build plans that place drills and bridges to
      * harvest the connected ore area starting from the selected tile.
+     * 
      * @return a sequence of {@link BuildPlan} objects representing the
      *         structures to place. The sequence may be empty if no valid
      *         placement could be found.
      */
     public Seq<BuildPlan> build() {
         Seq<BuildPlan> finalPlans = new Seq<>();
+        // All fetched ore tile
         Seq<Tile> oreTiles = Utils.getConnectedTiles(selectedTile, 200);
-        Utils.expandArea(oreTiles, maxDrillSize / 2);
+        Utils.expandArea(oreTiles, maxDrillSize / 4);
+
         if (oreTiles.isEmpty()) return finalPlans;
 
-        // Move selected tile to outer most ore tile for avoid graph grow into circular path
+        // Move selected tile to outer most ore tile for avoid graph grow into circular
+        // path
         // Choose the outer most for the selected direction
         Tile outermostTile = oreTiles.get(0);
         int peekCur = Integer.MIN_VALUE;
@@ -245,28 +255,74 @@ public class HeuristicGroundOrePF extends GroundOrePathFinding {
         selectedTile = outermostTile;
         // Indicate all tiles that already have something here
         ObjectSet<Tile> globalOccupied = new ObjectSet<>();
-
         // anchor the network at the selected tile with an item bridge
         ObjectSet<Tile> networkNodes = new ObjectSet<>();
+        // The output bridge direction
         Point2 outlet = outDirection.p.cpy();
+        // All ore that already got cover
+        ObjectSet<Tile> coveredOre = new ObjectSet<>();
+        // Create bridge branch out
+        int step = Math.min(4, bridgeRange - 2);
+        // generate all candidate drill placements
+        Seq<Candidate> candidates = new Seq<>();
 
-        for (int i = 0; i < Math.min(4, bridgeRange - 2); i++) outlet.add(outlet);
+        for (int i = 0; i < step; i++) outlet.add(outDirection.p);
+        allowedDrill.sort((a, b) -> b.size - a.size);
         networkNodes.add(selectedTile);
         globalOccupied.add(selectedTile);
         finalPlans.add(new BuildPlan(selectedTile.x, selectedTile.y, outDirection.r, bridgeBlock, outlet));
         finalPlans.add(new BuildPlan(selectedTile.x + outlet.x, selectedTile.y + outlet.y, outDirection.r, bridgeBlock));
 
-        // generate all candidate drill placements
-        Seq<Candidate> candidates = new Seq<>();
+        switch (outDirection) {
+            case RIGHT:
+                oreTiles.sort((a, b) -> {
+                    int dx = Integer.compare(a.x, b.x);
+                    if (dx != 0) return dx;
+                    return Integer.compare(a.y, b.y);
+                });
+                break;
+            case LEFT:
+                oreTiles.sort((a, b) -> {
+                    int dx = Integer.compare(b.x, a.x);
+                    if (dx != 0) return dx;
+                    return Integer.compare(a.y, b.y);
+                });
+                break;
+            case UP:
+                oreTiles.sort((a, b) -> {
+                    int dy = Integer.compare(a.y, b.y);
+                    if (dy != 0) return dy;
+                    return Integer.compare(a.x, b.x);
+                });
+                break;
+            case DOWN:
+                oreTiles.sort((a, b) -> {
+                    int dy = Integer.compare(b.y, a.y);
+                    if (dy != 0) return dy;
+                    return Integer.compare(a.x, b.x);
+                });
+                break;
+        }
+
         for (Tile t : oreTiles) {
             for (Block drillMode : allowedDrill) {
-                if (forceSelectedSize && drillMode != selectedDrill)
-                    continue;
-                if (!(drillMode instanceof Drill drill))
-                    continue;
-                if (!Build.validPlace(drill, Vars.player.team(), t.x, t.y, 0))
-                    continue;
+                if (forceSelectedSize && drillMode != selectedDrill) continue;
+                if (!(drillMode instanceof Drill drill)) continue;
+                if (!Build.validPlace(drill, Vars.player.team(), t.x, t.y, 0)) continue;
+
                 ObjectIntMap.Entry<Item> ores = Utils.countOre(t, drill);
+                Seq<Tile> hitbox = getHitboxTiles(t, drillMode);
+
+                boolean fits = true;
+                for (Tile ht : hitbox) {
+                    if (ht == null || ht.drop() != targetOre) {
+                        fits = false;
+                        break;
+                    }
+                }
+
+                if (!fits) continue;
+
                 if (ores != null && ores.value > 0) {
                     if (ores.key != targetOre) {
                         // Not a request ore at all
@@ -292,34 +348,62 @@ public class HeuristicGroundOrePF extends GroundOrePathFinding {
         }
         candidates.sort((a, b) -> b.score - a.score);
 
-        // place drills and connect to network using bridges via A*
-        for (Candidate c : candidates) {
-            if (isHitboxOccupied(c.tile, c.drill, globalOccupied))
-                continue;
-            Seq<BuildPlan> route = aStarBridgeRoute(c.tile, c.drill, networkNodes, globalOccupied);
-            if (route != null) {
-                int drillDir = 0;
-                if (!route.isEmpty()) {
-                    Tile firstBridgeTile = Vars.world.tile(route.first().x, route.first().y);
-                    drillDir = getDirectionTo(c.tile, firstBridgeTile);
-                }
-                finalPlans.add(new BuildPlan(c.tile.x, c.tile.y, drillDir, c.drill));
-                if (c.drill.size > 2) {
-                    Seq<BuildPlan> extractorPlans = findBestWaterExtractor(c.tile, c.drill, globalOccupied);
-                    if (extractorPlans == null) continue;
-                    finalPlans.addAll(extractorPlans);
-                }
-                finalPlans.addAll(route);
+        while (true) {
+            Candidate best = null;
+            double bestScore = Double.NEGATIVE_INFINITY;
 
-                lockHitbox(c.tile, c.drill, globalOccupied);
-                for (BuildPlan bp : route) {
-                    Tile rTile = Vars.world.tile(bp.x, bp.y);
-                    if (rTile != null) {
-                        globalOccupied.add(rTile);
-                        networkNodes.add(rTile);
-                    }
+            for (Candidate c : candidates) {
+                if (isHitboxOccupied(c.tile, c.drill, globalOccupied)) continue;
+            
+                int gain = countUncoveredOre(c.tile, c.drill, coveredOre);
+                if (gain <= 0) continue;
+            
+                int dist = distanceToNetwork(c.tile, networkNodes);
+                double score = gain * 15.0 - dist * 2.0;
+
+                if (score > bestScore) {
+                    bestScore = score;
+                    best = c;
                 }
             }
+        
+            if (best == null) break;
+            Seq<BuildPlan> route = aStarBridgeRoute(best.tile, best.drill, networkNodes, globalOccupied);
+        
+            if (route == null) {
+                candidates.remove(best);
+                continue;
+            }
+        
+            finalPlans.add(new BuildPlan(best.tile.x, best.tile.y, 0, best.drill));
+
+            if (best.drill.size > 2 && useWaterExtractor) {
+                Seq<BuildPlan> extractorPlans = findBestWaterExtractor(best.tile, best.drill, globalOccupied);
+                if (extractorPlans == null) continue;
+                finalPlans.addAll(extractorPlans);
+            }
+    
+            for (Tile t : best.tile.getLinkedTilesAs((Drill) best.drill, new Seq<>())) {
+                if (t != null && t.drop() == targetOre) {
+                    coveredOre.add(t);
+                }
+            }
+        
+            // Lock hitbox
+            lockHitbox(best.tile, best.drill, globalOccupied);
+            finalPlans.addAll(route);
+        
+            for (BuildPlan bp : route) {
+                Tile rTile = Vars.world.tile(bp.x, bp.y);
+                if (rTile != null) {
+                    globalOccupied.add(rTile);
+                    networkNodes.add(rTile);
+                }
+            }
+        
+            // Add drill tile to network so growth expands outward
+            networkNodes.add(best.tile);        
+            candidates.remove(best);
         }
 
         return finalPlans;
@@ -335,7 +419,7 @@ public class HeuristicGroundOrePF extends GroundOrePathFinding {
      * @return the number of tiles inside the area whose {@code drop()} equals
      *         {@link #targetOre}
      */
-    private int countOreInArea(int x, int y, int size) {
+    protected int countOreInArea(int x, int y, int size) {
         int count = 0;
         int offset = (size - 1) / 2;
         int maxo = offset + (size % 2 == 0 ? 1 : 0);
@@ -358,7 +442,7 @@ public class HeuristicGroundOrePF extends GroundOrePathFinding {
      * @return {@code true} if there is at least one pair of tiles at
      *         Manhattan distance 1, otherwise {@code false}
      */
-    private boolean isAdjacentToDrill(Seq<Tile> drillTiles, Seq<Tile> exTiles) {
+    protected boolean isAdjacentToDrill(Seq<Tile> drillTiles, Seq<Tile> exTiles) {
         for (Tile dt : drillTiles) {
             for (Tile et : exTiles) {
                 if (Math.abs(dt.x - et.x) + Math.abs(dt.y - et.y) == 1) {
@@ -382,7 +466,7 @@ public class HeuristicGroundOrePF extends GroundOrePathFinding {
      *         returned extractor will be locked into the occupied set by the
      *         caller.
      */
-    private Seq<BuildPlan> findBestWaterExtractor(Tile drillCenter, Block drill, ObjectSet<Tile> occupied) {
+    protected Seq<BuildPlan> findBestWaterExtractor(Tile drillCenter, Block drill, ObjectSet<Tile> occupied) {
         if (drill.size <= 2)
             return null;
 
@@ -453,8 +537,10 @@ public class HeuristicGroundOrePF extends GroundOrePathFinding {
      *         network, or {@code null} if no connection is possible. An empty
      *         sequence means the drill is already adjacent to the network.
      */
-    private Seq<BuildPlan> aStarBridgeRoute(Tile drillCenter, Block drillType, ObjectSet<Tile> networkNodes,
+    protected Seq<BuildPlan> aStarBridgeRoute(Tile drillCenter, Block drillType,
+            ObjectSet<Tile> networkNodes,
             ObjectSet<Tile> occupied) {
+
         Seq<Tile> startEdges = getAdjacentTiles(drillCenter, drillType);
 
         // Already touching network?
@@ -463,19 +549,6 @@ public class HeuristicGroundOrePF extends GroundOrePathFinding {
                 return new Seq<>();
         }
 
-        // try to connect to the nearest network
-        Tile target = null;
-        int bestDist = Integer.MAX_VALUE;
-        for (Tile n : networkNodes) {
-            int d = Math.abs(n.x - drillCenter.x) + Math.abs(n.y - drillCenter.y);
-            if (d < bestDist) {
-                bestDist = d;
-                target = n;
-            }
-        }
-        if (target == null)
-            return null;
-
         PriorityQueue<AStarNode> openSet = new PriorityQueue<>();
         ObjectSet<Tile> closedSet = new ObjectSet<>();
 
@@ -483,41 +556,52 @@ public class HeuristicGroundOrePF extends GroundOrePathFinding {
         for (Tile adj : startEdges) {
             if (!isValidBridge(adj, occupied))
                 continue;
-            int h = manhattan(adj, target);
+
+            int h = nearestNetworkDistance(adj, networkNodes);
             openSet.add(new AStarNode(adj, null, -1, 0, h));
         }
 
         AStarNode goal = null;
+
         while (!openSet.isEmpty()) {
             AStarNode curr = openSet.poll();
-            if (closedSet.contains(curr.tile)) continue;
+
+            if (closedSet.contains(curr.tile))
+                continue;
+
             closedSet.add(curr.tile);
 
+            // Stop when reaching ANY network node
             if (networkNodes.contains(curr.tile)) {
                 goal = curr;
                 break;
             }
 
-            // Try LONGEST jumps first, forces sparse placement
             for (Direction d : Direction.values()) {
                 for (int len = bridgeRange; len >= 1; len--) {
                     Tile next = curr.tile.nearby(d.p.x * len, d.p.y * len);
                     if (next == null || closedSet.contains(next))
                         continue;
 
-                    // TODO it actually more optimal to force bridge to not jump over buidling (cuz it often block potential drill)
                     if (!isLineClear(curr.tile, next, occupied))
-                    continue;
+                        continue;
 
                     if (!networkNodes.contains(next) && !isValidBridge(next, occupied))
                         continue;
 
-                    int newG = curr.gCost + (bridgeRange - len + 1);
-                    int newH = manhattan(next, target);
-                    openSet.add(new AStarNode(next, curr, -1, newG, newH));
+                    // Distance-based cost
+                    int turnPenalty = 0;
+                    if (curr.parent != null && curr.dir != -1 && curr.dir != d.ordinal()) {
+                        turnPenalty = 2; // tune if needed
+                    }
+
+                    int newG = curr.gCost + len + turnPenalty;
+                    int newH = nearestNetworkDistance(next, networkNodes);
+
+                    openSet.add(new AStarNode(next, curr, d.ordinal(), newG, newH));
 
                     if (networkNodes.contains(next))
-                        break; // no need to check shorter in this ray
+                        break;
                 }
             }
         }
@@ -532,10 +616,8 @@ public class HeuristicGroundOrePF extends GroundOrePathFinding {
         }
         path.reverse();
 
-        // remove unnecessary intermediate bridges when colinear
         path = compressPath(path);
 
-        // Build plans
         Seq<BuildPlan> plans = new Seq<>();
         for (int i = 0; i < path.size - 1; i++) {
             Tile from = path.get(i);
@@ -543,7 +625,18 @@ public class HeuristicGroundOrePF extends GroundOrePathFinding {
             Point2 config = new Point2(to.x - from.x, to.y - from.y);
             plans.add(new BuildPlan(from.x, from.y, 0, bridgeBlock, config));
         }
+
         return plans;
+    }
+
+    protected int nearestNetworkDistance(Tile t, ObjectSet<Tile> networkNodes) {
+        int best = Integer.MAX_VALUE;
+        for (Tile n : networkNodes) {
+            int d = Math.abs(t.x - n.x) + Math.abs(t.y - n.y);
+            if (d < best)
+                best = d;
+        }
+        return best;
     }
 
     /**
@@ -555,7 +648,7 @@ public class HeuristicGroundOrePF extends GroundOrePathFinding {
      * @return {@code true} if a bridge can be placed here, {@code false}
      *         otherwise
      */
-    private boolean isValidBridge(Tile t, ObjectSet<Tile> occupied) {
+    protected boolean isValidBridge(Tile t, ObjectSet<Tile> occupied) {
         return t != null && !occupied.contains(t)
                 && Build.validPlace(bridgeBlock, Vars.player.team(), t.x, t.y, 0);
     }
@@ -567,7 +660,7 @@ public class HeuristicGroundOrePF extends GroundOrePathFinding {
      * @param b second tile
      * @return |a.x-b.x| + |a.y-b.y|
      */
-    private int manhattan(Tile a, Tile b) {
+    protected int manhattan(Tile a, Tile b) {
         return Math.abs(a.x - b.x) + Math.abs(a.y - b.y);
     }
 
@@ -693,7 +786,8 @@ public class HeuristicGroundOrePF extends GroundOrePathFinding {
      * @param to   destination tile
      * @return rotation index defined by {@link Direction} enum (0=RIGHT,1=UP,..
      */
-    private int getDirectionTo(Tile from, Tile to) {
+    @SuppressWarnings("unused")
+    protected int getDirectionTo(Tile from, Tile to) {
         if (Math.abs(from.x - to.x) > Math.abs(from.y - to.y)) {
             return from.x < to.x ? Direction.RIGHT.r : Direction.LEFT.r;
         } else {
@@ -703,16 +797,18 @@ public class HeuristicGroundOrePF extends GroundOrePathFinding {
 
     /**
      * Checks if a line of tiles between two points is clear of occupied tiles.
-     * Uses Bresenham-like algorithm to trace a line from the source tile to the destination tile,
+     * Uses Bresenham-like algorithm to trace a line from the source tile to the
+     * destination tile,
      * checking if any intermediate tiles are occupied.
      *
-     * @param from the starting tile
-     * @param to the ending tile
+     * @param from     the starting tile
+     * @param to       the ending tile
      * @param occupied a set of tiles that are considered occupied/blocked
-     * @return true if the line is clear (no occupied tiles in between), false otherwise
+     * @return true if the line is clear (no occupied tiles in between), false
+     *         otherwise
      */
     @SuppressWarnings("unused")
-    private boolean isLineClear(Tile from, Tile to, ObjectSet<Tile> occupied) {
+    protected boolean isLineClear(Tile from, Tile to, ObjectSet<Tile> occupied) {
         int dx = Integer.signum(to.x - from.x);
         int dy = Integer.signum(to.y - from.y);
         int steps = Math.max(Math.abs(to.x - from.x), Math.abs(to.y - from.y));
@@ -732,8 +828,9 @@ public class HeuristicGroundOrePF extends GroundOrePathFinding {
      * @param path original list of consecutive bridge tiles
      * @return a compressed sequence with redundant midpoints removed
      */
-    private Seq<Tile> compressPath(Seq<Tile> path) {
-        if (path.size < 3) return path;
+    protected Seq<Tile> compressPath(Seq<Tile> path) {
+        if (path.size < 3)
+            return path;
         Seq<Tile> result = new Seq<>();
         result.add(path.first());
 
@@ -759,7 +856,7 @@ public class HeuristicGroundOrePF extends GroundOrePathFinding {
      * @param c last tile
      * @return {@code true} if b lies on the line segment joining a and c
      */
-    private boolean isColinear(Tile a, Tile b, Tile c) {
+    protected boolean isColinear(Tile a, Tile b, Tile c) {
         return (b.x - a.x) * (c.y - a.y) == (c.x - a.x) * (b.y - a.y);
     }
 
@@ -771,8 +868,47 @@ public class HeuristicGroundOrePF extends GroundOrePathFinding {
      * @param b second tile
      * @return {@code true} if the tiles are aligned horizontally or vertically
      */
-    private boolean isAxisAligned(Tile a, Tile b) {
+    protected boolean isAxisAligned(Tile a, Tile b) {
         return a.x == b.x || a.y == b.y;
+    }
+
+    /**
+     * Helpler to count how many ore are covered by given drill and tile
+     * 
+     * @param center drill center tile
+     * @param drill given drill for counting
+     * @param covered already covered array
+     * @return amount of ore will get cover
+     */
+    protected int countUncoveredOre(Tile center, Block drill, ObjectSet<Tile> covered) {
+        int count = 0;
+
+        for (Tile t : center.getLinkedTilesAs((Drill) drill, new Seq<>())) {
+            if (t != null && t.drop() == targetOre && !covered.contains(t)) {
+                count++;
+            }
+        }
+
+        return count;
+    }
+
+    /**
+     * Return the smallest distance between given tile and current network node
+     * 
+     * @param t given tile
+     * @param networkNodes
+     * @return
+     */
+    protected int distanceToNetwork(Tile t, ObjectSet<Tile> networkNodes) {
+        int best = Integer.MAX_VALUE;
+
+        for (Tile n : networkNodes) {
+            int d = Math.abs(t.x - n.x) + Math.abs(t.y - n.y);
+            if (d < best)
+                best = d;
+        }
+
+        return best;
     }
 
     /**
@@ -785,7 +921,7 @@ public class HeuristicGroundOrePF extends GroundOrePathFinding {
      * @return trimmed version of the path
      */
     @SuppressWarnings("unused")
-    private Seq<Tile> aggressiveTrim(Seq<Tile> path) {
+    protected Seq<Tile> aggressiveTrim(Seq<Tile> path) {
         if (path.size < 3)
             return path;
 
@@ -815,7 +951,7 @@ public class HeuristicGroundOrePF extends GroundOrePathFinding {
      * Simple data holder representing a potential drill placement in the
      * heuristic search.
      */
-    private class Candidate {
+    protected class Candidate {
         public Tile tile;
         public Block drill;
         public int score;
@@ -826,12 +962,12 @@ public class HeuristicGroundOrePF extends GroundOrePathFinding {
             score = s;
         }
     }
-    
+
     /**
      * Simple data holder representing a potential water extractor placement in the
      * heuristic search.
      */
-    private class ExtractorCandidate {
+    protected class ExtractorCandidate {
         final int x, y, oreCovered;
 
         ExtractorCandidate(int x, int y, int oreCovered) {
@@ -847,7 +983,7 @@ public class HeuristicGroundOrePF extends GroundOrePathFinding {
      * Implements {@link Comparable} so that nodes can be sorted by estimated
      * total cost.
      */
-    private class AStarNode implements Comparable<AStarNode> {
+    protected class AStarNode implements Comparable<AStarNode> {
         public Tile tile;
         public AStarNode parent;
         @SuppressWarnings("unused")

@@ -58,13 +58,17 @@ public abstract class GroundOrePathFinding {
     /**
      * Minimum coverage percentage required for a drill placement to be considered valid.
      * A drill placement is valid if it covers at least {n}% of ore tiles.
-     * Default: 0.334f (approximately 33.4%)
+     * Default: 0.3f (approximately 30%)
      */
-    public float minimumCoverage = 0.334f;
+    public float minimumCoverage = 0.33f;
     /**
      * The range of the bridge block used for connections.
      */
     public final int bridgeRange;
+    /**
+     * The bridge block type used to connect drill outputs.
+     */
+    public boolean useWaterExtractor = true;
     /**
      * The bridge block type used to connect drill outputs.
      */
