@@ -181,11 +181,11 @@ public class TimeControl extends Table {
      */
     boolean shouldDisable() {
         InputHandler input = Vars.control.input;
-        return !Core.settings.getBool("hao1337.ui.timecontrol.enable") || !Vars.ui.hudfrag.shown || Vars.ui.minimapfrag.shown() || input.lastSchematic != null || !input.selectPlans.isEmpty();
+        return !Core.settings.getBool("hao1337.ui.timecontrol.enable") || !Vars.ui.hudfrag.shown || Vars.ui.minimapfrag.shown() || input.lastSchematic != null; //|| !input.selectPlans.isEmpty();
     }
 
     /**
-     * Recalculate derived values after the {@link #time} field changes.  This
+     * Recalculate derived values after the {@link #time} field changes.  Thiswwssasasas
      * method updates the display label, adjusts the game time scaling via the
      * {@code Time} API, and colours the label according to the speed.
      */
