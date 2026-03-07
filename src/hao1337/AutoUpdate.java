@@ -101,7 +101,18 @@ public class AutoUpdate {
 			// Log.info("@", ((Jval) json.get("assets").asArray().get(0)));
 
 			latest = json.getString("tag_name").substring(1);
-			download = ((Jval) json.get("assets").asArray().get(0)).getString("browser_download_url");
+			for (var file : json.get("assets").asArray()) {
+				String url = file.getString("browser_download_url");
+				if (HVars.isSteam && url.contains("steam")) {
+					download = url;
+					break;
+				}
+				if (HVars.isBeta && url.contains("v154")) {
+					download = url;
+					break;
+				}
+				download = url;
+			}
 			latestBuild = Integer.parseInt(json.getString("tag_name").substring(1).replace(".", ""));
 
 			Log.info("Fetch complete, version: [accent]" + latestBuild + "[]. User version: [accent]" + modBuild + "[]");
