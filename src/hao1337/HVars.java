@@ -137,8 +137,8 @@ public class HVars {
                                 haveDefaultSpacer = true;
                             }
 
-                        if (haveDefaultSpacer) w.spacerY(() -> (control.showCancel() ? 149.5f : 100f) - (tcTable.visible ? 0f : 100f) + (autoDrill.uiTable.visible ? 48f : 0f));
-                        if (getButtonByI18NText(w, "@cancel") != null) w.spacerY(() -> (tcTable.visible ? 249f : autoDrill.uiTable.visible ? 48.5f : 0f) + (autoDrill.uiTable.visible ? 96f : 0f));
+                        if (haveDefaultSpacer) w.spacerY(() -> (control.showCancel() ? 149.5f : 98f) - (tcTable.visible ? 0f : 100f) + (autoDrill.uiTable.visible ? 47.5f : 0f));
+                        if (getButtonByI18NText(w, "@cancel") != null) w.spacerY(() -> (tcTable.visible ? 249f : autoDrill.uiTable.visible ? 50f : 0f) + (autoDrill.uiTable.visible ? 96f : 0f));
                         var btn = getButtonByI18NText(w, "@command.queue");
                         if (btn != null) toggleSeqButton = btn;
                     }
