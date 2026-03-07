@@ -331,7 +331,7 @@ public class HeuristicGroundOrePF extends GroundOrePathFinding {
                         // candidates.add(new Candidate(t, drill, Integer.MIN_VALUE));
                         continue;
                     }
-                    if (ores.value / (drillMode.size * drillMode.size) < minimumCoverage) {
+                    if (ores.value * 1f / (drillMode.size * drillMode.size) < minimumCoverage) {
                         // It not really worth if you place laser drill (cover 16 tiles) just for mine 1
                         // tiles
                         continue;

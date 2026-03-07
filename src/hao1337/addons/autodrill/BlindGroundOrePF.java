@@ -3,6 +3,7 @@ package hao1337.addons.autodrill;
 import arc.math.geom.Point2;
 import arc.struct.ObjectIntMap;
 import arc.struct.Seq;
+import arc.util.Log;
 import arc.util.Nullable;
 import mindustry.Vars;
 import mindustry.content.Blocks;
@@ -56,7 +57,7 @@ public class BlindGroundOrePF extends GroundOrePathFinding {
         Point2 direction = new Point2(outDirection.p.x * 3, outDirection.p.y * 3);
         Seq<Tile> drillTiles = oreTiles.select(BlindGroundOrePF::isDrillTile);
         Seq<Tile> bridgeTiles = oreTiles.select(BlindGroundOrePF::isBridgeTile);
-        int area = selectedDrill.size * selectedDrill.size;
+        float area = 1f * selectedDrill.size * selectedDrill.size;
 
         drillTiles.retainAll(t -> {
             ObjectIntMap.Entry<Item> itemAndCount = Utils.countOre(t, (Drill)selectedDrill);
