@@ -13,7 +13,6 @@ import arc.scene.Element;
 import arc.scene.Group;
 import arc.scene.style.Drawable;
 import mindustry.Vars;
-import mindustry.core.Version;
 import mindustry.game.EventType.ClientLoadEvent;
 import mindustry.game.EventType.WorldLoadEndEvent;
 import mindustry.input.MobileInput;
@@ -57,7 +56,7 @@ public class HVars {
     public static final short tcNetChannel = 23555;
 
     public static final boolean isSteam = Vars.steam;
-    public static final boolean isBeta = Version.type.equals("bleeding-edge") || Version.build < 0;
+    public static final boolean isBeta = true;
 
     public HVars() {
         Htex.load(name);
