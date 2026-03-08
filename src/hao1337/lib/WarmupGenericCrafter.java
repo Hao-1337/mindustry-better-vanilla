@@ -5,6 +5,7 @@ import arc.graphics.g2d.TextureRegion;
 import arc.math.Mathf;
 import arc.util.io.Reads;
 import arc.util.io.Writes;
+import mindustry.gen.Sounds;
 import mindustry.graphics.Drawf;
 import mindustry.world.blocks.production.GenericCrafter;
 import mindustry.world.meta.BlockStatus;
@@ -41,6 +42,7 @@ public class WarmupGenericCrafter extends GenericCrafter {
         super(name);
         buildVisibility = Core.settings.getBool("hao1337.gameplay.experimental") ? BuildVisibility.shown : BuildVisibility.hidden;
         warmupSpeed = 0.01f;
+        ambientSound = Sounds.drillCharge;
     }
 
     @Override
