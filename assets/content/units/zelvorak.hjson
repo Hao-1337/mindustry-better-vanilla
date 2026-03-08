@@ -44,10 +44,10 @@ weapons: [
     shootY: 8
     y: 35
     x: 10
-    reload: 9
-    recoil: 1
+    reload: 45
+    recoil: 5
     ejectEffect: casing2
-    shootSound: bang
+    shootSound: shootDuo
     shoot: {
       shots: 1
     }
@@ -78,10 +78,10 @@ weapons: [
     rotate: true
     y: 15
     x: 15
-    reload: 9
-    recoil: 1
+    reload: 45
+    recoil: 5
     ejectEffect: casing2
-    shootSound: bang
+    shootSound: shootSalvo
     shoot: {
       shots: 1
     }
@@ -110,18 +110,18 @@ weapons: [
     y: 5
     x: 22
     shoot: {
-      shotDelay: 5
-      shots: 3
+      shotDelay: 2
+      shots: 5
     }
     rotate: true
     rotateSpeed: 4
     inaccuracy: 5
     shootY: 10
-    reload: 16
-    recoil: 1
+    reload: 15
+    recoil: 10
     shake: 0.5
     ejectEffect: casing2
-    shootSound: shootBig
+    shootSound: shootArtillery
     bullet: {
       type: BasicBulletType
       hitEffect: flakExplosion
@@ -150,18 +150,18 @@ weapons: [
     y: -12
     x: 28
     shoot: {
-      shotDelay: 5
-      shots: 3
+      shotDelay: 2
+      shots: 5
     }
     rotate: true
     rotateSpeed: 4
     inaccuracy: 5
     shootY: 10
-    reload: 16
-    recoil: 1
+    reload: 15
+    recoil: 10
     shake: 0.5
     ejectEffect: casing2
-    shootSound: shootBig
+    shootSound: shootArtillery
     bullet: {
       type: BasicBulletType
       hitEffect: flakExplosion
@@ -201,7 +201,7 @@ weapons: [
     shootY: 8
     inaccuracy: 10
     xRand: 11
-    shootSound: missile
+    shootSound: shootMissile
     velocityRnd: 0.4
     bullet: {
       keepVelocity: false
@@ -224,21 +224,22 @@ weapons: [
   }
 
   {
+    type: "hao1337.lib.ChargeWeapon"
     name: zelvorak-nuke
+    chargeSuffix: '-l-heat'
+    chargeSpeed: 120
+    chargeQuad: [ 0.525, 0.95 ]
+    continuous: true
+
     x: 0
     y: 0
     alternate: false
     mirror: false
     top: false
     rotate: false
-    shootY: 34
+    shootY: 40
     cooldownTime: 80
-    reload: 1200
-    shoot: {
-      shots: 1
-      firstShotDelay: 120
-      shotDelay: 110
-    }
+    reload: 600
     shootStatus: unmoving
     shootStatusDuration: 60
     smoothReloadSpeed: 0.01
@@ -246,33 +247,10 @@ weapons: [
     linearWarmup: false
     minWarmup: 0.95
     heatColor: ff2515
-    parts: [
-      {
-        type: RegionPart
-        name: '-1'
-        progress: {
-          type: warmup
-          blending: additive
-          heatColor: purple
-          delay: 0.2
-        }
-      }
-      {
-        type: RegionPart
-        name: '-1'
-        progress: {
-          type: warmup
-          heatProgress: {
-            type: heat
-            delay: 5.0
-          }
-          heatColor: scarlet
-          delay: 12.0
-        }
-      }
-    ]
+
     shake: 3
-    shootSound: bigLaserShoot
+    chargeSound: bigLaserShoot
+    shootSound: explosionArtillery
     ejectEffect: none
     bullet: {
       type: BasicBulletType
@@ -368,9 +346,9 @@ weapons: [
             type: ParticleEffect
             particles: 35
             offset: 15
-            baseLength: -105
-            sizeFrom: 0
-            sizeTo: 5
+            baseLength: 70
+            sizeFrom: 6
+            sizeTo: 0
             length: 60
             lifetime: 100
             colorFrom: f9c27a
@@ -383,18 +361,18 @@ weapons: [
             sizeFrom: 0.25
             sizeTo: 10
             length: 0
-            lifetime: 110
+            lifetime: 60
             colorFrom: f9c27a
             colorTo: fff8e8
             cone: 360
           }
           {
             type: WaveEffect
-            lifetime: 105
-            sizeFrom: 95
-            sizeTo: 0
+            lifetime: 40
+            sizeFrom: 0
+            sizeTo: 60
             strokeFrom: 0
-            strokeTo: 8
+            strokeTo: 2
             colorFrom: f9c27a
             colorTo: fff8e8
           }
@@ -444,25 +422,25 @@ abilities: [
   {
     type: mindustry.entities.abilities.StatusFieldAbility
     range: 100
-    reload: 340
-    duration: 250
+    reload: 600
+    duration: 300
     effect: overclock
   }
   {
     type: mindustry.entities.abilities.RegenAbility
-    amount: 10
+    amount: 2
   }
   {
     type: mindustry.entities.abilities.UnitSpawnAbility
     unit: horizon
-    spawnTime: 820
+    spawnTime: 1800
     spawnX: 45
     spawnY: 4
   }
   {
     type: mindustry.entities.abilities.UnitSpawnAbility
     unit: horizon
-    spawnTime: 820
+    spawnTime: 1800
     spawnX: -45
     spawnY: 4
   }

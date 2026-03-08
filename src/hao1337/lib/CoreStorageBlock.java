@@ -11,6 +11,7 @@ import mindustry.content.Fx;
 import mindustry.entities.Effect;
 import mindustry.game.Team;
 import mindustry.gen.Building;
+import mindustry.gen.Sounds;
 import mindustry.graphics.Drawf;
 import mindustry.type.Item;
 import mindustry.world.blocks.storage.StorageBlock;
@@ -54,6 +55,7 @@ public class CoreStorageBlock extends StorageBlock {
         separateItemCapacity = false;
         noUpdateDisabled = true;
         hasPower = needPower;
+        ambientSound = Sounds.drillCharge;
 
         if (needPower) consume(new ConsumePower(powerRequire, 5.0f, false));
     }
