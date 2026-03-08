@@ -2,7 +2,6 @@ package hao1337;
 
 import arc.Core;
 import arc.util.Log;
-import mindustry.entities.part.RegionPart;
 import mindustry.mod.Mod;
 import static hao1337.HVars.*;
 
