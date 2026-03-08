@@ -22,7 +22,7 @@ shootCone: 10
 maxAmmo: 40
 shake: 4
 rotateSpeed: 6
-shootSound: bang
+shootSound: shootDuo
 ammoPerShot: 2
 shoot: {
   type: ShootSpread

@@ -1,5 +1,6 @@
 package hao1337;
 
+import java.lang.reflect.Field;
 import arc.Core;
 import arc.Events;
 import arc.scene.ui.Label;
@@ -188,5 +189,15 @@ public class HVars {
         }
 
         return elementGroup.find(e -> e instanceof TextButton btn && btn.getChildren().contains(t -> t instanceof Label l && l.toString().contains(name)));
+    }
+
+    public static @Nullable Object getField(Object obj, String... names) {
+        for (String name : names) {
+            try {
+                Field f = obj.getClass().getField(name);
+                return f.get(obj);
+            } catch (NoSuchFieldException | IllegalAccessException ignored) {}
+        }
+        return null;
     }
 }

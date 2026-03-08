@@ -8,7 +8,7 @@ hasItems: true
 liquidCapacity: 60
 
 consumes: {
-  power: 150
+  power: 140
   items: {
     items: [
       titanium/2500
