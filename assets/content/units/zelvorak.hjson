@@ -47,7 +47,7 @@ weapons: [
     reload: 45
     recoil: 5
     ejectEffect: casing2
-    shootSound: shootDuo
+    shootSound: shoot
     shoot: {
       shots: 1
     }
@@ -81,7 +81,7 @@ weapons: [
     reload: 45
     recoil: 5
     ejectEffect: casing2
-    shootSound: shootSalvo
+    shootSound: shoot
     shoot: {
       shots: 1
     }
@@ -121,7 +121,7 @@ weapons: [
     recoil: 10
     shake: 0.5
     ejectEffect: casing2
-    shootSound: shootArtillery
+    shootSound: shootBig
     bullet: {
       type: BasicBulletType
       hitEffect: flakExplosion
@@ -161,7 +161,7 @@ weapons: [
     recoil: 10
     shake: 0.5
     ejectEffect: casing2
-    shootSound: shootArtillery
+    shootSound: shootBig
     bullet: {
       type: BasicBulletType
       hitEffect: flakExplosion
@@ -201,7 +201,7 @@ weapons: [
     shootY: 8
     inaccuracy: 10
     xRand: 11
-    shootSound: shootMissile
+    shootSound: shootBig
     velocityRnd: 0.4
     bullet: {
       keepVelocity: false
@@ -229,7 +229,7 @@ weapons: [
     chargeSuffix: '-l-heat'
     chargeSpeed: 120
     chargeQuad: [ 0.525, 0.95 ]
-    continuous: true
+    continuous: false
 
     x: 0
     y: 0
@@ -249,8 +249,8 @@ weapons: [
     heatColor: ff2515
 
     shake: 3
-    chargeSound: bigLaserShoot
-    shootSound: explosionArtillery
+    chargeSound: railgun
+    shootSound: shootSmite
     ejectEffect: none
     bullet: {
       type: BasicBulletType

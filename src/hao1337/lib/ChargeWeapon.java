@@ -124,42 +124,6 @@ public class ChargeWeapon extends Weapon {
             mount.warmup = Mathf.lerpDelta(mount.warmup, warmupTarget, shootWarmupSpeed);
         }
 
-        float
-        mountX = unit.x + Angles.trnsx(unit.rotation - 90, x, y),
-        mountY = unit.y + Angles.trnsy(unit.rotation - 90, x, y);
-
-        //find a new target
-        if(!controllable && autoTarget){
-            if((mount.retarget -= Time.delta) <= 0f){
-                mount.target = findTarget(unit, mountX, mountY, bullet.range, bullet.collidesAir, bullet.collidesGround);
-                mount.retarget = mount.target == null ? targetInterval : targetSwitchInterval;
-            }
-
-            if(mount.target != null && checkTarget(unit, mount.target, mountX, mountY, bullet.range)){
-                mount.target = null;
-            }
-
-            boolean shoot = false;
-
-            if(mount.target != null){
-                shoot = mount.target.within(mountX, mountY, bullet.range + Math.abs(shootY) + (mount.target instanceof Sized s ? s.hitSize()/2f : 0f)) && can;
-
-                if(predictTarget){
-                    Vec2 to = Predict.intercept(unit, mount.target, bullet);
-                    mount.aimX = to.x;
-                    mount.aimY = to.y;
-                }else{
-                    mount.aimX = mount.target.x();
-                    mount.aimY = mount.target.y();
-                }
-            }
-
-            mount.shoot = mount.rotate = shoot;
-
-            //note that shooting state is not affected, as these cannot be controlled
-            //logic will return shooting as false even if these return true, which is fine
-        }
-
         //rotate if applicable
         if(rotate && (mount.rotate || mount.shoot) && can){
             float axisX = unit.x + Angles.trnsx(unit.rotation - 90,  x, y),
@@ -180,9 +144,43 @@ public class ChargeWeapon extends Weapon {
 
         float
         weaponRotation = unit.rotation - 90 + (rotate ? mount.rotation : baseRotation),
+        mountX = unit.x + Angles.trnsx(unit.rotation - 90, x, y),
+        mountY = unit.y + Angles.trnsy(unit.rotation - 90, x, y),
         bulletX = mountX + Angles.trnsx(weaponRotation, this.shootX, this.shootY),
         bulletY = mountY + Angles.trnsy(weaponRotation, this.shootX, this.shootY),
         shootAngle = bulletRotation(unit, mount, bulletX, bulletY);
+
+        //find a new target
+        if(!controllable && autoTarget){
+            if((mount.retarget -= Time.delta) <= 0f){
+                mount.target = findTarget(unit, mountX, mountY, bullet.range, bullet.collidesAir, bullet.collidesGround);
+                mount.retarget = mount.target == null ? targetInterval : targetSwitchInterval;
+            }
+
+            if(mount.target != null && checkTarget(unit, mount.target, mountX, mountY, bullet.range)){
+                mount.target = null;
+            }
+
+            boolean shoot = false;
+
+            if(mount.target != null){
+                shoot = mount.target.within(mountX, mountY, bullet.range + Math.abs(shootY) + (mount.target instanceof Sized s ? s.hitSize()/2f : 0f)) && can;
+
+                if(predictTarget){
+                    Vec2 to = Predict.intercept(unit, mount.target, bullet.speed);
+                    mount.aimX = to.x;
+                    mount.aimY = to.y;
+                }else{
+                    mount.aimX = mount.target.x();
+                    mount.aimY = mount.target.y();
+                }
+            }
+
+            mount.shoot = mount.rotate = shoot;
+
+            //note that shooting state is not affected, as these cannot be controlled
+            //logic will return shooting as false even if these return true, which is fine
+        }
 
         if(alwaysShooting) mount.shoot = true;
 
@@ -195,23 +193,11 @@ public class ChargeWeapon extends Weapon {
                 mount.bullet.set(bulletX, bulletY);
                 mount.reload = reload;
                 mount.recoil = 1f;
-                unit.vel.add(Tmp.v1.trns(mount.bullet.rotation() + 180f, mount.bullet.type.recoil * Time.delta));
+                unit.vel.add(Tmp.v1.trns(unit.rotation + 180f, mount.bullet.type.recoil * Time.delta));
                 if(shootSound != Sounds.none && !headless){
                     if(mount.sound == null) mount.sound = new SoundLoop(shootSound, 1f);
                     mount.sound.update(bulletX, bulletY, true);
                 }
-
-                //target length of laser
-                float shootLength = Math.min(Mathf.dst(bulletX, bulletY, mount.aimX, mount.aimY), range());
-                //current length of laser
-                float curLength = Mathf.dst(bulletX, bulletY, mount.bullet.aimX, mount.bullet.aimY);
-                //resulting length of the bullet (smoothed)
-                float resultLength = Mathf.approachDelta(curLength, shootLength, aimChangeSpeed);
-                //actual aim end point based on length
-                Tmp.v1.trns(shootAngle, mount.lastLength = resultLength).add(bulletX, bulletY);
-
-                mount.bullet.aimX = Tmp.v1.x;
-                mount.bullet.aimY = Tmp.v1.y;
 
                 if(alwaysContinuous && mount.shoot){
                     mount.bullet.time = mount.bullet.lifetime * mount.bullet.type.optimalLifeFract * mount.warmup;
@@ -231,17 +217,10 @@ public class ChargeWeapon extends Weapon {
 
         //flip weapon shoot side for alternating weapons
         boolean wasFlipped = mount.side;
-        if(otherSide >= 0 && alternate && mount.side == flipSprite && otherSide < unit.mounts.length && mount.reload <= reload / 2f && lastReload > reload / 2f){
+        if(otherSide != -1 && alternate && mount.side == flipSprite && mount.reload <= reload / 2f && lastReload > reload / 2f){
             unit.mounts[otherSide].side = !unit.mounts[otherSide].side;
             mount.side = !mount.side;
         }
-
-        // TODO: v147 won't have this 
-        if(!headless && activeSound != null && mount.shoot && can && mount.warmup >= minWarmup) {
-            Vars.control.sound.loop(activeSound, unit, activeSoundVolume);
-        }
-
-        float velLen = unit.isRemote() ? unit.vel.len() : unit.deltaLen() / Time.delta;
         ChargeWeaponMount m = (ChargeWeaponMount) mount;
 
         //shoot if applicable
@@ -251,7 +230,7 @@ public class ChargeWeapon extends Weapon {
         (!useAmmo || unit.ammo > 0 || !state.rules.unitAmmo || unit.team.rules().infiniteAmmo) && //check ammo
         (!alternate || wasFlipped == flipSprite) &&
         mount.warmup >= minWarmup && //must be warmed up
-        velLen >= minShootVelocity && //check velocity requirements
+        unit.vel.len() >= minShootVelocity && //check velocity requirements
         (mount.reload <= 0.0001f || (alwaysContinuous && mount.bullet == null)) && //reload has to be 0, or it has to be an always-continuous weapon
         (alwaysShooting || Angles.within(rotate ? mount.rotation : unit.rotation + baseRotation, mount.targetRotation, shootCone)) //has to be within the cone
         ){
