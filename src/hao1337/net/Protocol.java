@@ -47,7 +47,10 @@ public class Protocol {
         Events.on(HostEvent.class, e -> protocolChangeFire(false));
         Events.on(ResetEvent.class, e -> protocolChangeFire(false));
         Events.on(WorldLoadEndEvent.class, e -> protocolChangeFire(true));
-        Events.on(ConnectPacketEvent.class, e -> playerConnections.put(e.connection, 0));
+        Events.on(ConnectPacketEvent.class, e -> {
+            playerConnections.put(e.connection, 0);
+            Log.info("[green][Server][][blue] Auth started for '[accent]@[]'", e.connection);
+        });
 
         Events.on(PlayerLeave.class, e -> {
             authPlayers.remove(e.player.con);
@@ -55,7 +58,6 @@ public class Protocol {
         });
 
         Events.on(PlayerConnectionConfirmed.class, e -> {
-            Log.info("[green][Server][][blue] Auth started for uuid '[accent]@[]'", e.player.con.uuid);
             Timer.schedule(() -> {
                 if (e.player.con.hasDisconnected) {
                     playerConnections.remove(e.player.con);
@@ -75,10 +77,10 @@ public class Protocol {
                 kick(con);
             }
             else {
-                Events.fire(new PlayerAuthSuccess(con));
                 Log.info("[green][Server][] Auth success for '@'", con.uuid);
                 playerConnections.remove(con);
                 authPlayers.put(con, 0);
+                Timer.schedule(() -> Events.fire(new PlayerAuthSuccess(con)), 0.15f);
             }
         });
 
