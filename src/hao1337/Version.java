@@ -18,7 +18,7 @@ public class Version {
     /** Mod version tag */
     public static final Tag tag = Tag.RELEASE;
     /** Target vendor using in this mod version */
-    public static final Vendor vendor = Vendor.DESKTOP;
+    public static final Vendor vendor = Vendor.ANDROID;
 
     public static class InvalidVersionStringException extends Exception {
         public InvalidVersionStringException(String version) {
@@ -161,6 +161,34 @@ public class Version {
         }
     }
 
+    public static boolean equalIgnoreVendor(String version) {
+        try {
+            Parsed p = parse(version);
+
+            return p.major == majorVersion
+                    && p.minor == minorVersion
+                    && p.patch == patchVersion
+                    && p.tag == tag;
+        } catch (InvalidVersionStringException e) {
+            return false;
+        }
+    }
+
+    public static String getNoVendorVersionString() {
+        StringBuilder v = new StringBuilder();
+
+        v.append("v")
+                .append(majorVersion).append(".")
+                .append(minorVersion).append(".")
+                .append(patchVersion);
+
+        if (tag == Tag.ALPHA)
+            v.append("-alpha");
+        else if (tag == Tag.BETA)
+            v.append("-beta");
+        return v.toString();
+    }
+
     public static String getVersionString() {
         StringBuilder v = new StringBuilder();
 
@@ -175,7 +203,7 @@ public class Version {
             v.append("-beta");
 
         if (vendor == Vendor.DESKTOP)
-            v.append("-steam");
+            v.append("-desktop");
 
         return v.toString();
     }

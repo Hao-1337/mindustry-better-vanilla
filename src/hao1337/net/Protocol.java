@@ -18,7 +18,7 @@ import mindustry.net.NetConnection;
  */
 public class Protocol {
     /** Unique protocol version identifier used for compatibility checks. */
-    public static final String protocolVersion = "43abc1b2-8adb-4527-ab27-e4a370095089";
+    public static final String protocolVersion = "f94d41fc-02f5-4c79-99bc-97714f00e252";
 
     public static class ProtocolChange {
         public final ProtocolType type;
@@ -72,7 +72,7 @@ public class Protocol {
         });
 
         Vars.net.handleServer(HandShakePacket.class, (con, p) -> {
-            if (!Version.equal(p.version)) {
+            if (!Version.equalIgnoreVendor(p.version)) {
                 Log.warn("[scarlet][Server][] Auth failed due to version mismatch for '@'", con.uuid);
                 kick(con);
             }
@@ -104,7 +104,7 @@ public class Protocol {
         if (lastProtocolType.isServer()) {
             playerConnections.remove(con);
             con.kick("[scarlet]Connection couldn't be authenticated.[]\n\nThis server requires [accent][Better Vanilla] - ("
-                    + Version.getVersionString() + ")[] to play!", 10);
+                    + Version.getNoVendorVersionString() + ")[] to play!", 10);
         }
     }
 
@@ -124,7 +124,7 @@ public class Protocol {
         lastProtocolType = state;
 
         if (state.isServer()) {
-            Vars.state.rules.tags.put(validProtocolString, Version.getVersionString());
+            Vars.state.rules.tags.put(validProtocolString, Version.getNoVendorVersionString());
             isCompatible = true;
         }
 
@@ -137,9 +137,9 @@ public class Protocol {
                 isCompatible = true;
 
                 var value = Vars.state.rules.tags.get(validProtocolString);
-                if (Version.equal(value)) {
+                if (Version.equalIgnoreVendor(value)) {
                     var packet = new HandShakePacket();
-                    packet.version = Version.getVersionString();
+                    packet.version = Version.getNoVendorVersionString();
                     Vars.net.send(packet, true);
                 }
             }
