@@ -6,7 +6,7 @@ import arc.util.Log;
 import arc.util.Timer;
 import arc.util.Nullable;
 import mindustry.Vars;
-import hao1337.HVars;
+import hao1337.Version;
 import mindustry.game.EventType.*;
 import mindustry.net.NetConnection;
 
@@ -72,7 +72,7 @@ public class Protocol {
         });
 
         Vars.net.handleServer(HandShakePacket.class, (con, p) -> {
-            if (!p.name.equals(HVars.name) || !p.version.equals(HVars.version)) {
+            if (!Version.equal(p.version)) {
                 Log.warn("[scarlet][Server][] Auth failed due to version mismatch for '@'", con.uuid);
                 kick(con);
             }
@@ -104,7 +104,7 @@ public class Protocol {
         if (lastProtocolType.isServer()) {
             playerConnections.remove(con);
             con.kick("[scarlet]Connection couldn't be authenticated.[]\n\nThis server requires [accent][Better Vanilla] - ("
-                    + HVars.version + ")[] to play!", 10);
+                    + Version.getVersionString() + ")[] to play!", 10);
         }
     }
 
@@ -124,7 +124,7 @@ public class Protocol {
         lastProtocolType = state;
 
         if (state.isServer()) {
-            Vars.state.rules.tags.put(validProtocolString, HVars.name + ":" + HVars.version);
+            Vars.state.rules.tags.put(validProtocolString, Version.getVersionString());
             isCompatible = true;
         }
 
@@ -137,12 +137,9 @@ public class Protocol {
                 isCompatible = true;
 
                 var value = Vars.state.rules.tags.get(validProtocolString);
-                String[] kvs = value.split(":");
-
-                if (kvs.length == 2 && kvs[0].equals(HVars.name) && kvs[1].equals(HVars.version)) {
+                if (Version.equal(value)) {
                     var packet = new HandShakePacket();
-                    packet.name = HVars.name;
-                    packet.version = HVars.version;
+                    packet.version = Version.getVersionString();
                     Vars.net.send(packet, true);
                 }
             }

@@ -18,6 +18,8 @@ import mindustry.core.Version;
 import mindustry.game.EventType.ClientLoadEvent;
 import mindustry.game.EventType.WorldLoadEndEvent;
 import mindustry.input.MobileInput;
+import hao1337.addins.AutoUpdate;
+import hao1337.addins.StateController;
 import hao1337.addons.autodrill.ui.AutoDrill;
 import hao1337.contents.HBlocks;
 import hao1337.contents.HItems;
@@ -26,17 +28,6 @@ import hao1337.net.Protocol;
 import hao1337.ui.*;
 
 public class HVars {
-    /** Mod version */
-    public static final String version = "1.8.6";
-    /** Github API url to this mod repo */
-    public static final String gitapi = "https://api.github.com/repos/Hao-1337/mindustry-better-vanilla/releases";
-    /** Github repo name */
-    public static final String repoName = "hao1337/mindustry-better-vanilla";
-    /** Mod name that will get use as id in game */
-    public static final String name = "hao1337-mod";
-    /** Zip file name (using for auto update if user already unzip the mod file) */
-    public static final String unzipName = "hao1337mindustry-better-vanilla";
-
     /** Unique instance of units counter UI */
     public static UnitsDisplay unitDisplay = new UnitsDisplay();
     /** Unique instance of core items UI */
@@ -44,7 +35,7 @@ public class HVars {
     /** Unique instace of settings UI */
     public static final SettingBuilder setting = new SettingBuilder();
     /** Control how mod block should be visible in different server */
-    public static final ModState modState = new ModState();
+    public static final StateController modState = new StateController();
     /** Unique instance of time control UI */
     public static final TimeControl timecontrol = new TimeControl();
     /** Internal mod networking */
@@ -61,7 +52,16 @@ public class HVars {
     public static final boolean isBeta = Version.type.equals("bleeding-edge") || Version.build < 0;
 
     public HVars() {
-        Htex.load(name);
+        Core.settings.defaults(
+            "hao1337.ui.autodrill.enable",
+            false,
+            "hao1337.toggle.autoupdate.prerelease",
+            false
+        );
+
+        AutoUpdate.load();
+        Htex.load(hao1337.Version.name);
+
         eventsLoader();
     }
 

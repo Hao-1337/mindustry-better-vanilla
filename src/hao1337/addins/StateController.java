@@ -1,4 +1,4 @@
-package hao1337;
+package hao1337.addins;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -8,6 +8,7 @@ import java.io.DataOutputStream;
 import arc.Core;
 import arc.Events;
 import arc.struct.Seq;
+import hao1337.HVars;
 import hao1337.contents.HBlocks;
 import hao1337.contents.HItems;
 import hao1337.modification.ForceProjector;
@@ -33,7 +34,7 @@ import arc.util.io.Reads;
 import arc.util.io.Writes;
 
 /**
- * ModState manages the configuration state for the Mindustry Better Vanilla mod.
+ * Manages the configuration state for the Mindustry Better Vanilla mod.
  * 
  * <p>This class handles:
  * <ul>
@@ -46,7 +47,7 @@ import arc.util.io.Writes;
  * <p>The class automatically registers network handlers on instantiation to synchronize state 
  * between clients and server, ensuring all players have consistent mod configurations.
  */
-public class ModState {
+public class StateController {
     public boolean thoriumConveyor;
     public boolean surgeConveyor;
 
@@ -75,7 +76,7 @@ public class ModState {
     public int sechematicSize;
     public boolean experimental;
 
-    public ModState() { netWorking(); }
+    public StateController() { netWorking(); }
 
     public void load() {
         ForceProjector.load();

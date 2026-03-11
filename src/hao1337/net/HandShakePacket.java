@@ -6,13 +6,11 @@ import mindustry.net.Packet;
 
 /**
  * Simple networking packet used during the custom handshake phase.  The packet
- * carries a mod or client {@code name} and its {@code version} string
+ * carries a mod or client {@code version} string
  * 
  * @author Hao-1337
  */
 public class HandShakePacket extends Packet {
-    /** client or mod name being announced. */
-    public String name;
     /** human-readable version identifier. */
     public String version;
 
@@ -28,20 +26,17 @@ public class HandShakePacket extends Packet {
      * @param name    name string to advertise
      * @param version version string associated with the name
      */
-    public HandShakePacket(String name, String version){
-        this.name = name;
+    public HandShakePacket(String version){
         this.version = version;
     }
 
     @Override
     public void write(Writes w){
-        w.str(name);
         w.str(version);
     }
 
     @Override
     public void read(Reads r){
-        name = r.str();
         version = r.str();
     }
 
