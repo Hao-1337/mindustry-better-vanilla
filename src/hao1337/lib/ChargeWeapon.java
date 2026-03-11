@@ -9,7 +9,6 @@ import arc.math.Mathf;
 import arc.math.geom.Vec2;
 import arc.util.Time;
 import arc.util.Tmp;
-import mindustry.Vars;
 import mindustry.audio.SoundLoop;
 import mindustry.entities.Predict;
 import mindustry.entities.Sized;
