@@ -1,0 +1,40 @@
+[
+    {
+        "name": "IOS/Android",
+        "version": "v154",
+        "replacements": {
+            "../mod.hjson": [
+                {
+                    "regex": true,
+                    "oldField": "/(^\\s*minGameVersion:)\\s*\\d+/gm",
+                    "newField": "$1 154"
+                }
+            ]
+        }
+    },
+    {
+        "name": "Steam",
+        "version": "v147",
+        "replacements": {
+            "../mod.hjson": [
+                {
+                    "regex": true,
+                    "oldField": "/(^\\s*minGameVersion:)\\s*\\d+/gm",
+                    "newField": "$1 147"
+                }
+            ]//,
+            // "../assets/content/**/*.hjson": [
+            //     {
+            //         "class": "mindustry.type.Weapon",
+            //         "oldField": "shootSound",
+            //         "newField": "shootSound"
+            //     },
+            //     {
+            //         "class": "mindustry.type.Weapon",
+            //         "oldField": "chargeSound",
+            //         "newField": "chargeSound"
+            //     }
+            // ]
+        }
+    }
+]

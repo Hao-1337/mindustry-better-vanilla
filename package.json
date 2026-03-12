@@ -3,9 +3,11 @@
   "version": "1.0.0",
   "description": "Mindustry mod",
   "main": "processor.js",
+  "type": "module",
   "scripts": {
-    "compile": "gradlew jar",
-    "cPush": "node ./processor.js"
+    "compile": "gradlew deploy",
+    "dev-steam": "cd scripts && node dev.ts steam",
+    "dev-jar": "cd scripts && node dev.ts jar"
   },
   "repository": {
     "type": "git",
@@ -14,8 +16,32 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "chokidar": "^3.6.0",
-    "colors": "^1.4.0",
     "hao1337-mindustry": "file:"
+  },
+  "devDependencies": {
+    "@types/node": "^25.4.0",
+    "chokidar": "^5.0.0",
+    "colors": "^1.4.0",
+    "dotenv": "^17.3.1",
+    "expand-home-dir": "^0.0.3",
+    "fmtr": "^1.1.2",
+    "fs-extra": "^8.1.0",
+    "glob": "^11.1.0",
+    "htmlparser2": "6.0.1",
+    "jdk-utils": "^0.6.0",
+    "json5": "^2.2.3",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
+    "semver": "^7.5.2",
+    "tar": "^7.5.11",
+    "tsx": "^4.21.0",
+    "vscode-languageclient": "8.2.0-next.3",
+    "vscode-variables": "^1.0.1",
+    "winreg-utf8": "^0.1.1",
+    "winston": "^3.2.1",
+    "winston-daily-rotate-file": "^4.7.1"
+  },
+  "engines": {
+    "node": ">=23"
   }
 }

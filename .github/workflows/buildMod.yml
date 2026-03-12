@@ -1,0 +1,57 @@
+name: Build Mod
+
+on: [push, pull_request]
+
+jobs:
+  buildJar:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        mindustry: [v147, v154]
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up JDK 17
+      uses: actions/setup-java@v4
+      with:
+        distribution: temurin
+        java-version: 17
+    
+    - name: Setup NodeJS 24
+      uses: actions/setup-node@v4
+      with:
+        node-version: 24
+
+    - name: Setup Android build-tools
+      run: echo "$ANDROID_HOME/build-tools/34.0.0" >> $GITHUB_PATH
+    
+    - name: install npm
+      run: npm ci
+
+    - name: Build mod jar
+      run: |
+        chmod +x ./gradlew
+
+        if [ "${{ matrix.mindustry }}" = "v147" ]; then
+          ./gradlew deployv147 -PmindustryVersion=v147
+        else
+          ./gradlew deployv154 -PmindustryVersion=v154
+        fi
+
+    - name: Rename artifact
+      run: |
+        if [ "${{ matrix.mindustry }}" = "v147" ]; then
+          PREFIX="steam-"
+        else
+          PREFIX=""
+        fi
+
+        mv build/libs/*.jar build/libs/${PREFIX}${{ github.event.repository.name }}.jar
+
+    - name: Upload jar
+      uses: actions/upload-artifact@v4
+      with:
+        name: ${{ github.event.repository.name }}-${{ matrix.mindustry }}
+        path: build/libs/${{ github.event.repository.name }}-${{ matrix.mindustry }}.jar

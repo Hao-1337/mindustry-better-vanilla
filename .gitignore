@@ -164,3 +164,9 @@ android/libs/
 /algorithm.js
 /.history
 /.screenshot
+
+## Dev scripts
+# /scripts/.env
+/scripts/.cloned
+/scripts/jdt-language-server/
+/scripts/jdt-language-server-latest.tar.gz
