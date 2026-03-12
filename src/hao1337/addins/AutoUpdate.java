@@ -122,7 +122,7 @@ public class AutoUpdate {
 				return;
 			}
 			if (allVersion.size == 1) {
-				Log.info("[@] Fetching complete, you mod is up-to-date!");
+				Log.info("[@] Fetching complete, your mod is up-to-date!", name);
 				return;
 			}
 
@@ -130,7 +130,7 @@ public class AutoUpdate {
 			latestVersionString = lastestAssets.getString("tag_name");
 
 			if (!allowAutoUpdate) {
-				Log.info("[@] Fetching complete, you mod is outdate (current is @, lastest is @), but auto update was disable!", currentVersionString, latestVersionString);
+				Log.info("[@] Fetching complete, you mod is outdate (current is @, lastest is @), but auto update was disable!", name, currentVersionString, latestVersionString);
 				return;
 			}
 
