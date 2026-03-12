@@ -106,10 +106,11 @@ public class ChargeWeapon extends Weapon {
     
     @Override
     public void update(Unit unit, WeaponMount mount) {
-        @PlatformDependance(version = "v154") boolean var = updateV2(unit, mount);
+        boolean var = updateV2(unit, mount);
         if (var) updateV1(unit, mount);
     }
 
+    @PlatformDependance(version = "v154")
     public boolean updateV2(Unit unit, WeaponMount mount) {
         boolean can = unit.canShoot();
         float lastReload = mount.reload;
@@ -284,6 +285,7 @@ public class ChargeWeapon extends Weapon {
         return false;
     }
 
+    @PlatformDependance(version = "v147")
     public boolean updateV1(Unit unit, WeaponMount mount) {
         boolean can = unit.canShoot();
         float lastReload = mount.reload;

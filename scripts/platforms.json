@@ -3,6 +3,13 @@
         "name": "IOS/Android",
         "version": "v154",
         "replacements": {
+            "../src/hao1337/lib/ChargeWeapon.java": [
+                {
+                    "regex": true,
+                    "oldField": "/(@PlatformDependance\\s*\\(\\s*version\\s*=\\s*\"v147\"\\s*\\)\\s*[\\w\\W]+?)\\s*{[\\w\\W]+\\s*return false;\\s*}/",
+                    "newField": "$1 { return /** This code already get stripped by 'platform.ts' for slient compiler error! */true; }"
+                }
+            ],
             "../mod.hjson": [
                 {
                     "regex": true,
@@ -36,8 +43,8 @@
             "../src/hao1337/lib/ChargeWeapon.java": [
                 {
                     "regex": true,
-                    "oldField": "/(@PlatformDependance\\s*\\(\\s*version\\s*=\\s*\"v154\"\\s*\\)\\s*)[\\w\\W]+?;/",
-                    "newField": "$1 boolean var = true;"
+                    "oldField": "/(@PlatformDependance\\s*\\(\\s*version\\s*=\\s*\"v154\"\\s*\\)\\s*[\\w\\W]+?)\\s*{[\\w\\W]+\\s*return false;\\s*}/",
+                    "newField": "$1 { return /** This code already get stripped by 'platform.ts' for slient compiler error! */true; }"
                 }
             ],
             "../src/hao1337/Version.java": [
