@@ -23,8 +23,10 @@ export function restore() {
         fs.mkdirSync(path.dirname(target), { recursive: true });
         fs.copyFileSync(file, target);
 
-        console.log("Restored:", target);
+        // console.log("Restored:", target);
     }
+
+    if (fs.existsSync(CLONE_DIR)) fs.rmSync(CLONE_DIR, { recursive: true });
 }
 
 if (process.argv[1] === fileURLToPath(import.meta.url)) {

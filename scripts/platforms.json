@@ -21,20 +21,105 @@
                     "regex": true,
                     "oldField": "/(^\\s*minGameVersion:)\\s*\\d+/gm",
                     "newField": "$1 147"
+                },
+                {
+                    "regex": false,
+                    "oldField": "for v154!",
+                    "newField": "for Steam - v147"
+                },
+                {
+                    "regex": false,
+                    "oldField": "older (Steam - v147 version)",
+                    "newField": "newer (Android/IOS - v154 version)"
                 }
-            ]//,
-            // "../assets/content/**/*.hjson": [
-            //     {
-            //         "class": "mindustry.type.Weapon",
-            //         "oldField": "shootSound",
-            //         "newField": "shootSound"
-            //     },
-            //     {
-            //         "class": "mindustry.type.Weapon",
-            //         "oldField": "chargeSound",
-            //         "newField": "chargeSound"
-            //     }
-            // ]
+            ],
+            "../src/hao1337/lib/ChargeWeapon.java": [
+                {
+                    "regex": true,
+                    "oldField": "/(@PlatformDependance\\s*\\(\\s*version\\s*=\\s*\"v154\"\\s*\\)\\s*)[\\w\\W]+?;/",
+                    "newField": "$1 boolean var = true;"
+                }
+            ],
+            "../src/hao1337/Version.java": [
+                {
+                    "oldField": "public static final Vendor vendor = Vendor.ANDROID",
+                    "newField": "public static final Vendor vendor = Vendor.DESKTOP"
+                }
+            ],
+            "../assets/content/units/zelvorak.hjson": [
+                {
+                    "class": "",
+                    "oldField": "shootSound: shootDuo",
+                    "newField": "shootSound: shoot"
+                },
+                {
+                    "class": "hao1337.lib.ChargeWeapon",
+                    "oldField": "chargeSound: chargeCorvus",
+                    "newField": "chargeSound: laserblast"
+                },
+                {
+                    "class": "mindustry.world.blocks.defense.turrets.ItemTurret",
+                    "oldField": "shootSound: shootSmite",
+                    "newField": "shootSound: laserblast"
+                }
+            ],
+            "../assets/content/**/*.hjson": [
+                {
+                    "class": "mindustry.world.blocks.defense.turrets.ItemTurret",
+                    "oldField": "shootSound: shootFuse",
+                    "newField": "shootSound: shotgun"
+                },
+                {
+                    "class": "mindustry.world.blocks.defense.turrets.ItemTurret",
+                    "oldField": "shootSound: shootMissile",
+                    "newField": "shootSound: missile"
+                },
+                {
+                    "class": "mindustry.world.blocks.defense.turrets.ItemTurret",
+                    "oldField": "shootSound: shootSmite",
+                    "newField": "shootSound: shootBig"
+                },
+                {
+                    "class": "mindustry.type.Weapon",
+                    "oldField": "shootSound: shootArtillerySmall",
+                    "newField": "shootSound: shootBig"
+                },
+                {
+                    "class": "mindustry.type.Weapon",
+                    "oldField": "hitSound: explosionArtillery",
+                    "newField": "hitSound: explosionbig"
+                },
+                {
+                    "class": "mindustry.type.Weapon",
+                    "oldField": "despawnSound: explosionArtillery",
+                    "newField": "despawnSound: explosionbig"
+                },
+                {
+                    "class": "mindustry.entities.bullet.BasicBulletType",
+                    "oldField": "hitSound: blockExplode1",
+                    "newField": "hitSound: bang"
+                },
+                {
+                    "class": "mindustry.entities.bullet.BasicBulletType",
+                    "oldField": "despawnSound: blockExplode1",
+                    "newField": "despawnSound: bang"
+                },
+                {
+                    "class": "mindustry.world.blocks.defense.turrets.ItemTurret",
+                    "oldField": "shootSound: shootDuo",
+                    "newField": "shootSound: bang"
+                },
+                {
+                    "class": "mindustry.world.blocks.production.GenericCrafter",
+                    "oldField": "ambientSound: loopSmelter",
+                    "newField": "ambientSound: smelter"
+                },
+                {
+                    "class": "hao1337.lib.CoreStorageBlock",
+                    "oldField": "ambientSound: loopDrill",
+                    "newField": "ambientSound: drill"
+                }
+            ]
         }
     }
 ]

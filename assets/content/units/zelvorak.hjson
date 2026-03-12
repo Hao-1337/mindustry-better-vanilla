@@ -44,10 +44,10 @@ weapons: [
     shootY: 8
     y: 35
     x: 10
-    reload: 45
+    reload: 35
     recoil: 5
     ejectEffect: casing2
-    shootSound: shoot
+    shootSound: shootDuo
     shoot: {
       shots: 1
     }
@@ -78,10 +78,10 @@ weapons: [
     rotate: true
     y: 15
     x: 15
-    reload: 45
+    reload: 35
     recoil: 5
     ejectEffect: casing2
-    shootSound: shoot
+    shootSound: shootDuo
     shoot: {
       shots: 1
     }
@@ -121,7 +121,7 @@ weapons: [
     recoil: 10
     shake: 0.5
     ejectEffect: casing2
-    shootSound: shootBig
+    shootSound: shootArtillerySmall
     bullet: {
       type: BasicBulletType
       hitEffect: flakExplosion
@@ -161,7 +161,7 @@ weapons: [
     recoil: 10
     shake: 0.5
     ejectEffect: casing2
-    shootSound: shootBig
+    shootSound: shootArtillerySmall
     bullet: {
       type: BasicBulletType
       hitEffect: flakExplosion
@@ -194,14 +194,21 @@ weapons: [
     rotateSpeed: 2.9
     reload: 15
     recoil: 0.5
+    shootPattern: {
+      barrels:[
+        -4.0, -1.25, 0.0,
+        0.0, 0.0, 0.0,
+        4, -1.25, 0.0
+      ]
+    }
     shoot: {
-      shotDelay: 1
-      shots: 2
+      shotDelay: 0.5
+      shots: 6
     }
     shootY: 8
     inaccuracy: 10
     xRand: 11
-    shootSound: shootBig
+    shootSound: shootMissile
     velocityRnd: 0.4
     bullet: {
       keepVelocity: false
@@ -249,7 +256,8 @@ weapons: [
     heatColor: ff2515
 
     shake: 3
-    chargeSound: railgun
+    soundPitchMin: 60.0
+    chargeSound: chargeCorvus
     shootSound: shootSmite
     ejectEffect: none
     bullet: {
@@ -272,6 +280,8 @@ weapons: [
       homingRange: 160
       shrinkX: 0
       shrinkY: 0
+      hitSound: explosionArtillery
+      despawnSound: explosionArtillery
       hitEffect: {
         type: multiEffect
         effects: [

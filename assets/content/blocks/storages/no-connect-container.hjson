@@ -10,6 +10,7 @@ minwarmup: 1.0
 warmupSpeed: 0.005
 rotateSpeed: 5.25
 rotationOffset: 60
+ambientSound: loopDrill
 
 requirements: [
     copper/1200

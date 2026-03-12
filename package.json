@@ -20,6 +20,7 @@
   },
   "devDependencies": {
     "@types/node": "^25.4.0",
+    "@types/proper-lockfile": "^4.1.4",
     "chokidar": "^5.0.0",
     "colors": "^1.4.0",
     "dotenv": "^17.3.1",
@@ -30,6 +31,7 @@
     "htmlparser2": "6.0.1",
     "jdk-utils": "^0.6.0",
     "json5": "^2.2.3",
+    "proper-lockfile": "^4.1.2",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "semver": "^7.5.2",

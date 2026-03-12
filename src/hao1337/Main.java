@@ -13,5 +13,4 @@ public class Main extends Mod {
         Log.info("[Hao1337: Better Vanilla] is launching.");
         new HVars();
     }
-
 }

@@ -3,6 +3,7 @@ import path from "path";
 import { glob } from "glob";
 import { fileURLToPath } from "url";
 import json5 from "json5";
+import properLockfile from "proper-lockfile";
 
 interface Replacement {
     class?: string;
@@ -32,7 +33,7 @@ function backup(file: string) {
     const rel = path.relative(projectRoot, file);
     const target = path.join(CLONE_DIR, rel);
 
-    console.log("Backing up:", file, "to", target);
+    // console.log("Backing up:", file, "to", target);
 
     if (!fs.existsSync(target)) {
         ensureDir(target);
@@ -69,10 +70,13 @@ export function applyVersion(name: string) {
     for (const pattern in version.replacements) {
         const files = glob.sync(pattern, { cwd: __dirname, absolute: true });
 
-        for (const file of files) {
+        for (const file of files) try {
+            properLockfile.lockSync(file, { retries: 0 });
             backup(file);
             applyReplacement(file, version.replacements[pattern]!);
             console.log("Patched:", file);
+        } finally {
+            properLockfile.checkSync(file) && properLockfile.unlockSync(file);
         }
     }
 }

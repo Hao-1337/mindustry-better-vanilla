@@ -80,10 +80,14 @@ function javaChange(data: string) {
   console.log(`${'Detect java change at:'.blue} ${data.yellow.underline}${". Start complie".blue}`);
 
   try {
+    applyVersion(givenEnv === "steam" ? "v147" : "v154");
     execSync("npm run compile");
   } catch (e) {
     console.log('Compie error: '.red);
     console.error((e as { stderr: string }).stderr.toString().red);
+  }
+  finally {
+    restore();
   }
 
   console.timeEnd("Complie completed in: ");
@@ -95,9 +99,12 @@ function javaChange(data: string) {
 function accestChange(data: string) {
   console.log("Detect accest change at: ".green, data.yellow.underline);
   // copyFiles(ACCSET_PATH, TARGET_PATH);
-  applyVersion(givenEnv === "steam" ? "v147" : "v154");
-  copyFiles(assetsPath, assetsModFolder);
-  restore();
+  try {
+    applyVersion(givenEnv === "steam" ? "v147" : "v154");
+    copyFiles(assetsPath, assetsModFolder);
+  } finally {
+    restore();
+  }
 };
 
 const java_watch = chokidar.watch(sourcePath, {

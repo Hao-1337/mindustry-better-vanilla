@@ -15,7 +15,7 @@ consumes: {
 }
 
 outputItem: hao1337-mod-uranium/1
-ambientSound: smelter
+ambientSound: loopSmelter
 warmupSpeed: 0.02
 ambientSoundVolume: 0.7
 

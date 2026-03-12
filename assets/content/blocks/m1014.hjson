@@ -17,7 +17,7 @@ consumes: {
 
 range: 160
 shootCone: 20
-shootSound: shotgun
+shootSound: shootFuse
 shoot: {
   type: ShootSpread
   spread: 15
