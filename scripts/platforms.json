@@ -6,7 +6,7 @@
             "../src/hao1337/lib/ChargeWeapon.java": [
                 {
                     "regex": true,
-                    "oldField": "/(@PlatformDependance\\s*\\(\\s*version\\s*=\\s*\"v147\"\\s*\\)\\s*[\\w\\W]+?)\\s*{[\\w\\W]+\\s*return false;\\s*}/",
+                    "oldField": "/(@PlatformDependance\\s*\\(\\s*version\\s*=\\s*\"v147\"\\s*\\)\\s*[\\w\\W]+?)\\s*{[\\w\\W]+?\\s*return false;\\s*}/",
                     "newField": "$1 { return /** This code already get stripped by 'platform.ts' for slient compiler error! */true; }"
                 }
             ],
@@ -43,7 +43,7 @@
             "../src/hao1337/lib/ChargeWeapon.java": [
                 {
                     "regex": true,
-                    "oldField": "/(@PlatformDependance\\s*\\(\\s*version\\s*=\\s*\"v154\"\\s*\\)\\s*[\\w\\W]+?)\\s*{[\\w\\W]+\\s*return false;\\s*}/",
+                    "oldField": "/(@PlatformDependance\\s*\\(\\s*version\\s*=\\s*\"v154\"\\s*\\)\\s*[\\w\\W]+?)\\s*{[\\w\\W]+?\\s*return false;\\s*}/",
                     "newField": "$1 { return /** This code already get stripped by 'platform.ts' for slient compiler error! */true; }"
                 }
             ],
