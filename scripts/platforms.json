@@ -27,7 +27,7 @@
                 {
                     "regex": true,
                     "oldField": "/(^\\s*minGameVersion:)\\s*\\d+/gm",
-                    "newField": "$1 147"
+                    "newField": "$1 146"
                 },
                 {
                     "regex": false,
@@ -36,7 +36,7 @@
                 },
                 {
                     "regex": false,
-                    "oldField": "older (Steam - v147 version)",
+                    "oldField": "older (Steam - v146 version)",
                     "newField": "newer (Android/IOS - v154 version)"
                 }
             ],

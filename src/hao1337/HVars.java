@@ -56,7 +56,9 @@ public class HVars {
             "hao1337.ui.autodrill.enable",
             false,
             "hao1337.toggle.autoupdate.prerelease",
-            false
+            false,
+            "hao1337.toggle.autoupdate",
+            true
         );
 
         AutoUpdate.load();
