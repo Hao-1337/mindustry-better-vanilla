@@ -3,6 +3,7 @@ package hao1337.addins;
 import arc.Core;
 import arc.files.Fi;
 import arc.files.ZipFi;
+import arc.graphics.Color;
 import arc.input.KeyCode;
 import arc.scene.ui.ScrollPane;
 import arc.scene.ui.layout.Scl;
@@ -45,12 +46,24 @@ public class AutoUpdate {
 	public static float progress;
 	public static String downloadURL;
 	private static long downloadCount = 0;
+	private static boolean recuseMode = false;
 
 	private static String latestVersionString;
 	private static Jval lastestAssets;
 	private static String currentVersionString = Version.getVersionString();
 	private static boolean allowPrerelease;
 	private static boolean allowAutoUpdate;
+
+	/**
+	 * Revert to last version that accpet as the last not buggy version
+	 * 
+	 * @return
+	 */
+	public static String recuseUpdate() {
+		if (Version.vendor == Vendor.ANDROID || mindustry.core.Version.build > 147)
+			return "https://github.com/Hao-1337/mindustry-better-vanilla/releases/download/v1.8.72/mindustry-better-vanilla.jar";
+		return "https://github.com/Hao-1337/mindustry-better-vanilla/releases/download/v1.8.72/steam-mindustry-better-vanilla.jar";
+	}
 
 	public static void load() {
 		try {
@@ -118,7 +131,8 @@ public class AutoUpdate {
 			versions.addAll(allVersion);
 
 			if (allVersion.isEmpty()) {
-				Log.warn("[@] Fetching failed, this version doesn't match any release. Does this mod is custom build?", name);
+				Log.warn("[@] Fetching failed, this version doesn't match any release. Does this mod is custom build?",
+						name);
 				return;
 			}
 			if (allVersion.size == 1) {
@@ -130,21 +144,31 @@ public class AutoUpdate {
 			latestVersionString = lastestAssets.getString("tag_name");
 
 			if (!allowAutoUpdate) {
-				Log.info("[@] Fetching complete, you mod is outdate (current is @, lastest is @), but auto update was disable!", name, currentVersionString, latestVersionString);
+				Log.info(
+						"[@] Fetching complete, you mod is outdate (current is @, lastest is @), but auto update was disable!",
+						name, currentVersionString, latestVersionString);
 				return;
 			}
 
 			for (Jval asset : lastestAssets.get("assets").asArray()) {
 				Vendor vendor = Vendor.parseVendor(asset.getString("name"));
-		
+
 				if (vendor == Version.vendor) {
 					downloadURL = asset.getString("browser_download_url");
 					downloadCount = asset.getLong("download_count", 0);
 				}
 			}
 
-			Log.info("[@] Fetching complete, current version: @, lastest version: @", name, currentVersionString, latestVersionString);
+			Log.info("[@] Fetching complete, current version: @, lastest version: @", name, currentVersionString,
+					latestVersionString);
 			Log.info("[@] Download URL (download counter: @): @", name, downloadCount, downloadURL);
+
+			if (downloadURL == null) {
+				Log.err("[@] Fail to fetch URL, enter recuse mode!", downloadURL);
+				downloadURL = recuseUpdate();
+				recuseMode = true;
+			}
+
 			showCustomConfirm();
 		}, Log::err);
 	}
@@ -157,6 +181,8 @@ public class AutoUpdate {
 		float maxWidth = Math.max(Core.graphics.getWidth() / Scl.scl(1.08f), 520f);
 		Table content = dialog.cont;
 
+		if (recuseMode) content.add("RECUSE MODE!").color(Color.red).fillX().padLeft(80f).padRight(80f);
+		content.row();
 		content.add(
 				Core.bundle.format("hao1337.update.info", new Object[] { latestVersionString, currentVersionString }))
 				.fillX()
@@ -223,9 +249,7 @@ public class AutoUpdate {
 		}
 
 		Vars.ui.loadfrag.show(Core.bundle.format("hao1337.update.updating"));
-		Vars.ui.loadfrag.setProgress(() -> {
-			return progress;
-		});
+		Vars.ui.loadfrag.setProgress(() -> progress);
 		Http.get(downloadURL, AutoUpdate::handle, Log::err);
 	}
 
