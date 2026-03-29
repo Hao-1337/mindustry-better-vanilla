@@ -26,6 +26,8 @@ public class ChargeWeapon extends Weapon {
     public String chargeSuffix;
     /** Charge speed in tick */
     public float chargeSpeed = 65f;
+    /** As the name */
+    public float chargeSoundMinPitch = 1f;
     /** Due to region dimension, custom quad limit is require due to how big the chagre region is */
     public float[] chargeQuad = { 0f, 1f };
 
@@ -263,7 +265,7 @@ public class ChargeWeapon extends Weapon {
         (alwaysShooting || Angles.within(rotate ? mount.rotation : unit.rotation + baseRotation, mount.targetRotation, shootCone)) //has to be within the cone
         ){
             // if (chargeSound != null && (!m.charging || m.charge % chargeSound.getLength() <= 0.1f)) chargeSound.at(shootX, shootY);
-            if (chargeSound != null && m.charge <= 0.0005f) chargeSound.at(unit, 0.65f);
+            if (chargeSound != null && m.charge <= 0.00005f) chargeSound.at(unit, chargeSoundMinPitch);
             m.charging = true;
             m.charge = Mathf.approachDelta(m.charge, 1f, Time.delta / chargeSpeed);
         }
@@ -418,13 +420,13 @@ public class ChargeWeapon extends Weapon {
         (mount.reload <= 0.0001f || (alwaysContinuous && mount.bullet == null)) && //reload has to be 0, or it has to be an always-continuous weapon
         (alwaysShooting || Angles.within(rotate ? mount.rotation : unit.rotation + baseRotation, mount.targetRotation, shootCone)) //has to be within the cone
         ){
-            if (chargeSound != null && m.charge <= 0.0005f) chargeSound.at(unit, 0.65f);
+            if (chargeSound != null && m.charge <= 0.00005f) chargeSound.at(unit, chargeSoundMinPitch);
             m.charging = true;
             m.charge = Mathf.approachDelta(m.charge, 1f, Time.delta / chargeSpeed);
         }
         else {
             m.charging = false;
-            m.charge = Mathf.approachDelta(m.charge, 0f, (Time.delta / chargeSpeed) * 2f);
+            m.charge = Mathf.approachDelta(m.charge, 0f, (Time.delta / chargeSpeed) * 3.5f);
         }
 
         if (m.charge >= 1f) {

@@ -25,9 +25,9 @@ research: {
     requirements: [
         titanium/30000
         thorium/15000
-        copper/250000
+        copper/25000
         silicon/20000
-        lead/300000
+        lead/30000
         plastanium/20000
     ]
 }

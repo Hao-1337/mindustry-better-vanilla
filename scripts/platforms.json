@@ -55,14 +55,42 @@
             ],
             "../assets/content/units/zelvorak.hjson": [
                 {
-                    "class": "",
+                    "class": "hao1337.lib.ChargeWeapon",
+                    "regex": true,
+                    "oldField": "/hitSound: explosionArtillerySockBig\\s*despawnSound: explosionArtillerySock/m",
+                    "newField": "\n"
+                },
+                {
+                    "class": "mindustry.type.UnitType",
+                    "regex": true,
+                    "newField": "/$\\s*loopSound: loopHover/m",
+                    "oldField": ""
+                },
+                {
+                    "class": "mindustry.type.Weapon",
+                    "regex": true,
+                    "oldField": "/(\\s*)shootSound:(\\s*)shootCorvus(\\s*)chargeSound:(\\s*)chargeCorvus(\\s*)/g",
+                    "newField": "$1shootSound:$2laserblast$3chargeSound:$4lasercharge$5"
+                },
+                {
+                    "class": "mindustry.type.Weapon",
                     "oldField": "shootSound: shootDuo",
                     "newField": "shootSound: shoot"
+                },
+                {
+                    "class": "mindustry.type.Weapon",
+                    "oldField": "shootSound: shootEclipse",
+                    "newField": "shootSound: laser"
                 },
                 {
                     "class": "hao1337.lib.ChargeWeapon",
                     "oldField": "chargeSound: chargeCorvus",
                     "newField": "chargeSound: laserblast"
+                },
+                {
+                    "class": "hao1337.lib.ChargeWeapon",
+                    "oldField": "shootSound: shootLaser",
+                    "newField": "shootSound: lasershoot"
                 },
                 {
                     "class": "mindustry.world.blocks.defense.turrets.ItemTurret",

@@ -10,16 +10,20 @@ crashDamageMultiplier: 3
 speed: 0.35
 accel: 0.4
 drag: 0.4
-range: 430
-maxRange: 430
-aimDst: 430
+range: 580
+aimDst: 580
+maxRange: 580
 faceTarget: true
 flying: true
 health: 100000
 hitSize: 140
-armor: 60
+armor: 120
+loopSound: loopHover
+
 engineOffset: 52
 targetFlags: [
+  battery
+  core
   reactor
 ]
 
@@ -42,8 +46,8 @@ weapons: [
     rotateSpeed: 5
     rotate: true
     shootY: 8
-    y: 35
-    x: 10
+    x: 12
+    y: 31
     reload: 35
     recoil: 5
     ejectEffect: casing2
@@ -69,123 +73,121 @@ weapons: [
   }
 
   {
-    name: zelvorak-gun
-    shootCone: 15
-    shootY: 8
+    name: zelvorak-artillery
+    top: true
     mirror: true
-    alternate: true
+    alternate: false
+    x: 20
+    y: 12
+    shoot: {
+      shotDelay: 2
+      shots: 5
+    }
+    rotate: true
+    rotateSpeed: 4
+    inaccuracy: 5
+    shootY: 10
+    reload: 15
+    recoil: 5
+    shake: 0.5
+    ejectEffect: casing2
+    shootSound: shootArtillerySmall
+    bullet: {
+      type: BasicBulletType
+      hitEffect: flakExplosion
+      shootEffect: shootBig2
+      despawnEffect: flakExplosion
+      pierce: true
+      pierceCap: 1
+      knockback: 1.8
+      statusDuration: 80
+      status: blasted
+      lifetime: 90
+      damage: 75
+      speed: 4
+      width: 14
+      height: 14
+      splashDamage: 20
+      splashDamageRadius: 20
+    }
+  }
+
+  {
+    type: RepairBeamWeapon
+    name: zelvorak-healing-beam
+    x: 52.0
+    y: -12.5
+    shootY: 6.0
+    beamWidth : 0.8
+    repairSpeed : 0.7
+    baseRotation: 240.0
+    bullet: {
+      maxRange: 130.0
+    }
+  }
+
+  {
+    type: PointDefenseWeapon
+    name: zelvorak-defense
+    shootCone: 15
+    shootY: 4
+    mirror: true
+    alternate: false
     rotateSpeed: 5
     rotate: true
-    y: 15
-    x: 15
-    reload: 35
+    x: 48.5
+    y: -28.5
+    baseRotation: 240.0
+    reload: 5
     recoil: 5
+    targetInterval: 9.0
+    targetSwitchInterval: 12.0
     ejectEffect: casing2
-    shootSound: shootDuo
     shoot: {
-      shots: 1
+      shots: 5
     }
     shake: 1
     bullet: {
-      splashDamage: 30
-      splashDamageRadius: 20
-      knockback: 1
-      type: BasicBulletType
-      hitEffect: blastExplosion
-      shootEffect: shootBig2
-      despawnEffect: blastExplosion
-      lifetime: 90
-      damage: 80
-      speed: 4
-      width: 10
-      height: 10
+      shootEffect: sparkShoot
+      hitEffect: pointHit
+      maxRange: 240.0
+      damage: 50.0
     }
   }
 
   {
-    name: zelvorak-artillery
-    top: true
+    type: PointDefenseWeapon
+    name: zelvorak-defense
+    shootCone: 15
+    shootY: 4
     mirror: true
-    alternate: true
-    y: 5
-    x: 22
+    baseRotation: 225.0
+    alternate: false
+    rotateSpeed: 5
+    rotate: true
+    x: 35
+    y: -38
+    reload: 5
+    recoil: 5
+    targetInterval: 9.0
+    targetSwitchInterval: 12.0
+    ejectEffect: casing2
     shoot: {
-      shotDelay: 2
       shots: 5
     }
-    rotate: true
-    rotateSpeed: 4
-    inaccuracy: 5
-    shootY: 10
-    reload: 15
-    recoil: 10
-    shake: 0.5
-    ejectEffect: casing2
-    shootSound: shootArtillerySmall
+    shake: 1
     bullet: {
-      type: BasicBulletType
-      hitEffect: flakExplosion
-      shootEffect: shootBig2
-      despawnEffect: flakExplosion
-      pierce: true
-      pierceCap: 1
-      knockback: 1.8
-      statusDuration: 80
-      status: blasted
-      lifetime: 90
-      damage: 200
-      speed: 4
-      width: 14
-      height: 14
-      splashDamage: 20
-      splashDamageRadius: 20
-    }
-  }
-
-  {
-    name: zelvorak-artillery
-    top: true
-    mirror: true
-    alternate: true
-    y: -12
-    x: 28
-    shoot: {
-      shotDelay: 2
-      shots: 5
-    }
-    rotate: true
-    rotateSpeed: 4
-    inaccuracy: 5
-    shootY: 10
-    reload: 15
-    recoil: 10
-    shake: 0.5
-    ejectEffect: casing2
-    shootSound: shootArtillerySmall
-    bullet: {
-      type: BasicBulletType
-      hitEffect: flakExplosion
-      shootEffect: shootBig2
-      despawnEffect: flakExplosion
-      pierce: true
-      pierceCap: 1
-      knockback: 1.8
-      statusDuration: 80
-      status: blasted
-      lifetime: 90
-      damage: 200
-      speed: 4
-      width: 14
-      height: 14
-      splashDamage: 20
-      splashDamageRadius: 20
+      shootEffect: sparkShoot
+      hitEffect: pointHit
+      maxRange: 240.0
+      damage: 50.0
     }
   }
 
   {
     name: zelvorak-missile
-    x: 35
-    y: -28
+    x: 30
+    y: -22.5
     shootCone: 25
     alternate: true
     mirror: true
@@ -194,16 +196,16 @@ weapons: [
     rotateSpeed: 2.9
     reload: 15
     recoil: 0.5
-    shootPattern: {
+    targetSwitchInterval: 60
+    shoot: {
+      type: ShootBarrel
+      shotDelay: 0.5
+      shots: 4
       barrels:[
         -4.0, -1.25, 0.0,
         0.0, 0.0, 0.0,
         4, -1.25, 0.0
       ]
-    }
-    shoot: {
-      shotDelay: 0.5
-      shots: 6
     }
     shootY: 8
     inaccuracy: 10
@@ -211,8 +213,14 @@ weapons: [
     shootSound: shootMissile
     velocityRnd: 0.4
     bullet: {
+      type: hao1337.lib.LightningBulletType
+      lightningDamage: 25.0
+      lightningMinLength: 4
+      lightningMaxLength: 6
+      lightningPerHits: 2
+      lightningDelay: 10.0
+  
       keepVelocity: false
-      type: MissileBulletType
       hitEffect: explosion
       despawnEffect: explosion
       shootEffect: shootBig
@@ -223,10 +231,94 @@ weapons: [
       homingRange: 100
       weaveScale: 5
       weaveMag: 5
-      height: 12
-      width: 8
+      height: 18
+      width: 14
       splashDamageRadius: 20
       splashDamage: 38
+    }
+  }
+
+  {
+    name: zelvorak-laser
+    top: true
+    mirror: true
+    alternate: false
+    y: -5
+    x: 36.5
+    shoot: {
+      shots: 1
+    }
+    ignoreRotation: true
+    rotate: true
+    rotateSpeed: 1
+    reload: 60
+    recoil: 0
+    ejectEffect: casing2
+    shootSound: shootEclipse
+    bullet: {
+      type: LaserBulletType
+      damage: 450.0
+      sideAngle: 20.0
+      sideWidth: 1.5
+      sideLength: 80.0
+      width: 25.0
+      length: 270.0
+      shootEffect: shockwave
+      colors: [
+        ec7458aa
+        ff9c5a
+        ffffff
+      ]
+    }
+  }
+
+  {
+    name: zelvorak-repair-beam
+    y: -10.5
+    x: 11.5
+    top: true
+    mirror: true
+    alternate: true
+    shoot: {
+      shots: 1
+    }
+    ignoreRotation: true
+    rotate: true
+    rotateSpeed: 1
+    reload: 260
+    recoil: 0
+    firstShotDelay: 80.0
+    shootStatusDuration: 120.0
+    shootStatus: unmoving
+    ejectEffect: casing2
+    shootSound: shootCorvus
+    chargeSound: chargeCorvus
+    bullet: {
+      type: LaserBulletType
+      length: 460
+      damage: 650
+      width: 25
+      lifetime: 65
+      lightningSpacing: 35
+      lightningLength: 5
+      lightningDelay: 1.1
+      lightningLengthRand: 15
+      lightningDamage: 50
+      lightningAngleRand: 40
+      largeHit: true
+      lightColor: 98ffa9
+      lightningColor: 98ffa9
+      chargeEffect: greenLaserCharge
+      healPercent: 50
+      collidesTeam: true
+      sideAngle: 15
+      sideWidth: 0
+      sideLength: 0
+      colors: [
+        98ffa978
+        98ffa9
+        ffffff
+      ]
     }
   }
 
@@ -234,10 +326,14 @@ weapons: [
     type: "hao1337.lib.ChargeWeapon"
     name: zelvorak-nuke
     chargeSuffix: '-l-heat'
-    chargeSpeed: 120
+    chargeSpeed: 60
     chargeQuad: [ 0.525, 0.95 ]
-    continuous: false
+    continuous: false,
+    // parentizeEffects: true
 
+    targetSwitchInterval: 480
+    targetInterval: 30
+  
     x: 0
     y: 0
     alternate: false
@@ -246,7 +342,7 @@ weapons: [
     rotate: false
     shootY: 40
     cooldownTime: 80
-    reload: 600
+    reload: 180
     shootStatus: unmoving
     shootStatusDuration: 60
     smoothReloadSpeed: 0.01
@@ -257,31 +353,32 @@ weapons: [
 
     shake: 3
     soundPitchMin: 60.0
-    chargeSound: chargeCorvus
-    shootSound: shootSmite
+    chargeSound: chargeZelvorak
+    chargeSoundMinPitch: 1.0
+    shootSound: shootCorvus
     ejectEffect: none
     bullet: {
-      type: BasicBulletType
+      type: MissileBulletType
       sprite: missile-large
       status: melting
       statusDuration: 300
-      damage: 1080
+      damage: 2048
       splashDamage: 520
-      splashDamageRadius: 100
+      splashDamageRadius: 120
       makeFire: true
       incendChance: 140
       incendSpread: 18
       incendAmount: 4
-      height: 40
-      width: 30
+      height: 60
+      width: 60
       speed: 2.0
-      lifetime: 165
+      lifetime: 360
       homingPower: 0.00756
       homingRange: 160
       shrinkX: 0
       shrinkY: 0
-      hitSound: explosionArtillery
-      despawnSound: explosionArtillery
+      hitSound: explosionArtillerySockBig
+      despawnSound: explosionArtillerySock
       hitEffect: {
         type: multiEffect
         effects: [
@@ -443,7 +540,7 @@ abilities: [
   {
     type: mindustry.entities.abilities.UnitSpawnAbility
     unit: horizon
-    spawnTime: 1800
+    spawnTime: 180
     spawnX: 45
     spawnY: 4
   }
