@@ -1,8 +1,7 @@
-type: Unloader
+type: hao1337.lib.ValveUnloader
 category: effect
 group: transportation
 
-speed: 10
 health: 330
 
 requirements: [
