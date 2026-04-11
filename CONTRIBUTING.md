@@ -1,7 +1,7 @@
 # Contributing to mindustry-better-vanilla
 
 > [!NOTE]
-> **Current languages bundle is created by Gemini Pro (expect English & Vietnamese)**
+> **Translation status:** `bundle.properties`, `bundle_es.properties`, and `bundle_vi.properties` are currently treated as verified references. Other bundle files are machine-assisted (Google Gemini Pro & ChatGPT 5.4) translations and still need review by native speakers.
 > [!NOTE]
 > **Current Javadoc by Github Copilot Pro**
 
@@ -29,6 +29,7 @@ Thank you for contributing. Please follow these guidelines to keep the project s
 
 ## Language translation
 - Translations must be contributed by people who speak that language (a.k.a "native speaker").
+- Language bundles may contain machine-assisted translations. Treat them as draft quality until reviewed by a native speaker.
 - Keep terminology consistent with existing translations.
 - Provide context for ambiguous strings and test in-game for layout/overflow issues.
 
@@ -38,7 +39,7 @@ Thank you for contributing. Please follow these guidelines to keep the project s
 - Implement features in a backward-compatible manner when possible.
 
 ## Pull request checklist
-- I have pulled the latest `v154` and rebased my branch.
+- I have pulled the latest `master` and rebased my branch.
 - Code builds without errors.
 - All changed content works correctly in-game.
 - PR includes description, motivation, and testing notes.
