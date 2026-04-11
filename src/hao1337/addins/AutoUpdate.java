@@ -260,6 +260,8 @@ public class AutoUpdate {
 				progress = p;
 			});
 			Vars.mods.importMod(file).setRepo(repoName);
+			Fi oldFile = Vars.modDirectory.child("mindustry-better-vanilla.zip");
+			if (oldFile.exists()) oldFile.delete();
 			file.delete();
 			Core.app.post(Objects.requireNonNull(Vars.ui.loadfrag)::hide);
 			Vars.ui.showInfoOnHidden(Core.bundle.format("hao1337.reloadexit"), Objects.requireNonNull(Core.app)::exit);
