@@ -1,11 +1,11 @@
 # Contributing to mindustry-better-vanilla
+Thank you for contributing. Please follow these guidelines to keep the project stable and maintainable.
 
 > [!NOTE]
 > **Translation status:** `bundle.properties`, `bundle_es.properties`, and `bundle_vi.properties` are currently treated as verified references. Other bundle files are machine-assisted (Google Gemini Pro & ChatGPT 5.4) translations and still need review by native speakers.
+
 > [!NOTE]
 > **Current Javadoc by Github Copilot Pro**
-
-Thank you for contributing. Please follow these guidelines to keep the project stable and maintainable.
 
 ## Before you start
 - Fork the repository and create a branch named: `type/short-description` (e.g., `balance/solar-booster`, `feature/new-block`).
