@@ -63,12 +63,14 @@ public class UnitsDisplay extends Table {
 
         background(Styles.black6);
         margin(4);
-        buildUI();
+        
 
         update(() -> {
             if (!interval.get(time))
                 return;
+            clearChildren();
             fetchUnit();
+            buildUI();
             visible = units.size > 0;
         });
     }
@@ -88,7 +90,6 @@ public class UnitsDisplay extends Table {
                 units.add(unit);
             }
         }
-        rebuild();
     }
 
     /**

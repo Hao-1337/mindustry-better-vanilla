@@ -14,7 +14,7 @@ public class Version {
     /** Mod minor version */
     public static final int minorVersion = 9;
     /** Mod patch version */
-    public static final int patchVersion = 1;
+    public static final int patchVersion = 2;
     /** Mod version tag */
     public static final Tag tag = Tag.RELEASE;
     /** Target vendor using in this mod version */
