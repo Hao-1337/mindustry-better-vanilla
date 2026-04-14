@@ -9,7 +9,7 @@ Thank you for contributing. Please follow these guidelines to keep the project s
 
 ## Before you start
 - Fork the repository and create a branch named: `type/short-description` (e.g., `balance/solar-booster`, `feature/new-block`).
-- Target pull requests to the default branch `v154` unless instructed otherwise.
+- Target pull requests to the default branch `master` unless instructed otherwise.
 
 ## General rules
 - Follow existing coding style and project conventions.
