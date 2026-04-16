@@ -11,8 +11,10 @@ jobs:
         include:
           - mindustry: v147
             fname: v147
+            uname: "v147"
           - mindustry: v157
             fname: ""
+            uname: "v154"
 
     steps:
     - uses: actions/checkout@v4
@@ -55,5 +57,5 @@ jobs:
     - name: Upload jar
       uses: actions/upload-artifact@v4
       with:
-        name: ${{ github.event.repository.name }}-${{ matrix.fname }}
+        name: ${{ github.event.repository.name }}-${{ matrix.uname }}
         path: build/libs/${{ matrix.fname }}${{ github.event.repository.name }}.jar
