@@ -1,5 +1,5 @@
 import { execSync } from "child_process";
-import { copyFileSync, mkdirSync, readdirSync, statSync, unlinkSync } from 'fs';
+import { copyFileSync, mkdirSync, readdirSync, statSync, unlinkSync, writeFileSync } from 'fs';
 import { fileURLToPath } from "url";
 import path, { join } from 'path';
 import color from 'colors';
@@ -7,6 +7,8 @@ import chokidar from 'chokidar';
 import dotenv from 'dotenv';
 import { applyVersion } from "./platform.ts";
 import { restore } from "./platform-revert.ts";
+import AdmZip from "adm-zip";
+import net from "net";
 
 dotenv.config();
 color.enable();
@@ -20,7 +22,46 @@ const classPath = path.join(__dirname, "..", "build", "classes", "java", "main",
 const givenEnv = (process.argv[2] || "steam") == "steam" ? "steam" : "jar";
 const mindustryPath = path.resolve((givenEnv === "steam" ? process.env.MINDUSTRY_STEAM_PATH : process.env.MINDUSTRY_JAR_PATH) || ".");
 const classpathModFolder = path.join(mindustryPath, "mods", "hao-1337mindustry-better-vanilla", "hao1337");
+const modFolder = path.join(mindustryPath, "mods", "hao-1337mindustry-better-vanilla");
 const assetsModFolder = path.join(mindustryPath, "mods", "hao-1337mindustry-better-vanilla");
+const jarPath = Array.from(execSync("gradlew.bat printRuntimeClasspath", {
+  cwd: projectRoot,
+  stdio: "pipe"
+}).toString().split("\n")).map(l => l.trim()).filter(l => l.endsWith(".jar"));
+
+function extractJarClasses(jarPath: string, target: string) {
+  const zip = new AdmZip(jarPath);
+
+  for (const entry of zip.getEntries()) {
+    if (!entry.entryName.endsWith(".class")) continue;
+
+    const outPath = path.join(target, entry.entryName);
+
+    mkdirSync(path.dirname(outPath), { recursive: true });
+    writeFileSync(outPath, entry.getData());
+  }
+}
+
+function extractAllDeps() {
+  for (const jar of jarPath) {
+    try {
+      extractJarClasses(jar, modFolder);
+    } catch (e) {
+      console.error("Failed extracting:", jar, e);
+    }
+  }
+}
+
+function sendRestart() {
+  const client = net.createConnection({ port: 1337, host: "127.0.0.1" }, () => {
+    client.write("restart\n");
+    client.end();
+  });
+
+  client.on("error", (err) => {
+    console.log("DevTools seem to be not running:", err.message);
+  });
+}
 
 const ignored = [
   '**/node_modules/**',
@@ -81,7 +122,9 @@ function javaChange(data: string) {
 
   try {
     applyVersion(givenEnv === "steam" ? "v147" : "v154");
-    execSync("npm run compile");
+    execSync("npm run dev-compile");
+    extractAllDeps();
+    sendRestart();
   } catch (e) {
     console.log('Compie error: '.red);
     console.error((e as { stderr: string }).stderr.toString().red);
@@ -102,6 +145,7 @@ function accestChange(data: string) {
   try {
     applyVersion(givenEnv === "steam" ? "v147" : "v154");
     copyFiles(assetsPath, assetsModFolder);
+    sendRestart();
   } finally {
     restore();
   }

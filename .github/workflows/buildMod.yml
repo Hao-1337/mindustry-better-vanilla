@@ -10,9 +10,9 @@ jobs:
       matrix:
         include:
           - mindustry: v147
-            prefix: steam-
+            fname: v147
           - mindustry: v154
-            prefix: ""
+            fname: ""
 
     steps:
     - uses: actions/checkout@v4
@@ -44,7 +44,7 @@ jobs:
 
     - name: Rename artifact
       run: |
-        DES=build/libs/${{ matrix.prefix }}${{ github.event.repository.name }}.jar
+        DES=build/libs/${{ matrix.fname }}${{ github.event.repository.name }}.jar
           
         for f in build/libs/*.jar; do
           [[ "$f" == *-desktop.jar ]] && continue
@@ -55,5 +55,5 @@ jobs:
     - name: Upload jar
       uses: actions/upload-artifact@v4
       with:
-        name: ${{ github.event.repository.name }}-${{ matrix.mindustry }}
-        path: build/libs/${{ matrix.prefix }}${{ github.event.repository.name }}.jar
+        name: ${{ github.event.repository.name }}-${{ matrix.fname }}
+        path: build/libs/${{ matrix.fname }}${{ github.event.repository.name }}.jar

@@ -16,7 +16,7 @@ import arc.util.io.Streams;
 import arc.util.serialization.Jval;
 import hao1337.Version;
 import hao1337.Version.InvalidVersionStringException;
-import hao1337.Version.Vendor;
+import hao1337.Version.GameVersion;
 
 import java.net.URLClassLoader;
 import java.util.Objects;
@@ -60,7 +60,7 @@ public class AutoUpdate {
 	 * @return
 	 */
 	public static String recuseUpdate() {
-		if (Version.vendor == Vendor.ANDROID || mindustry.core.Version.build > 147)
+		if (Version.gameVersion == GameVersion.V157 || mindustry.core.Version.build > 147)
 			return "https://github.com/Hao-1337/mindustry-better-vanilla/releases/download/v1.8.72/mindustry-better-vanilla.jar";
 		return "https://github.com/Hao-1337/mindustry-better-vanilla/releases/download/v1.8.72/steam-mindustry-better-vanilla.jar";
 	}
@@ -151,9 +151,9 @@ public class AutoUpdate {
 			}
 
 			for (Jval asset : lastestAssets.get("assets").asArray()) {
-				Vendor vendor = Vendor.parseVendor(asset.getString("name"));
+				GameVersion version = GameVersion.parseGameVer(asset.getString("name"));
 
-				if (vendor == Version.vendor) {
+				if (version == Version.gameVersion) {
 					downloadURL = asset.getString("browser_download_url");
 					downloadCount = asset.getLong("download_count", 0);
 				}
@@ -259,16 +259,29 @@ public class AutoUpdate {
 			Streams.copyProgress(res.getResultAsStream(), file.write(false), res.getContentLength(), 4096, (p) -> {
 				progress = p;
 			});
+			cleanup();
 			Vars.mods.importMod(file).setRepo(repoName);
-			Fi oldFile = Vars.modDirectory.child("mindustry-better-vanilla.zip");
-			if (oldFile.exists()) oldFile.delete();
 			file.delete();
 			Core.app.post(Objects.requireNonNull(Vars.ui.loadfrag)::hide);
 			Vars.ui.showInfoOnHidden(Core.bundle.format("hao1337.reloadexit"), Objects.requireNonNull(Core.app)::exit);
 		} catch (Throwable err) {
 			Log.err(err);
 		}
+	}
 
+	private static void cleanup() {
+		try {
+			Fi oldFile = Vars.modDirectory.child("mindustry-better-vanilla.zip");
+			if (oldFile.exists()) oldFile.delete();
+			Fi oldFile1 = Vars.modDirectory.child("hao1337mindustry-better-vanilla.zip");
+			if (oldFile1.exists()) oldFile1.delete();
+			Fi oldFile2 = Vars.modDirectory.child("hao1337-mindustry-better-vanilla.zip");
+			if (oldFile2.exists()) oldFile2.delete();
+			Fi oldFile3 = Vars.modDirectory.child("hao-1337-mindustry-better-vanilla.zip");
+			if (oldFile3.exists()) oldFile3.delete();
+		} catch (Throwable e) {
+			Log.err(e);
+		}
 	}
 
 	public static boolean installed(String mod) {

@@ -4,7 +4,7 @@ public class Version {
     /** Github API url to this mod repo */
     public static final String gitapi = "https://api.github.com/repos/Hao-1337/mindustry-better-vanilla/releases";
     /** Github repo name */
-    public static final String repoName = "hao1337/mindustry-better-vanilla";
+    public static final String repoName = "Hao-1337/mindustry-better-vanilla";
     /** Mod name that will get use as id in game */
     public static final String name = "hao1337-mod";
     /** Zip file name (using for auto update if user already unzip the mod file) */
@@ -17,8 +17,8 @@ public class Version {
     public static final int patchVersion = 2;
     /** Mod version tag */
     public static final Tag tag = Tag.RELEASE;
-    /** Target vendor using in this mod version */
-    public static final Vendor vendor = Vendor.ANDROID;
+    /** Target mindustry version using in this mod version */
+    public static final GameVersion gameVersion = mindustry.core.Version.number == 8 ? GameVersion.V157 : GameVersion.V147;
 
     public static class InvalidVersionStringException extends Exception {
         public InvalidVersionStringException(String version) {
@@ -26,14 +26,14 @@ public class Version {
         }
     }
 
-    public static enum Vendor {
-        DESKTOP,
-        ANDROID;
+    public static enum GameVersion {
+        V147,
+        V157;
 
-        public static Vendor parseVendor(String version) {
-            if (version.contains("steam") || version.contains("desktop"))
-                return DESKTOP;
-            return ANDROID;
+        public static GameVersion parseGameVer(String version) {
+            if (version.contains("v147"))
+                return V147;
+            return V157;
         }
     }
 
@@ -64,7 +64,7 @@ public class Version {
     private static class Parsed {
         int major, minor, patch;
         Tag tag;
-        Vendor vendor;
+        GameVersion vendor;
     }
 
     private static Parsed parse(String version) throws InvalidVersionStringException {
@@ -74,7 +74,7 @@ public class Version {
             String v = version.startsWith("v") ? version.substring(1) : version;
 
             p.tag = Tag.parseTag(v);
-            p.vendor = Vendor.parseVendor(v);
+            p.vendor = GameVersion.parseGameVer(v);
 
             String numbers = v.split("-")[0];
             String[] parts = numbers.split("\\.");
@@ -128,7 +128,7 @@ public class Version {
         if (tagCompare != 0)
             return tagCompare;
 
-        return remote.vendor.compareTo(vendor);
+        return remote.vendor.compareTo(gameVersion);
     }
 
     public static boolean isSmaller(String version) throws InvalidVersionStringException {
@@ -146,7 +146,7 @@ public class Version {
     public static boolean isSameVendor(String version) {
         try {
             Parsed parsed = parse(version);
-            return parsed.vendor == vendor;
+            return parsed.vendor == gameVersion;
         } catch (InvalidVersionStringException e) {
             e.printStackTrace();
             return false;
@@ -202,7 +202,7 @@ public class Version {
         else if (tag == Tag.BETA)
             v.append("-beta");
 
-        if (vendor == Vendor.DESKTOP)
+        if (gameVersion == GameVersion.V147)
             v.append("-desktop");
 
         return v.toString();

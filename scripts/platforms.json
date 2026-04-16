@@ -1,7 +1,7 @@
 [
     {
-        "name": "IOS/Android",
-        "version": "v154",
+        "name": "Mindsutry V8",
+        "version": "v157",
         "replacements": {
             "../src/hao1337/lib/ChargeWeapon.java": [
                 {
@@ -9,18 +9,11 @@
                     "oldField": "/(@PlatformDependance\\s*\\(\\s*version\\s*=\\s*\"v147\"\\s*\\)\\s*[\\w\\W]+?)\\s*{[\\w\\W]+?\\s*return false;\\s*}/",
                     "newField": "$1 { return /** This code already get stripped by 'platform.ts' for slient compiler error! */true; }"
                 }
-            ],
-            "../mod.hjson": [
-                {
-                    "regex": true,
-                    "oldField": "/(^\\s*minGameVersion:)\\s*\\d+/gm",
-                    "newField": "$1 154"
-                }
             ]
         }
     },
     {
-        "name": "Steam",
+        "name": "Mindsutry V7",
         "version": "v147",
         "replacements": {
             "../mod.hjson": [
@@ -31,13 +24,13 @@
                 },
                 {
                     "regex": false,
-                    "oldField": "for v154!",
-                    "newField": "for Steam - v147"
+                    "oldField": "for v157",
+                    "newField": "for v147"
                 },
                 {
                     "regex": false,
-                    "oldField": "older (Steam - v146 version)",
-                    "newField": "newer (Android/IOS - v154 version)"
+                    "oldField": "older (v147 version)",
+                    "newField": "newer (v157 version)"
                 }
             ],
             "../src/hao1337/lib/ChargeWeapon.java": [

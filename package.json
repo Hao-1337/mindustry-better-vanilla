@@ -6,6 +6,7 @@
   "type": "module",
   "scripts": {
     "compile": "gradlew deploy",
+    "dev-compile": "gradlew build -Pdev=true",
     "dev-steam": "cd scripts && node dev.ts steam",
     "dev-jar": "cd scripts && node dev.ts jar"
   },
@@ -19,8 +20,10 @@
     "hao1337-mindustry": "file:"
   },
   "devDependencies": {
+    "@types/adm-zip": "^0.5.8",
     "@types/node": "^25.4.0",
     "@types/proper-lockfile": "^4.1.4",
+    "adm-zip": "^0.5.17",
     "chokidar": "^5.0.0",
     "colors": "^1.4.0",
     "dotenv": "^17.3.1",

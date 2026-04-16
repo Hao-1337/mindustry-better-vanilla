@@ -3,6 +3,7 @@ version = '1.0'
 
 sourceSets.main.java.srcDirs = ["src"]
 def targetVersion = project.findProperty("mindustryVersion") ?: "v154"
+def isDev = project.hasProperty("dev")
 
 repositories{
     mavenCentral()
@@ -26,7 +27,12 @@ ext{
 allprojects{
     tasks.withType(JavaCompile).tap{
         configureEach{
-            options.compilerArgs.addAll(['--release', '8'])
+            if (isDev) {
+                options.compilerArgs = ['--release', '11']
+            } else {
+                options.compilerArgs = ['--release', '8']
+                exclude "hao1337/addins/DevTools.java"
+            }
         }
     }
 }
@@ -68,6 +74,12 @@ tasks.register('jarAndroid'){
     }
 }
 
+tasks.register('printRuntimeClasspath') {
+    doLast {
+        println configurations.runtimeClasspath.asPath
+    }
+}
+    
 tasks.register('platformcleanup', Exec) {
     workingDir = file("scripts")
     commandLine "node", "platform-revert.ts"

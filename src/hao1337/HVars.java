@@ -19,6 +19,7 @@ import mindustry.game.EventType.ClientLoadEvent;
 import mindustry.game.EventType.WorldLoadEndEvent;
 import mindustry.input.MobileInput;
 import hao1337.addins.AutoUpdate;
+import hao1337.addins.DevTools;
 import hao1337.addins.StateController;
 import hao1337.addons.autodrill.ui.AutoDrill;
 import hao1337.contents.HBlocks;
@@ -61,6 +62,7 @@ public class HVars {
             true
         );
 
+        DevTools.init();
         AutoUpdate.load();
         Htex.load(hao1337.Version.name);
 
