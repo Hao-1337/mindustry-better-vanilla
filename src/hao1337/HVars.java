@@ -9,6 +9,7 @@ import arc.scene.ui.layout.Scl;
 import arc.scene.ui.layout.Table;
 import arc.scene.ui.layout.Spacer;
 import arc.scene.ui.layout.WidgetGroup;
+import arc.util.Log;
 import arc.util.Nullable;
 import arc.scene.Element;
 import arc.scene.Group;
@@ -19,7 +20,6 @@ import mindustry.game.EventType.ClientLoadEvent;
 import mindustry.game.EventType.WorldLoadEndEvent;
 import mindustry.input.MobileInput;
 import hao1337.addins.AutoUpdate;
-import hao1337.addins.DevTools;
 import hao1337.addins.StateController;
 import hao1337.addons.autodrill.ui.AutoDrill;
 import hao1337.contents.HBlocks;
@@ -62,7 +62,13 @@ public class HVars {
             true
         );
 
-        DevTools.init();
+        try {
+            Class<?> clazz = Class.forName("hao1337.addins.DevTools");
+            clazz.getMethod("init").invoke(null);
+        } catch (ClassNotFoundException e) {} catch (Exception e) {
+            Log.err(e);
+        }
+
         AutoUpdate.load();
         Htex.load(hao1337.Version.name);
 
