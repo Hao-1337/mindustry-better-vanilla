@@ -46,7 +46,7 @@ jobs:
 
     - name: Rename artifact
       run: |
-        DES=build/libs/${{ matrix.fname }}${{ github.event.repository.name }}.jar
+        DES=build/libs/${{ matrix.fname }}-${{ github.event.repository.name }}.jar
           
         for f in build/libs/*.jar; do
           [[ "$f" == *-desktop.jar ]] && continue
