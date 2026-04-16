@@ -2,7 +2,7 @@ apply plugin: "java"
 version = '1.0'
 
 sourceSets.main.java.srcDirs = ["src"]
-def targetVersion = project.findProperty("mindustryVersion") ?: "v154"
+def targetVersion = project.findProperty("mindustryVersion") ?: "v157"
 def isDev = project.hasProperty("dev")
 
 repositories{
@@ -85,9 +85,9 @@ tasks.register('platformcleanup', Exec) {
     commandLine "node", "platform-revert.ts"
 }
 
-tasks.register('preparev154', Exec) {
+tasks.register('preparev157', Exec) {
     workingDir = file("scripts")
-    commandLine "node", "platform.ts", "v154"
+    commandLine "node", "platform.ts", "v157"
 }
 
 tasks.register('preparev147', Exec) {
@@ -130,7 +130,7 @@ tasks.register("deployv147", GradleBuild) {
     startParameter.projectProperties = [ mindustryVersion: "v147" ]
 }
 
-tasks.register("deployv154", GradleBuild) {
-    tasks = ["preparev154", "deploy", "platformcleanup"]
-    startParameter.projectProperties = [ mindustryVersion: "v154" ]
+tasks.register("deployv157", GradleBuild) {
+    tasks = ["preparev157", "deploy", "platformcleanup"]
+    startParameter.projectProperties = [ mindustryVersion: "v157" ]
 }

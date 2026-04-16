@@ -112,7 +112,7 @@ public class ChargeWeapon extends Weapon {
         if (var) updateV1(unit, mount);
     }
 
-    @PlatformDependance(version = "v154")
+    @PlatformDependance(version = "v157")
     public boolean updateV2(Unit unit, WeaponMount mount) {
         boolean can = unit.canShoot();
         float lastReload = mount.reload;

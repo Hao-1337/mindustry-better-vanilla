@@ -11,7 +11,7 @@ jobs:
         include:
           - mindustry: v147
             fname: v147
-          - mindustry: v154
+          - mindustry: v157
             fname: ""
 
     steps:
