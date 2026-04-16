@@ -121,7 +121,8 @@ function javaChange(data: string) {
   console.log(`${'Detect java change at:'.blue} ${data.yellow.underline}${". Start complie".blue}`);
 
   try {
-    applyVersion(givenEnv === "steam" ? "v147" : "v157");
+    // applyVersion(givenEnv === "steam" ? "v147" : "v157");
+    applyVersion("v157");
     execSync("npm run dev-compile");
     extractAllDeps();
     sendRestart();
@@ -143,7 +144,8 @@ function accestChange(data: string) {
   console.log("Detect accest change at: ".green, data.yellow.underline);
   // copyFiles(ACCSET_PATH, TARGET_PATH);
   try {
-    applyVersion(givenEnv === "steam" ? "v147" : "v157");
+    // applyVersion(givenEnv === "steam" ? "v147" : "v157");
+    applyVersion("v157");
     copyFiles(assetsPath, assetsModFolder);
     sendRestart();
   } finally {

@@ -50,7 +50,7 @@
                 {
                     "class": "hao1337.lib.ChargeWeapon",
                     "regex": true,
-                    "oldField": "/hitSound: explosionArtillerySockBig\\s*despawnSound: explosionArtillerySock/m",
+                    "oldField": "/hitSound: explosionArtillerySockBig\\s*despawnSound: explosionArtilleryShock/m",
                     "newField": "\n"
                 },
                 {
@@ -92,6 +92,10 @@
                 }
             ],
             "../assets/content/**/*.hjson": [
+                {
+                    "oldField": "hitSound: explosion",
+                    "newField": "hitSound: titanExplosion"
+                },
                 {
                     "class": "mindustry.world.blocks.defense.turrets.ItemTurret",
                     "oldField": "shootSound: shootFuse",

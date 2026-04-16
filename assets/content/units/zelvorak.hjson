@@ -287,7 +287,6 @@ weapons: [
     rotateSpeed: 1
     reload: 260
     recoil: 0
-    firstShotDelay: 80.0
     shootStatusDuration: 120.0
     shootStatus: unmoving
     ejectEffect: casing2
@@ -377,8 +376,8 @@ weapons: [
       homingRange: 160
       shrinkX: 0
       shrinkY: 0
-      hitSound: explosionArtillerySockBig
-      despawnSound: explosionArtillerySock
+      hitSound: explosionArtilleryShockBig
+      despawnSound: explosionArtilleryShock
       hitEffect: {
         type: multiEffect
         effects: [

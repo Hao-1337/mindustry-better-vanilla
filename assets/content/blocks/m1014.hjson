@@ -134,7 +134,7 @@ ammoTypes: {
     }
     splashDamageRadius: 30
     splashDamage: 40
-    hitSound: titanExplosion
+    hitSound: explosion
     hitShake: 4
     shootEffect: thoriumShoot
     hitEffect: [
