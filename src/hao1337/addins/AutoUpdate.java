@@ -156,6 +156,7 @@ public class AutoUpdate {
 				if (version == Version.gameVersion) {
 					downloadURL = asset.getString("browser_download_url");
 					downloadCount = asset.getLong("download_count", 0);
+					break;
 				}
 			}
 
