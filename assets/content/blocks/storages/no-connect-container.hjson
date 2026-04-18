@@ -25,6 +25,16 @@ requirements: [
 
 research: {
     parent: vault
+    objectives: [
+        {
+            type: SectorComplete
+            preset: saltFlats
+        },
+        {
+            type: Produce
+            content: thorium
+        }
+    ]
     requirements: [
         titanium/30000
         thorium/15000

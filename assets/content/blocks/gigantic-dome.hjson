@@ -35,6 +35,16 @@ requirements: [
 
 research: {
   parent: overdrive-dome
+  objectives: [
+    {
+      type: SectorComplete
+      preset: overgrowth
+    },
+    {
+      type: Produce
+      content: surge-alloy
+    }
+  ]
   requirements: [
     plastanium/40000
     silicon/32000

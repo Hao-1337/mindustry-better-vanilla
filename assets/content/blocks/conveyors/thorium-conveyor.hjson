@@ -2,7 +2,7 @@ type: Conveyor
 category: distribution
 
 hasShadow: true
-health: 100
+health: 90
 speed: 0.16
 displayedSpeed: 22.2
 
@@ -14,6 +14,16 @@ requirements: [
 
 research: {
   parent: titanium-conveyor
+  objectives: [
+    {
+      type: SectorComplete
+      preset: taintedWoods
+    },
+    {
+      type: Produce
+      content: thorium
+    }
+  ]
   requirements: [
     titanium/500
     thorium/300

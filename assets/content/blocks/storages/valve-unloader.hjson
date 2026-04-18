@@ -13,6 +13,16 @@ requirements: [
 
 research: {
   parent: unloader
+  objectives: [
+    {
+      type: SectorComplete
+      preset: taintedWoods
+    },
+    {
+      type: Produce
+      content: surge-alloy
+    }
+  ]
   requirements: [
     titanium/2500
     lead/3200

@@ -16,6 +16,20 @@ requirements: [
 
 research: {
     parent: silo
+    objectives: [
+        {
+            type: SectorComplete
+            preset: tarFields
+        },
+        {
+            type: Produce
+            content: thorium
+        },
+        {
+            type: Produce
+            content: plastanium
+        }
+    ]
     requirements: [
         titanium/30000
         thorium/15000

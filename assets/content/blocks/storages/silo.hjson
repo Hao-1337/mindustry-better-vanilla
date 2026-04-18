@@ -7,20 +7,34 @@ hasItems: true
 itemCapacity: 15000
 
 requirements: [
-    copper/1200
-    titanium/800
-    thorium/500
-    plastanium/150
-    lead/2000
+  copper/1200
+  titanium/800
+  thorium/500
+  plastanium/150
+  lead/2000
 ]
 
 research: {
-    parent: vault
-    requirements: [
-        titanium/3000
-        thorium/1500
-        copper/25000
-        lead/30000
-        plastanium/2000
-    ]
+  parent: vault
+  objectives: [
+    {
+      type: SectorComplete
+      preset: windsweptIslands
+    },
+    {
+      type: Produce
+      content: thorium
+    },
+    {
+      type: Produce
+      content: plastanium
+    }
+  ]
+  requirements: [
+    titanium/3000
+    thorium/1500
+    copper/25000
+    lead/30000
+    plastanium/2000
+  ]
 }

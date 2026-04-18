@@ -52,7 +52,7 @@ ammoTypes: {
     height: 20
     speed: 6
     lifetime: 25
-    damage: 100
+    damage: 120
     ammoMultiplier: 2
     knockback: 1.4
     mixColorFrom: F9A3C7FF
@@ -77,7 +77,7 @@ ammoTypes: {
       type: BasicBulletType
       pierce: true
       pierceBuilding: true
-      damage: 60
+      damage: 45
       hitSize: 5
       width: 9
       height: 15
@@ -107,7 +107,7 @@ ammoTypes: {
         type: BasicBulletType
         pierce: true
         pierceBuilding: true
-        damage: 30
+        damage: 20
         hitSize: 5
         width: 4.5
         height: 7
@@ -160,7 +160,7 @@ ammoTypes: {
   surge-alloy: {
     type: ShrapnelBulletType
     pierce: true
-    length: 160
+    length: 250
     lifetime: 18
     width: 25
     serrations: 8
@@ -200,6 +200,16 @@ requirements: [
 
 research: {
   parent: fuse
+  objectives: [
+    {
+      type: SectorComplete
+      preset: overgrowth
+    },
+    {
+      type: Produce
+      content: plastanium
+    }
+  ]
   requirements: [
     titanium/25000
     graphite/10000

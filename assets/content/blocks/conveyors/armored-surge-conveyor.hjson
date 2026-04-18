@@ -2,7 +2,7 @@ type: ArmoredConveyor
 category: distribution
 
 hasShadow: true
-health: 100
+health: 450
 speed: 0.24
 displayedSpeed: 33.3
 

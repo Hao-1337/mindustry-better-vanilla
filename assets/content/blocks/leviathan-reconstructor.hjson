@@ -11,11 +11,11 @@ consumes: {
   power: 140
   items: {
     items: [
-      titanium/2500
-      plastanium/2000
-      silicon/5000
-      surge-alloy/1000
-      phase-fabric/1500
+      titanium/1500
+      plastanium/1000
+      silicon/2500
+      surge-alloy/800
+      phase-fabric/1000
     ]
   }
   liquids: {
@@ -26,14 +26,14 @@ consumes: {
 }
 
 requirements: [
-  surge-alloy/2000
-  phase-fabric/1000
+  surge-alloy/250
+  phase-fabric/450
   thorium/2500
   plastanium/1200
   titanium/1500
-  silicon/5000
-  copper/4500
-  lead/3000
+  silicon/3500
+  copper/3500
+  lead/2000
 ]
 
 upgrades: [
@@ -45,16 +45,34 @@ upgrades: [
 
 research: {
   parent: tetrative-reconstructor
+  objectives: [
+    {
+      type: SectorComplete
+      preset: overgrowth
+    },
+    {
+      type: Produce
+      content: surge-alloy
+    },
+    {
+      type: Produce
+      content: plastanium
+    },
+    {
+      type: Produce
+      content: phase-fabric
+    }
+  ]
   requirements: [
       copper/720000
       lead/400000
-      graphite/567000
-      metaglass/260000
-      titanium/300200
-      silicon/353000
-      thorium/250000
+      graphite/250000
+      metaglass/250000
+      titanium/300000
+      silicon/350000
+      thorium/350000
       surge-alloy/20000
-      plastanium/32000
+      plastanium/30000
       phase-fabric/30000
   ]
 }

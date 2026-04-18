@@ -551,3 +551,25 @@ abilities: [
     spawnY: 4
   }
 ]
+
+research: {
+  parent: eclipse
+  objectives: [
+    {
+      type: Research
+      content: leviathan-reconstructor
+    }
+  ]
+  requirements: [
+      copper/720000
+      lead/400000
+      graphite/250000
+      metaglass/250000
+      titanium/300000
+      silicon/350000
+      thorium/350000
+      surge-alloy/20000
+      plastanium/30000
+      phase-fabric/30000
+  ]
+}

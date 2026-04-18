@@ -15,6 +15,16 @@ requirements: [
 
 research: {
   parent: thorium-conveyor
+  objectives: [
+    {
+      type: SectorComplete
+      preset: nuclearComplex
+    },
+    {
+      type: Produce
+      content: surge-alloy
+    }
+  ]
   requirements: [
     titanium/1200
     thorium/500

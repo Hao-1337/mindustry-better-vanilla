@@ -35,7 +35,7 @@ ammoTypes: {
     type: BasicBulletType
     hitSound: blockExplode1
     despawnSound: blockExplode1
-    damage: 12
+    damage: 25
     width: 15
     height: 15
     pierce: false
