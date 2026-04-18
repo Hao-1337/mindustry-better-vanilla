@@ -16,17 +16,11 @@ import mindustry.graphics.Drawf;
 import mindustry.type.Item;
 import mindustry.world.blocks.storage.StorageBlock;
 import mindustry.world.blocks.storage.Unloader;
-import mindustry.world.consumers.ConsumePower;
 import mindustry.world.meta.BlockStatus;
 
 public class CoreStorageBlock extends StorageBlock {
     @SuppressWarnings("unused")
     private final int itemCapacity = -1;
-
-    /** If this block must need power to working */
-    public boolean needPower = true;
-    /** If this block need power for working then this indicate how many should it use */
-    public float powerRequire = 0.5f;
 
     /** Minimal warmup before it working (accpect value is [0.0, 1.0]) */
     public float minwarmup = 1.0f;
@@ -47,17 +41,15 @@ public class CoreStorageBlock extends StorageBlock {
 
     public CoreStorageBlock(String name) {
         super(name);
-        super.itemCapacity = 10;
+        super.itemCapacity = 1;
         coreMerge = true;
         update = true;
         solid = true;
         sync = true;
         separateItemCapacity = false;
         noUpdateDisabled = true;
-        hasPower = needPower;
         ambientSound = Sounds.drillCharge;
-
-        if (needPower) consume(new ConsumePower(powerRequire, 5.0f, false));
+        buildTime = 120f;
     }
 
     @Override

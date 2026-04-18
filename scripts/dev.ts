@@ -140,13 +140,14 @@ function javaChange(data: string) {
   copyFiles(classPath, classpathModFolder);
 };
 
-function accestChange(data: string) {
-  console.log("Detect accest change at: ".green, data.yellow.underline);
+function assetsChange(data: string) {
+  console.log("Detect assets change at: ".green, data.yellow.underline);
   // copyFiles(ACCSET_PATH, TARGET_PATH);
   try {
     // applyVersion(givenEnv === "steam" ? "v147" : "v157");
     applyVersion("v157");
     copyFiles(assetsPath, assetsModFolder);
+    console.log("Assets copied successfully.".green);
     sendRestart();
   } finally {
     restore();
@@ -159,7 +160,7 @@ const java_watch = chokidar.watch(sourcePath, {
   depth: 20,
   ignored: [...ignored, '**/assets/**']
 });
-const accest_watch = chokidar.watch(assetsPath, {
+const assets_watch = chokidar.watch(assetsPath, {
   persistent: true,
   ignoreInitial: true,
   depth: 20,
@@ -169,5 +170,5 @@ const accest_watch = chokidar.watch(assetsPath, {
 java_watch.on('add', javaChange);
 java_watch.on('change', javaChange);
 
-accest_watch.on('add', accestChange);
-accest_watch.on('change', accestChange);
+assets_watch.on('add', assetsChange);
+assets_watch.on('change', assetsChange);

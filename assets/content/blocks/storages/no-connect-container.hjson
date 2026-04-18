@@ -4,13 +4,16 @@ category: effect
 size: 3
 health: 1500
 
-needPower: true
-powerRequire: 0.5
+hasPower: true
 minwarmup: 1.0
 warmupSpeed: 0.005
 rotateSpeed: 5.25
 rotationOffset: 60
 ambientSound: loopDrill
+
+consumes: {
+    power: 4.25
+}
 
 requirements: [
     copper/1200
