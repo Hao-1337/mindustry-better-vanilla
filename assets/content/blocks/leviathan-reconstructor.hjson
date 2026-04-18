@@ -48,7 +48,7 @@ research: {
   objectives: [
     {
       type: SectorComplete
-      preset: overgrowth
+      preset: desolateRift
     },
     {
       type: Produce
