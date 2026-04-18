@@ -49,7 +49,7 @@ public class CoreStorageBlock extends StorageBlock {
         separateItemCapacity = false;
         noUpdateDisabled = true;
         ambientSound = Sounds.drillCharge;
-        buildTime = 120f;
+        buildTime = 240f;
     }
 
     @Override
