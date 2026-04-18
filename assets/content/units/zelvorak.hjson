@@ -539,14 +539,14 @@ abilities: [
   {
     type: mindustry.entities.abilities.UnitSpawnAbility
     unit: horizon
-    spawnTime: 180
+    spawnTime: 1020
     spawnX: 45
     spawnY: 4
   }
   {
     type: mindustry.entities.abilities.UnitSpawnAbility
     unit: horizon
-    spawnTime: 1800
+    spawnTime: 1020
     spawnX: -45
     spawnY: 4
   }
