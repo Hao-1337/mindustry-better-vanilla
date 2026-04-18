@@ -28,7 +28,7 @@ import mindustry.world.blocks.distribution.ItemBridge;
 import mindustry.world.blocks.production.BeamDrill;
 
 public class AutoDrill {
-    public static final float buttonSize = Scl.scl(20f);
+    public static final float buttonSize = Scl.scl(25f);
     public static final boolean heuristicPathFinder = false;
 
     final public DrillTable selectTable = new DrillTable();
@@ -37,7 +37,7 @@ public class AutoDrill {
 
     Tile selectedTile;
     Block selectDrill;
-    ItemBridge bridge = (ItemBridge)Blocks.itemBridge;
+    ItemBridge bridge = (ItemBridge)Blocks.phaseConveyor;
     Direction outputDirection;
     boolean toggled = false;
 
@@ -45,7 +45,7 @@ public class AutoDrill {
         uiTable.visible(() -> Core.settings.getBool("hao1337.ui.autodrill.enable", false));
         uiTable.margin(0);
         uiTable.name = "hao137-auto-drill";
-        uiTable.top();
+        uiTable.top();  
         uiTable.background(Htex.paneTopRight);
 
         var toggle = new TextButton("Auto Drill", Styles.flatToggleMenut);
@@ -58,7 +58,7 @@ public class AutoDrill {
             }
         });
     
-        uiTable.add(toggle).grow().height(48f);
+        uiTable.add(toggle).growX().height(48f);
 
         uiTable.update(() -> {
             if (toggled && selectedTile != null) {
