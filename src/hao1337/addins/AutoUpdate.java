@@ -256,7 +256,7 @@ public class AutoUpdate {
 
 	private static void handle(HttpResponse res) {
 		try {
-			Fi file = Vars.tmpDirectory.child(repoName.replace("/", "") + ".zip");
+			Fi file = Vars.tmpDirectory.child(repoName.replace("/", "").toLowerCase() + ".zip");
 			Streams.copyProgress(res.getResultAsStream(), file.write(false), res.getContentLength(), 4096, (p) -> {
 				progress = p;
 			});
@@ -273,13 +273,15 @@ public class AutoUpdate {
 	private static void cleanup() {
 		try {
 			Fi oldFile = Vars.modDirectory.child("mindustry-better-vanilla.zip");
-			if (oldFile.exists()) oldFile.delete();
+			if (oldFile.exists()) oldFile.delete(); 
 			Fi oldFile1 = Vars.modDirectory.child("hao1337mindustry-better-vanilla.zip");
 			if (oldFile1.exists()) oldFile1.delete();
 			Fi oldFile2 = Vars.modDirectory.child("hao1337-mindustry-better-vanilla.zip");
 			if (oldFile2.exists()) oldFile2.delete();
 			Fi oldFile3 = Vars.modDirectory.child("hao-1337-mindustry-better-vanilla.zip");
 			if (oldFile3.exists()) oldFile3.delete();
+			Fi oldFile4 = Vars.modDirectory.child("Hao-1337mindustry-better-vanilla.zip");
+			if (oldFile4.exists()) oldFile.delete();
 		} catch (Throwable e) {
 			Log.err(e);
 		}
