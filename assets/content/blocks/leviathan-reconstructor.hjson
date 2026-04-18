@@ -2,7 +2,7 @@ type: Reconstructor
 category: units
 
 size: 16
-constructTime: 30000
+constructTime: 2400
 hasLiquids: true
 hasItems: true
 liquidCapacity: 60
