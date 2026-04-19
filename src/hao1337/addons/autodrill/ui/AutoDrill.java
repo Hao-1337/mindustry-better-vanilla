@@ -2,6 +2,9 @@ package hao1337.addons.autodrill.ui;
 
 import arc.Core;
 import arc.Events;
+import arc.func.Boolp;
+import arc.graphics.Color;
+import arc.graphics.g2d.Draw;
 import arc.math.geom.Vec2;
 import arc.scene.style.Drawable;
 import arc.scene.ui.TextButton;
@@ -9,6 +12,7 @@ import arc.scene.ui.layout.Scl;
 import arc.scene.ui.layout.Table;
 import arc.struct.Seq;
 import arc.util.Align;
+import arc.util.Nullable;
 import hao1337.addons.autodrill.BlindGroundOrePF;
 import hao1337.addons.autodrill.GroundOrePathFinding;
 import hao1337.addons.autodrill.HeuristicGroundOrePF;
@@ -20,7 +24,7 @@ import mindustry.content.Fx;
 import mindustry.entities.units.BuildPlan;
 import mindustry.game.EventType;
 import mindustry.game.EventType.ResetEvent;
-
+import mindustry.graphics.Drawf;
 import mindustry.ui.Styles;
 import mindustry.world.Block;
 import mindustry.world.Tile;
@@ -34,6 +38,7 @@ public class AutoDrill {
     final public DrillTable selectTable = new DrillTable();
     final public DirectionTable directionTable = new DirectionTable();
     final public Table uiTable = new Table((Drawable) null);
+    public Boolp optionalCondition = () -> false;
 
     Tile selectedTile;
     Block selectDrill;
@@ -42,10 +47,8 @@ public class AutoDrill {
     boolean toggled = false;
 
     public void buildTable() {
-        uiTable.visible(() -> Core.settings.getBool("hao1337.ui.autodrill.enable", false));
-        uiTable.margin(0);
+        uiTable.margin(2f);
         uiTable.name = "hao137-auto-drill";
-        uiTable.top();  
         uiTable.background(Htex.paneTopRight);
 
         var toggle = new TextButton("Auto Drill", Styles.flatToggleMenut);
@@ -53,8 +56,7 @@ public class AutoDrill {
         toggle.changed(() -> {
             toggled = toggle.isChecked();
             if (!toggled) {
-                selectTable.reset();
-                directionTable.reset();
+                reset();
             }
         });
     
@@ -66,7 +68,21 @@ public class AutoDrill {
                 selectTable.setPosition(v.x, v.y, Align.bottom);
                 directionTable.setPosition(v.x, v.y, Align.bottom);
             }
+
+            if (selectedTile != null) {
+                var oldZ = Draw.z();
+                Draw.z(oldZ + 20);
+                Drawf.selected(selectedTile, Color.valueOf("aae5a4"));
+                Draw.z(oldZ);
+            }
         });
+
+        uiTable.visible(() -> !optionalCondition.get() && Vars.ui.hudfrag.shown && !Vars.ui.minimapfrag.shown() && Core.settings.getBool("hao1337.ui.autodrill.enable", false));
+    }
+
+    void showOptionFragment() {
+        // var frag = Vars.ui.hudfrag.blockfrag;
+        
     }
 
     public void register() {
@@ -74,32 +90,45 @@ public class AutoDrill {
         Core.scene.root.addChildAt(0, directionTable);
 
         Events.on(ResetEvent.class, e -> {
-            toggled = false;
-            selectTable.reset();
-            directionTable.reset();
+            reset();
         });
 
         Events.on(EventType.TapEvent.class, e -> {
-            if (e.tile != null && toggled) {
+            if (e.tile != null && e.tile.build == null && toggled) {
                 selectedTile = e.tile;
                 selectTable.reset();
                 selectTable.build(selectedTile, this::onDrillSelected);
 
                 Fx.tapBlock.at(selectedTile.getX(), selectedTile.getY());
             }
+            else if (e.tile.build != null) {
+                reset();
+            }
         });
     }
 
-    void onDrillSelected(Block drill) {
-        selectDrill = drill;
+    void reset() {
+        toggled = false;
+        selectedTile = null;
+        selectDrill = null;
         selectTable.reset();
+        directionTable.reset();
+    }
+
+    void onDrillSelected(@Nullable Block drill) {
+        selectTable.reset();
+        if (drill == null) {
+            reset();
+            return;
+        }
+        selectDrill = drill;
         directionTable.build(this::onDirectionSelected);
     }
 
     void onDirectionSelected(Direction direction) {
-        toggled = false;
-        directionTable.reset();
+        reset();
         if (direction == null) return;
+
         outputDirection = direction;
 
         if (selectDrill instanceof @SuppressWarnings("unused") BeamDrill beamDrill) {

@@ -52,6 +52,8 @@ public class DirectionTable extends Table {
 
     public void build(Cons<Direction> onClick) {
         reset();
+        background(Styles.black3);
+        margin(2f);
         Core.input.addProcessor(inputHandler);
 
         update(() -> {
@@ -63,17 +65,25 @@ public class DirectionTable extends Table {
             setPosition(v.x, v.y, Align.bottom);
         });
 
-        add().pad(2f);
-        button(Icon.up, Styles.defaulti, () -> { onClick.get(Direction.UP); visible = false; }).pad(2f).get().resizeImage(buttonSize);
-        add().pad(2f);
+
+        table(t -> {
+            t.label(() -> Core.bundle.format("hao1337.ui.addon.autodrill.direction"));
+        }).growX().fillX();
         row();
-        button(Icon.left, Styles.defaulti, () -> { onClick.get(Direction.LEFT); visible = false; }).pad(2f).get().resizeImage(buttonSize);
-        button(Icon.cancel, Styles.defaulti, () -> { onClick.get(null); visible = false; }).pad(2f).get().resizeImage(buttonSize);
-        button(Icon.right, Styles.defaulti, () -> { onClick.get(Direction.RIGHT); visible = false; }).pad(2f).get().resizeImage(buttonSize);
-        row();
-        add().pad(2f);
-        button(Icon.down, Styles.defaulti, () -> { onClick.get(Direction.DOWN); visible = false; }).pad(2f).get().resizeImage(buttonSize);
-        add().pad(2f);
+
+        table(t -> {
+            t.add().pad(2f);
+            t.button(Icon.up, Styles.defaulti, () -> { onClick.get(Direction.UP); visible = false; }).pad(2f).get().resizeImage(buttonSize);
+            t.add().pad(2f);
+            t.row();
+            t.button(Icon.left, Styles.defaulti, () -> { onClick.get(Direction.LEFT); visible = false; }).pad(2f).get().resizeImage(buttonSize);
+            t.button(Icon.cancel, Styles.defaulti, () -> { onClick.get(null); visible = false; }).pad(2f).get().resizeImage(buttonSize);
+            t.button(Icon.right, Styles.defaulti, () -> { onClick.get(Direction.RIGHT); visible = false; }).pad(2f).get().resizeImage(buttonSize);
+            t.row();
+            t.add().pad(2f);
+            t.button(Icon.down, Styles.defaulti, () -> { onClick.get(Direction.DOWN); visible = false; }).pad(2f).get().resizeImage(buttonSize);
+            t.add().pad(2f);
+        });
 
         pack();
         act(0);

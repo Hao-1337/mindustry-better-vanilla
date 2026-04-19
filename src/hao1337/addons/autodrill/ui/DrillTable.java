@@ -9,7 +9,9 @@ import arc.scene.style.TextureRegionDrawable;
 import arc.scene.ui.ImageButton;
 import arc.scene.ui.layout.Table;
 import arc.util.Align;
+import arc.util.Interval;
 import mindustry.Vars;
+import mindustry.gen.Icon;
 import mindustry.ui.Styles;
 import mindustry.world.Block;
 import mindustry.world.Tile;
@@ -26,6 +28,7 @@ import mindustry.world.blocks.production.Drill;
  */
 public class DrillTable extends Table {
     public final float buttonSize;
+    public final Interval interval = new Interval();
 
     private final InputProcessor inputHandler = new InputProcessor() {
         @Override
@@ -50,6 +53,8 @@ public class DrillTable extends Table {
 
     public void build(Tile tile, Cons<Block> onClick) {
         reset();
+        background(Styles.black3);
+        margin(2f);
         Core.input.addProcessor(inputHandler);
 
         update(() -> {
@@ -61,25 +66,41 @@ public class DrillTable extends Table {
             setPosition(v.x, v.y, Align.bottom);
         });
 
-        boolean selectedTileIsWallOre = tile.wallDrop() != null;
-        for (Block block : Vars.content.blocks()) {
-            if (!isAllowed(block)) continue;
-            if (
-                (!selectedTileIsWallOre && block instanceof Drill ground && ground.canMine(tile)) ||
-                (selectedTileIsWallOre && block instanceof BeamDrill wall && wall.blockedItems.contains(tile.wallDrop()))
-            ) {
-                var icon = drawIcon(block);
-                ImageButton button = new ImageButton(icon, Styles.defaulti);
+        table(t -> {
+            t.label(() -> Core.bundle.format("hao1337.ui.addon.autodrill.selectdrill"));
+        }).growX().fillX();
+        row();
 
+        table(b -> {
+            boolean selectedTileIsWallOre = tile.wallDrop() != null;
+            for (Block block : Vars.content.blocks()) {
+                if (!isAllowed(block)) continue;
+                if (
+                    (!selectedTileIsWallOre && block instanceof Drill ground && ground.canMine(tile)) ||
+                    (selectedTileIsWallOre && block instanceof BeamDrill wall && wall.blockedItems.contains(tile.wallDrop()))
+                ) {
+                    var icon = drawIcon(block);
+                    ImageButton button = new ImageButton(icon, Styles.defaulti);
+
+                    button.clicked(() -> {
+                        if (onClick != null) onClick.get(block);
+                        visible = false;
+                    });
+
+                    b.table(null, t -> t.add(button).get().resizeImage(buttonSize)).margin(2f);
+                    if (b.getChildren().size % 6 == 0) b.row();
+                }
+            }
+
+            {
+                ImageButton button = new ImageButton(Icon.cancel, Styles.defaulti);
                 button.clicked(() -> {
-                    if (onClick != null) onClick.get(block);
+                    if (onClick != null) onClick.get((Block) null);
                     visible = false;
                 });
-
-                table(null, t -> t.add(button).get().resizeImage(buttonSize)).margin(2f);
-                if (getChildren().size % 6 == 0) row();
+                b.table(null, t -> t.add(button).get().resizeImage(buttonSize)).margin(2f);
             }
-        }
+        });
 
         pack();
         act(0);

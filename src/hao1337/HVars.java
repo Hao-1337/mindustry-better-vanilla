@@ -5,15 +5,11 @@ import arc.Core;
 import arc.Events;
 import arc.scene.ui.Label;
 import arc.scene.ui.TextButton;
-import arc.scene.ui.layout.Scl;
 import arc.scene.ui.layout.Table;
-import arc.scene.ui.layout.Spacer;
 import arc.scene.ui.layout.WidgetGroup;
 import arc.util.Log;
 import arc.util.Nullable;
-import arc.scene.Element;
 import arc.scene.Group;
-import arc.scene.style.Drawable;
 import mindustry.Vars;
 import mindustry.core.Version;
 import mindustry.game.EventType.ClientLoadEvent;
@@ -139,55 +135,45 @@ public class HVars {
 
             if (button != null && button.parent instanceof Table t && t.parent != null) {
                 var parent = t.parent;
-                var firstChild = parent.getChildren().get(0);
-                Table tcTable = new Table();
+                var childs = parent.getChildren();
+                var allChild = childs.toArray();
+                var lastChild = allChild[childs.size - 1];
+                var commandToggle = getButtonByI18NText(parent, "@command.queue");
+                if (commandToggle != null) toggleSeqButton = commandToggle;
 
-                for (Element e : parent.getChildren()) {
-                    if (e instanceof Table w) {
-                        // remove any default spacer first!
-                        boolean haveDefaultSpacer = false;
-                        for (Element e1 : w.getChildren())
-                            if (e1 instanceof Spacer) {
-                                w.removeChild(e1);
-                                haveDefaultSpacer = true;
-                            }
+                parent.clearChildren();
+                autoDrill.optionalCondition = control::hasSchematic;
 
-                        if (haveDefaultSpacer) w.spacerY(() -> (control.showCancel() ? 149.5f : 100f) - (tcTable.visible ? 0f : 100f) + (autoDrill.uiTable.visible ? 48f : 0f));
-                        if (getButtonByI18NText(w, "@cancel") != null) w.spacerY(() -> (tcTable.visible ? 249f : autoDrill.uiTable.visible ? 48.5f : 0f) + (autoDrill.uiTable.visible ? 96f : 0f));
-                        var btn = getButtonByI18NText(w, "@command.queue");
-                        if (btn != null) toggleSeqButton = btn;
-                    }
-                };
+                parent.fill(e -> e.bottom().left().table(mergeTable -> {
+                    mergeTable.fill(c -> c.bottom().left().table(t1 -> {
+                        t1.add(autoDrill.uiTable).minWidth(155f).fillX();
+                        t1.row();
+                        t1.spacerY(() -> timecontrol.visible ? 105f : 0f);
+                    }));
 
-                tcTable.name = "Hao137 TimeControl";
-                tcTable.bottom().left();
-                tcTable.setFillParent(true);
-                tcTable.visible(() -> Core.settings.getBool("hao1337.ui.timecontrol.enable"));
-                tcTable.add(timecontrol).width(155f).height(100f);
-                tcTable.row();
-
-                parent.addChildBefore(firstChild, tcTable);
-
-                Table autoDrillTable = new Table((Drawable) null);
-                autoDrillTable.bottom().left();
-                autoDrillTable.setFillParent(true);
-                autoDrillTable.add(autoDrill.uiTable).width(155f);
-                autoDrillTable.spacerY(() -> tcTable.visible ? 248f : 0f);
+                    mergeTable.fill(c -> c.bottom().left().table(t1 -> {
+                        t1.add(timecontrol).minWidth(155f).growX();
+                        t1.row();
+                    }));
     
-                parent.addChildBefore(firstChild, autoDrillTable);
-
+                    for (var c1: allChild) {
+                        mergeTable.fill(c -> c.bottom().left().table(t1 -> {
+                            t1.add(c1);
+                            t1.row();
+                            if (lastChild != c1) t1.spacerY(() -> (autoDrill.uiTable.visible ? 51.5f : 0f) + (timecontrol.visible ? 105f : 0f));
+                        }));                        
+                    }
+                }));
                 return;
             }
         }
 
         hud.fill(t -> {
             t.bottom().left();
-            t.name = "Hao137 TimeControl";
-            t.add(autoDrill.uiTable).width(158f);
+            t.name = "Hao137 Bottom Left Area";
+            t.add(autoDrill.uiTable).minWidth(155f).fillX();
             t.row();
-            t.collapser(timecontrol, () -> Core.settings.getBool("hao1337.ui.timecontrol.enable"));
-            if (Vars.mobile)
-                t.moveBy(0, Scl.scl(46));
+            t.add(timecontrol).minWidth(155f).fillX();
         });
     }
 

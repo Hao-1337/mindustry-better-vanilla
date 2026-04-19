@@ -114,6 +114,7 @@ public class TimeControl extends Table {
         name = "hao1337-timecontrol-ui";
         background(Htex.paneTopRight);
         top();
+        margin(0f);
 
         table(null, table -> {
             table.label(() -> Core.bundle.format("hao1337.timecontrol.speedlabel"));
@@ -137,7 +138,9 @@ public class TimeControl extends Table {
                 return;
             }
             table.label(() -> Core.bundle.format("hao1337.timecontrol.disable"));
-        });
+        }).minHeight(50f).growX();
+        row();
+        visible(() -> Core.settings.getBool("hao1337.ui.timecontrol.enable"));
     }
 
     /**
@@ -181,7 +184,7 @@ public class TimeControl extends Table {
      */
     boolean shouldDisable() {
         InputHandler input = Vars.control.input;
-        return !Core.settings.getBool("hao1337.ui.timecontrol.enable") || !Vars.ui.hudfrag.shown || Vars.ui.minimapfrag.shown() || input.lastSchematic != null; //|| !input.selectPlans.isEmpty();
+        return !Vars.ui.hudfrag.shown || Vars.ui.minimapfrag.shown() || input.lastSchematic != null; //|| !input.selectPlans.isEmpty();
     }
 
     /**
@@ -211,6 +214,8 @@ public class TimeControl extends Table {
         }
 
         time += step;
+        if (time == 0) time = step >= 0 ? 1 : -1;
+
         if (time > MAX_SPEED) {
             Vars.ui.showInfoToast(Core.bundle.format("hao1337.ui.speedlimit.up"), 2f);
             time = MAX_SPEED;
