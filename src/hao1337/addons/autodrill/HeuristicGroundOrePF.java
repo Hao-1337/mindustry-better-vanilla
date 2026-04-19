@@ -77,6 +77,15 @@ public class HeuristicGroundOrePF extends GroundOrePathFinding {
         }
     }
 
+    protected enum BatchStage {
+        INIT,
+        GENERATE_CANDIDATES,
+        PREPARE_SELECTION,
+        SCORE_CANDIDATES,
+        APPLY_SELECTION,
+        DONE
+    }
+
     /**
      * Collection of static helper methods used throughout the pathfinder. These
      * utilities perform common world queries such as finding nearby tiles,
@@ -237,53 +246,20 @@ public class HeuristicGroundOrePF extends GroundOrePathFinding {
      *         structures to place. The sequence may be empty if no valid
      *         placement could be found.
      */
+    @Override
+    public BuildBatch createBuildBatch() {
+        return new HeuristicBuildBatch();
+    }
+
     public Seq<BuildPlan> build() {
-        Seq<BuildPlan> finalPlans = new Seq<>();
-        // All fetched ore tile
-        Seq<Tile> clusterOreTiles = Utils.getConnectedTiles(selectedTile, maxTiles);
-        Seq<Tile> oreTiles = new Seq<>();
-        oreTiles.addAll(clusterOreTiles);
-        Utils.expandArea(oreTiles, maxDrillSize / 4);
-
-        if (clusterOreTiles.isEmpty()) return finalPlans;
-
-        ObjectSet<Tile> oreCluster = new ObjectSet<>();
-        for (Tile tile : clusterOreTiles) {
-            oreCluster.add(tile);
+        BuildBatch batch = createBuildBatch();
+        while (!batch.isDone()) {
+            batch.step(Integer.MAX_VALUE);
         }
+        return batch.result();
+    }
 
-        outputAnchorTile = findOutputAnchorTile(clusterOreTiles, selectedTile);
-        heuristicCenterTile = findClusterCenter(clusterOreTiles);
-        // Indicate all tiles that already have something here
-        ObjectSet<Tile> globalOccupied = new ObjectSet<>();
-        ObjectSet<Tile> drillOccupied = new ObjectSet<>();
-        // anchor the network at the selected tile with an item bridge
-        ObjectSet<Tile> networkNodes = new ObjectSet<>();
-        // The output bridge direction
-        Point2 outlet = outDirection.p.cpy();
-        // All ore that already got cover
-        ObjectSet<Tile> coveredOre = new ObjectSet<>();
-        // Create bridge branch out
-        int step = Math.min(4, Math.max(0, bridgeRange - 2));
-        // generate all candidate drill placements
-        Seq<Candidate> candidates = new Seq<>();
-
-        for (int i = 0; i < step; i++) outlet.add(outDirection.p);
-        allowedDrill.sort((a, b) -> {
-            int sizeCompare = Integer.compare(b.size, a.size);
-            if (sizeCompare != 0)
-                return sizeCompare;
-            return Integer.compare(b.id, a.id);
-        });
-        Tile outputBridge = Vars.world.tile(outputAnchorTile.x + outlet.x, outputAnchorTile.y + outlet.y);
-        networkNodes.add(outputAnchorTile);
-        globalOccupied.add(outputAnchorTile);
-        finalPlans.add(new BuildPlan(outputAnchorTile.x, outputAnchorTile.y, outDirection.r, bridgeBlock, outlet));
-        if (outputBridge != null) {
-            globalOccupied.add(outputBridge);
-            finalPlans.add(new BuildPlan(outputBridge.x, outputBridge.y, outDirection.r, bridgeBlock));
-        }
-
+    protected void sortOreTilesForOutput(Seq<Tile> oreTiles) {
         switch (outDirection) {
             case RIGHT:
                 oreTiles.sort((a, b) -> {
@@ -314,88 +290,272 @@ public class HeuristicGroundOrePF extends GroundOrePathFinding {
                 });
                 break;
         }
+    }
 
-        for (Tile t : oreTiles) {
-            for (Block drillMode : allowedDrill) {
-                if (forceSelectedSize && drillMode != selectedDrill) continue;
-                if (!(drillMode instanceof Drill drill)) continue;
-                if (!Build.validPlace(drill, Vars.player.team(), t.x, t.y, 0)) continue;
+    protected class HeuristicBuildBatch implements BuildBatch {
+        protected final Seq<BuildPlan> finalPlans = new Seq<>();
+        protected Seq<Tile> clusterOreTiles = new Seq<>();
+        protected Seq<Tile> oreTiles = new Seq<>();
+        protected ObjectSet<Tile> oreCluster = new ObjectSet<>();
+        protected ObjectSet<Tile> globalOccupied = new ObjectSet<>();
+        protected ObjectSet<Tile> drillOccupied = new ObjectSet<>();
+        protected ObjectSet<Tile> networkNodes = new ObjectSet<>();
+        protected ObjectSet<Tile> coveredOre = new ObjectSet<>();
+        protected Seq<Candidate> candidates = new Seq<>();
 
-                ObjectIntMap.Entry<Item> ores = Utils.countOre(t, drill);
-                if (ores != null && ores.value > 0) {
-                    if (ores.key != targetOre) {
-                        // Not a request ore at all
-                        // Not add to graph at all (even heuristic score is 0, it still can be pick if
-                        // this is the only option exist)
-                        // candidates.add(new Candidate(t, drill, Integer.MIN_VALUE));
-                        continue;
-                    }
-                    float coverage = ores.value / (float) (drillMode.size * drillMode.size);
-                    if (coverage < minimumCoverage) {
-                        // It not really worth if you place laser drill (cover 16 tiles) just for mine 1
-                        // tiles
-                        continue;
-                    }
-                    int distToOut = Math.abs(t.x - heuristicCenterTile.x) + Math.abs(t.y - heuristicCenterTile.y);
-                    int score = drill.size * 10000 + ores.value * 100 + Math.round(coverage * 100f) * 4 - distToOut;
-                    Seq<Tile> coveredTiles = getCoveredOreTiles(t, drill);
-                    candidates.add(new Candidate(t, drill, score, ores.value, coverage, coveredTiles));
+        protected BatchStage stage = BatchStage.INIT;
+        protected int oreIndex;
+        protected int drillIndex;
+        protected int candidateIndex;
+        protected int totalCandidateSlots;
+        protected int processedCandidateSlots;
+        protected int initialCandidateCount;
+
+        protected Candidate bestCandidate;
+        protected Seq<BuildPlan> bestRoute;
+        protected Seq<BuildPlan> bestExtractors = new Seq<>();
+        protected double bestScore = Double.NEGATIVE_INFINITY;
+        protected int bestGap = Integer.MAX_VALUE;
+        protected int bestTouch = Integer.MIN_VALUE;
+
+        @Override
+        public void step(int operationBudget) {
+            int remaining = Math.max(1, operationBudget);
+
+            while (remaining > 0 && !isDone()) {
+                switch (stage) {
+                    case INIT:
+                        init();
+                        remaining--;
+                        break;
+                    case GENERATE_CANDIDATES:
+                        remaining -= Math.max(1, processCandidateGeneration(remaining));
+                        break;
+                    case PREPARE_SELECTION:
+                        prepareSelection();
+                        remaining--;
+                        break;
+                    case SCORE_CANDIDATES:
+                        remaining -= Math.max(1, scoreCandidates(remaining));
+                        break;
+                    case APPLY_SELECTION:
+                        applyBestCandidate();
+                        remaining--;
+                        break;
+                    case DONE:
+                        remaining = 0;
+                        break;
                 }
             }
         }
-        candidates = pruneDominatedCandidates(candidates);
-        candidates.sort(this::compareInitialCandidates);
 
-        while (true) {
-            Candidate best = null;
-            Seq<BuildPlan> bestRoute = null;
-            Seq<BuildPlan> bestExtractors = new Seq<>();
-            double bestScore = Double.NEGATIVE_INFINITY;
-            @SuppressWarnings("unused")
-            int bestSize = -1;
-            int bestGap = Integer.MAX_VALUE;
-            int bestTouch = Integer.MIN_VALUE;
+        @Override
+        public boolean isDone() { return stage == BatchStage.DONE; }
 
-            for (Candidate c : candidates) {
-                if (isHitboxOccupied(c.tile, c.drill, globalOccupied)) continue;
+        @Override
+        public float progress() {
+            if (stage == BatchStage.DONE)
+                return 1f;
 
-                int gain = countUncoveredOre(c.tile, c.drill, coveredOre);
-                if (gain <= 0) continue;
+            float generationProgress = totalCandidateSlots <= 0
+                    ? (stage.ordinal() >= BatchStage.PREPARE_SELECTION.ordinal() ? 1f : 0f)
+                    : processedCandidateSlots / (float) totalCandidateSlots;
+            float coveredProgress = clusterOreTiles.isEmpty() ? 1f : coveredOre.size / (float) clusterOreTiles.size;
+            float reductionProgress = initialCandidateCount <= 0
+                    ? (stage == BatchStage.DONE ? 1f : 0f)
+                    : (initialCandidateCount - candidates.size) / (float) initialCandidateCount;
 
-                Seq<BuildPlan> route = aStarBridgeRoute(c.tile, c.drill, networkNodes, globalOccupied);
-                if (route == null) continue;
+            if (stage == BatchStage.SCORE_CANDIDATES && !candidates.isEmpty() && initialCandidateCount > 0)
+                reductionProgress += (candidateIndex / (float) candidates.size) / initialCandidateCount;
 
-                Seq<BuildPlan> extractorPlans = useWaterExtractor ? findBestWaterExtractor(c.tile, c.drill, globalOccupied, oreCluster) : new Seq<>();
-                if (extractorPlans == null) continue;
-                int extractorCompactness = extractorPlanCompactness(extractorPlans, c.tile, c.drill, globalOccupied);
+            float selectionProgress = Math.min(1f, Math.max(coveredProgress, reductionProgress));
 
-                int compactness = countTouchingOccupied(c.tile, c.drill, drillOccupied);
-                int supportTouch = countTouchingOccupied(c.tile, c.drill, globalOccupied);
-                int gap = drillOccupied.isEmpty()
-                        ? distanceFromHitboxToTiles(c.tile, c.drill, networkNodes)
-                        : distanceFromHitboxToTiles(c.tile, c.drill, drillOccupied);
-                int dist = distanceToNetwork(c.tile, networkNodes);
-                int redundancy = c.oreCount - gain;
-                int routeCost = routePlacementCost(route);
-                int routeCompactness = routeCompactnessScore(route, globalOccupied);
-                int bboxGrowth = boundingAreaGrowth(drillOccupied, c.tile, c.drill);
-                double marginalScore = gain * 260.0
-                    + compactness * 500.0
-                    + supportTouch * 80.0
-                    + extractorCompactness * 120.0
-                    - gap * 320.0
-                    - bboxGrowth * 60.0
-                    - routeCost * 90.0
-                    - redundancy * 200.0
-                    - dist * 8.0;
+            switch (stage) {
+                case INIT:
+                    return 0f;
+                case GENERATE_CANDIDATES:
+                    return Math.min(0.55f, 0.05f + generationProgress * 0.5f);
+                case PREPARE_SELECTION:
+                    return 0.6f;
+                case SCORE_CANDIDATES:
+                case APPLY_SELECTION:
+                    return Math.min(0.99f, 0.6f + selectionProgress * 0.39f);
+                case DONE:
+                default:
+                    return 1f;
+            }
+        }
 
-                if (shouldRejectDedicatedRoute(route, gain, compactness, supportTouch, routeCompactness, gap, marginalScore)) {
+        @Override
+        public Seq<BuildPlan> result() { return finalPlans; }
+
+        protected void init() {
+            clusterOreTiles = Utils.getConnectedTiles(selectedTile, maxTiles);
+            oreTiles = new Seq<>();
+            oreTiles.addAll(clusterOreTiles);
+            Utils.expandArea(oreTiles, maxDrillSize / 4);
+
+            if (clusterOreTiles.isEmpty()) {
+                stage = BatchStage.DONE;
+                return;
+            }
+
+            oreCluster = new ObjectSet<>();
+            for (Tile tile : clusterOreTiles) {
+                oreCluster.add(tile);
+            }
+
+            outputAnchorTile = findOutputAnchorTile(clusterOreTiles, selectedTile);
+            heuristicCenterTile = findClusterCenter(clusterOreTiles);
+
+            Point2 outlet = outDirection.p.cpy();
+            int step = Math.min(4, Math.max(0, bridgeRange - 2));
+            for (int i = 0; i < step; i++) {
+                outlet.add(outDirection.p);
+            }
+
+            allowedDrill.sort((a, b) -> {
+                int sizeCompare = Integer.compare(b.size, a.size);
+                if (sizeCompare != 0)
+                    return sizeCompare;
+                return Integer.compare(b.id, a.id);
+            });
+
+            Tile outputBridge = Vars.world.tile(outputAnchorTile.x + outlet.x, outputAnchorTile.y + outlet.y);
+            networkNodes.add(outputAnchorTile);
+            globalOccupied.add(outputAnchorTile);
+            finalPlans.add(new BuildPlan(outputAnchorTile.x, outputAnchorTile.y, outDirection.r, bridgeBlock, outlet));
+
+            if (outputBridge != null) {
+                globalOccupied.add(outputBridge);
+                finalPlans.add(new BuildPlan(outputBridge.x, outputBridge.y, outDirection.r, bridgeBlock));
+            }
+
+            sortOreTilesForOutput(oreTiles);
+            totalCandidateSlots = oreTiles.size * allowedDrill.size;
+            processedCandidateSlots = 0;
+            stage = BatchStage.GENERATE_CANDIDATES;
+        }
+
+        protected int processCandidateGeneration(int budget) {
+            int processed = 0;
+
+            while (processed < budget && oreIndex < oreTiles.size) {
+                Tile tile = oreTiles.get(oreIndex);
+                Block drillMode = allowedDrill.get(drillIndex);
+                processed++;
+                processedCandidateSlots++;
+
+                if (!forceSelectedSize || drillMode == selectedDrill) {
+                    if (drillMode instanceof Drill drill && Build.validPlace(drill, Vars.player.team(), tile.x, tile.y, 0)) {
+                        ObjectIntMap.Entry<Item> ores = Utils.countOre(tile, drill);
+                        if (ores != null && ores.value > 0 && ores.key == targetOre) {
+                            float coverage = ores.value / (float) (drillMode.size * drillMode.size);
+                            if (coverage >= minimumCoverage) {
+                                int distToOut = Math.abs(tile.x - heuristicCenterTile.x) + Math.abs(tile.y - heuristicCenterTile.y);
+                                int score = drill.size * 10000 + ores.value * 100 + Math.round(coverage * 100f) * 4 - distToOut;
+                                Seq<Tile> coveredTiles = getCoveredOreTiles(tile, drill);
+                                candidates.add(new Candidate(tile, drill, score, ores.value, coverage, coveredTiles));
+                            }
+                        }
+                    }
+                }
+
+                drillIndex++;
+                if (drillIndex >= allowedDrill.size) {
+                    drillIndex = 0;
+                    oreIndex++;
+                }
+            }
+
+            if (oreIndex >= oreTiles.size)
+                stage = BatchStage.PREPARE_SELECTION;
+
+            return processed;
+        }
+
+        protected void prepareSelection() {
+            candidates = pruneDominatedCandidates(candidates);
+            candidates.sort(HeuristicGroundOrePF.this::compareInitialCandidates);
+            initialCandidateCount = candidates.size;
+
+            if (candidates.isEmpty()) {
+                stage = BatchStage.DONE;
+                return;
+            }
+
+            resetSelectionScan();
+            stage = BatchStage.SCORE_CANDIDATES;
+        }
+
+        protected void resetSelectionScan() {
+            candidateIndex = 0;
+            bestCandidate = null;
+            bestRoute = null;
+            bestExtractors = new Seq<>();
+            bestScore = Double.NEGATIVE_INFINITY;
+            bestGap = Integer.MAX_VALUE;
+            bestTouch = Integer.MIN_VALUE;
+        }
+
+        protected int scoreCandidates(int budget) {
+            int processed = 0;
+
+            while (processed < budget && candidateIndex < candidates.size) {
+                Candidate candidate = candidates.get(candidateIndex++);
+                processed++;
+
+                if (isHitboxOccupied(candidate.tile, candidate.drill, globalOccupied)) {
                     continue;
                 }
 
-                double score = c.score
+                int gain = countUncoveredOre(candidate.tile, candidate.drill, coveredOre);
+                if (gain <= 0) {
+                    continue;
+                }
+
+                Seq<BuildPlan> route = aStarBridgeRoute(candidate.tile, candidate.drill, networkNodes, globalOccupied);
+                if (route == null) {
+                    continue;
+                }
+
+                Seq<BuildPlan> extractorPlans = useWaterExtractor
+                        ? findBestWaterExtractor(candidate.tile, candidate.drill, globalOccupied, oreCluster)
+                        : new Seq<>();
+                if (extractorPlans == null) {
+                    continue;
+                }
+
+                int extractorCompactness = extractorPlanCompactness(extractorPlans, candidate.tile, candidate.drill,
+                        globalOccupied);
+                int compactness = countTouchingOccupied(candidate.tile, candidate.drill, drillOccupied);
+                int supportTouch = countTouchingOccupied(candidate.tile, candidate.drill, globalOccupied);
+                int gap = drillOccupied.isEmpty()
+                        ? distanceFromHitboxToTiles(candidate.tile, candidate.drill, networkNodes)
+                        : distanceFromHitboxToTiles(candidate.tile, candidate.drill, drillOccupied);
+                int dist = distanceToNetwork(candidate.tile, networkNodes);
+                int redundancy = candidate.oreCount - gain;
+                int routeCost = routePlacementCost(route);
+                int routeCompactness = routeCompactnessScore(route, globalOccupied);
+                int bboxGrowth = boundingAreaGrowth(drillOccupied, candidate.tile, candidate.drill);
+                double marginalScore = gain * 260.0
+                        + compactness * 500.0
+                        + supportTouch * 80.0
+                        + extractorCompactness * 120.0
+                        - gap * 320.0
+                        - bboxGrowth * 60.0
+                        - routeCost * 90.0
+                        - redundancy * 200.0
+                        - dist * 8.0;
+
+                if (shouldRejectDedicatedRoute(route, gain, compactness, supportTouch, routeCompactness, gap,
+                        marginalScore)) {
+                    continue;
+                }
+
+                double score = candidate.score
                         + gain * 300.0
-                        + c.coverage * 120.0
+                        + candidate.coverage * 120.0
                         + compactness * 500.0
                         + supportTouch * 50.0
                         + extractorCompactness * 180.0
@@ -409,32 +569,43 @@ public class HeuristicGroundOrePF extends GroundOrePathFinding {
                     score += 50.0;
                 }
 
-                if (best == null || isBetterCandidate(c, best, gap, bestGap, compactness, bestTouch, score, bestScore)) {
-                    bestSize = c.drill.size;
+                if (bestCandidate == null || isBetterCandidate(candidate, bestCandidate, gap, bestGap, compactness,
+                        bestTouch, score, bestScore)) {
                     bestGap = gap;
                     bestTouch = compactness;
                     bestScore = score;
-                    best = c;
+                    bestCandidate = candidate;
                     bestRoute = route;
                     bestExtractors = extractorPlans;
                 }
             }
 
-            if (best == null) break;
+            if (candidateIndex >= candidates.size) {
+                stage = BatchStage.APPLY_SELECTION;
+            }
+
+            return processed;
+        }
+
+        protected void applyBestCandidate() {
+            if (bestCandidate == null) {
+                stage = BatchStage.DONE;
+                return;
+            }
 
             finalPlans.addAll(bestRoute);
-            finalPlans.add(new BuildPlan(best.tile.x, best.tile.y, 0, best.drill));
+            finalPlans.add(new BuildPlan(bestCandidate.tile.x, bestCandidate.tile.y, 0, bestCandidate.drill));
             finalPlans.addAll(bestExtractors);
 
-            for (Tile t : best.tile.getLinkedTilesAs((Drill) best.drill, new Seq<>())) {
-                if (t != null && t.drop() == targetOre) {
-                    coveredOre.add(t);
+            for (Tile tile : bestCandidate.tile.getLinkedTilesAs((Drill) bestCandidate.drill, new Seq<>())) {
+                if (tile != null && tile.drop() == targetOre) {
+                    coveredOre.add(tile);
                 }
             }
 
-            // Lock hitbox
-            lockHitbox(best.tile, best.drill, globalOccupied);
-            lockHitbox(best.tile, best.drill, drillOccupied);
+            lockHitbox(bestCandidate.tile, bestCandidate.drill, globalOccupied);
+            lockHitbox(bestCandidate.tile, bestCandidate.drill, drillOccupied);
+
             for (BuildPlan extractorPlan : bestExtractors) {
                 Tile extractorTile = Vars.world.tile(extractorPlan.x, extractorPlan.y);
                 if (extractorTile != null) {
@@ -442,18 +613,23 @@ public class HeuristicGroundOrePF extends GroundOrePathFinding {
                 }
             }
 
-            for (BuildPlan bp : bestRoute) {
-                Tile rTile = Vars.world.tile(bp.x, bp.y);
-                if (rTile != null) {
-                    globalOccupied.add(rTile);
-                    networkNodes.add(rTile);
+            for (BuildPlan plan : bestRoute) {
+                Tile routeTile = Vars.world.tile(plan.x, plan.y);
+                if (routeTile != null) {
+                    globalOccupied.add(routeTile);
+                    networkNodes.add(routeTile);
                 }
             }
 
-            candidates.remove(best);
-        }
+            candidates.remove(bestCandidate);
+            if (candidates.isEmpty()) {
+                stage = BatchStage.DONE;
+                return;
+            }
 
-        return finalPlans;
+            resetSelectionScan();
+            stage = BatchStage.SCORE_CANDIDATES;
+        }
     }
 
     /**

@@ -24,10 +24,35 @@ public abstract class GroundOrePathFinding {
     public final Block WATER_EXTRACTOR = Blocks.waterExtractor;
 
     /**
+     * Cooperative build session that can be stepped over multiple frames.
+     * Implementations must stay on the game thread because world queries are not
+     * thread safe.
+     */
+    public interface BuildBatch {
+        void step(int operationBudget);
+
+        boolean isDone();
+
+        float progress();
+
+        Seq<BuildPlan> result();
+    }
+
+    /**
      * Generates a sequence of build plans for drill and bridge placement.
      * @return a sequence of BuildPlan objects representing the construction plan
      */
     public abstract Seq<BuildPlan> build();
+
+    /**
+     * Create an optional batched planner for cooperative main-thread execution.
+     * The default implementation returns {@code null} and callers should fall back
+     * to {@link #build()}.
+     */
+    public @Nullable BuildBatch createBuildBatch() {
+        return null;
+    }
+
     /**
      * The primary drill block selected for this pathfinding operation.
      */
