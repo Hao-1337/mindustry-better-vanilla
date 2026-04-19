@@ -12,9 +12,9 @@ public class Version {
     /** Mod maajor version */
     public static final int majorVersion = 1;
     /** Mod minor version */
-    public static final int minorVersion = 9;
+    public static final int minorVersion = 10;
     /** Mod patch version */
-    public static final int patchVersion = 3;
+    public static final int patchVersion = 0;
     /** Mod version tag */
     public static final Tag tag = Tag.RELEASE;
     /** Target mindustry version using in this mod version */
