@@ -351,6 +351,7 @@ public class HeuristicGroundOrePF extends GroundOrePathFinding {
             Seq<BuildPlan> bestRoute = null;
             Seq<BuildPlan> bestExtractors = new Seq<>();
             double bestScore = Double.NEGATIVE_INFINITY;
+            @SuppressWarnings("unused")
             int bestSize = -1;
             int bestGap = Integer.MAX_VALUE;
             int bestTouch = Integer.MIN_VALUE;
