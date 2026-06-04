@@ -96,7 +96,6 @@ public class ChargeWeapon extends Weapon {
         return name == null || name.isEmpty() ? "hao1337.lib.ChargeWeapon" : "hao1337.lib.ChargeWeapon: " + name;
         // Vars.content.unit("hao1337-mod-zelvorak").weapons.get(0).progress
     }
-
     
     @Override
     public void update(Unit unit, WeaponMount mount) {
@@ -116,8 +115,7 @@ public class ChargeWeapon extends Weapon {
         ChargeWeaponMount m = (ChargeWeaponMount) mount;
         m.charging = true;
 
-        if (chargeSound != null && (m.charge % chargeSound.getLength() <= 0.1f)) chargeSound.at(shootX, shootY);
-        if (chargeSound != null && m.charge <= 0.00005f) chargeSound.at(unit, chargeSoundMinPitch);
+        if (chargeSound != null && m.charge <= 0.05f) chargeSound.at(unit, chargeSoundMinPitch);
         
         m.charge = Mathf.approachDelta(m.charge, 1f, Time.delta / chargeSpeed);
         m.lastReload = m.reload;
