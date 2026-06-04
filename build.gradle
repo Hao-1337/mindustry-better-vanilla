@@ -2,7 +2,7 @@ apply plugin: "java"
 version = '1.0'
 
 sourceSets.main.java.srcDirs = ["src"]
-def targetVersion = project.findProperty("mindustryVersion") ?: "v157"
+def targetVersion = project.findProperty("mindustryVersion") ?: "v158.1"
 def isDev = project.hasProperty("dev")
 
 repositories{
@@ -132,5 +132,5 @@ tasks.register("deployv147", GradleBuild) {
 
 tasks.register("deployv157", GradleBuild) {
     tasks = ["preparev157", "deploy", "platformcleanup"]
-    startParameter.projectProperties = [ mindustryVersion: "v157" ]
+    startParameter.projectProperties = [ mindustryVersion: "v158.1" ]
 }
