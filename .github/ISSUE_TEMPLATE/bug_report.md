@@ -2,8 +2,8 @@
 name: Bug report
 about: Create a report to help me know what going on here.
 title: 'Bug: crash on game start'
-labels: enhancement
-assignees: Hao-1337, BackNNHH
+labels: bug
+assignees: BackNNHH, Hao-1337
 
 ---
 
