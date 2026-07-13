@@ -7,7 +7,7 @@ Add wonderful contents for vanilla experience. For more info, please visit githu
 [red]DUE TO GAME VERSION MISMATCH, This version is using for v157![]
 [accent]You can get a older (v147 version) of this mod from github release.[]
 '''
-version: "1.0.0"
+version: "1.10.2"
 minGameVersion: 154
 java: true
 hidden: true

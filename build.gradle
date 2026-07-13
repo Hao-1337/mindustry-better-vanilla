@@ -2,7 +2,7 @@ apply plugin: "java"
 version = '1.0'
 
 sourceSets.main.java.srcDirs = ["src"]
-def targetVersion = project.findProperty("mindustryVersion") ?: "v158.1"
+def targetVersion = project.findProperty("mindustryVersion") ?: "v159"
 def isDev = project.hasProperty("dev")
 
 repositories{
@@ -28,9 +28,15 @@ allprojects{
     tasks.withType(JavaCompile).tap{
         configureEach{
             if (isDev) {
-                options.compilerArgs = ['--release', '11']
+                // options.compilerArgs = ['--release', '11']
+                options.compilerArgs = ['--release', '17']
             } else {
-                options.compilerArgs = ['--release', '8']
+                if (mindustryVersion == "v159") {
+                    options.compilerArgs = ['--release', '17']
+                }
+                else {
+                    options.compilerArgs = ['--release', '8']
+                }
                 exclude "hao1337/addins/DevTools.java"
             }
         }

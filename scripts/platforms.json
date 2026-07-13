@@ -31,6 +31,11 @@
                     "regex": false,
                     "oldField": "older (v147 version)",
                     "newField": "newer (v157 version)"
+                },
+                {
+                    "regex": false,
+                    "oldField": "version: \"1.10.2\"",
+                    "newField": "version: \"1.0.0\""
                 }
             ],
             "../src/hao1337/lib/ChargeWeapon.java": [

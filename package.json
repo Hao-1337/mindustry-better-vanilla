@@ -15,7 +15,7 @@
     "url": "https://github.com/Hao-1337/mod-mindustry"
   },
   "author": "",
-  "license": "ISC",
+  "license": "MIT",
   "dependencies": {
     "hao1337-mindustry": "file:"
   },
