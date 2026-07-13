@@ -138,5 +138,5 @@ tasks.register("deployv147", GradleBuild) {
 
 tasks.register("deployv157", GradleBuild) {
     tasks = ["preparev157", "deploy", "platformcleanup"]
-    startParameter.projectProperties = [ mindustryVersion: "v158.1" ]
+    startParameter.projectProperties = [ mindustryVersion: "v159" ]
 }
