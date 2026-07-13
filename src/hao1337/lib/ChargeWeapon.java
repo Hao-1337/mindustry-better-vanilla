@@ -21,6 +21,8 @@ public class ChargeWeapon extends Weapon {
     public float chargeSoundMinPitch = 1f;
     /** Due to region dimension, custom quad limit is require due to how big the chagre region is */
     public float[] chargeQuad = { 0f, 1f };
+    /** Charge region layer */
+    public float chargeLayer = Layer.bullet - 2f;
 
     TextureRegion chargeRegion;
 
@@ -68,7 +70,8 @@ public class ChargeWeapon extends Weapon {
         float ry = unit.y + Angles.trnsy(rot, x, y);
 
         float z = Draw.z();
-        Draw.z(z + layerOffset);
+        float targetZ = z + layerOffset;
+        Draw.z(targetZ < chargeLayer ? chargeLayer : targetZ);
 
         Draw.draw(Layer.flyingUnit, () -> {
             float prevScl = Draw.xscl;
@@ -88,7 +91,7 @@ public class ChargeWeapon extends Weapon {
             Draw.xscl = prevScl;
         });
         Draw.z(z);
-        ;
+        Draw.reset();
     }
 
     @Override
