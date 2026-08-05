@@ -8,8 +8,7 @@ import arc.struct.ObjectMap;
 import arc.struct.ObjectSet;
 import arc.util.Interval;
 import mindustry.Vars;
-import mindustry.core.UI;
-import mindustry.game.Team;
+import mindustry.core.UI;   
 import mindustry.game.Teams;
 import mindustry.type.UnitType;
 import mindustry.ui.Styles;
@@ -24,7 +23,7 @@ public class UnitsDisplay extends Table {
     private final ObjectSet<UnitType> units = new ObjectSet<>();
     /** mapping from unit type to previous tick count used for delta calculation. */
     private final ObjectMap<UnitType, Integer> cap = new ObjectMap<>();
-    private Team playerTeam;
+    // private Team playerTeam;
     private Teams.TeamData teamData;
     /** timer used to throttle updates. */
     private final Interval interval = new Interval();
@@ -49,6 +48,7 @@ public class UnitsDisplay extends Table {
     public void resetUsed() {
         units.clear();
         cap.clear();
+        fetchUnit();
         rebuild();
     }
 
@@ -63,7 +63,6 @@ public class UnitsDisplay extends Table {
 
         background(Styles.black6);
         margin(4);
-        
 
         update(() -> {
             if (!interval.get(time))
@@ -71,7 +70,6 @@ public class UnitsDisplay extends Table {
             clearChildren();
             fetchUnit();
             buildUI();
-            visible = units.size > 0;
         });
     }
 
@@ -82,7 +80,7 @@ public class UnitsDisplay extends Table {
      */
     private void fetchUnit() {
         units.clear();
-        playerTeam = Vars.player.team();
+        var playerTeam = Vars.player.team();
         teamData = playerTeam.data();
 
         for (UnitType unit : content.units()) {

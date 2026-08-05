@@ -44,6 +44,7 @@ public class Protocol {
      */
     public void init() {
         Events.on(ClientLoadEvent.class, e -> protocolChangeFire(false));
+        Events.on(StateChangeEvent.class, e -> protocolChangeFire(false));
         Events.on(HostEvent.class, e -> protocolChangeFire(false));
         Events.on(ResetEvent.class, e -> protocolChangeFire(false));
         Events.on(WorldLoadEndEvent.class, e -> protocolChangeFire(true));

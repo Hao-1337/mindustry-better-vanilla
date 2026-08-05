@@ -122,7 +122,7 @@ function javaChange(data: string) {
 
   try {
     // applyVersion(givenEnv === "steam" ? "v147" : "v157");
-    applyVersion("v157");
+    applyVersion("v159.7");
     execSync("npm run dev-compile");
     extractAllDeps();
     sendRestart();
@@ -145,7 +145,7 @@ function assetsChange(data: string) {
   // copyFiles(ACCSET_PATH, TARGET_PATH);
   try {
     // applyVersion(givenEnv === "steam" ? "v147" : "v157");
-    applyVersion("v157");
+    applyVersion("v159.7");
     copyFiles(assetsPath, assetsModFolder);
     console.log("Assets copied successfully.".green);
     sendRestart();

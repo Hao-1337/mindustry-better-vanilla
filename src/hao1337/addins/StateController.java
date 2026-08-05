@@ -185,6 +185,7 @@ public class StateController {
                 sechematicSize = r.i();
                 experimental = r.bool();
 
+                applyState(true);
                 r.close();
             }
 

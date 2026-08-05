@@ -58,9 +58,8 @@ public class CoreStorageBlock extends StorageBlock implements DisableCacheBehavi
 
     @PlatformDependance(version = "v159")
     public void disableCache() {
-        // cacheLayer = CacheLayer.normal;
-        drawDynamic = true;
         drawCached = false;
+        drawDynamic = true;
     }
 
     @Override
@@ -147,9 +146,9 @@ public class CoreStorageBlock extends StorageBlock implements DisableCacheBehavi
         @Override
         public void draw() {
             super.draw();
-            Log.info("gay");
+            // Log.info("gay");
             if (sRotatorRegion != null) {
-                Log.info("@, @, @, @", sRotatorRegion, x, y, rotationOffset + rotation * rotateSpeed);
+                // Log.info("@, @, @, @", sRotatorRegion, x, y, rotationOffset + rotation * rotateSpeed);
                 Drawf.spinSprite(sRotatorRegion, x, y, rotationOffset + rotation * rotateSpeed);
             }
 

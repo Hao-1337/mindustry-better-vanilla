@@ -122,7 +122,7 @@ tasks.register('platformcleanup', Exec) {
 
 tasks.register('preparev157', Exec) {
     workingDir = file("scripts")
-    commandLine "node", "platform.ts", "v157"
+    commandLine "node", "platform.ts", "v159.7"
 }
 
 tasks.register('preparev147', Exec) {

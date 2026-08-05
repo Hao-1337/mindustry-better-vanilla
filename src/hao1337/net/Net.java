@@ -20,6 +20,10 @@ public class Net {
         return protocol.lastProtocolType == ProtocolType.LOCAL;
     }
 
+    public boolean isHost() {
+        return protocol.lastProtocolType == ProtocolType.HOST;
+    }
+
     public void init() {
         protocol.init();
         router.init();

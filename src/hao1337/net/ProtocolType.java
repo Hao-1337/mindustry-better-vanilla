@@ -20,6 +20,7 @@ public enum ProtocolType {
 
     public static ProtocolType fetch() {
         if (Vars.headless) return SERVER;
+        // if (Vars.state.is(GameState.State.menu)) return LOCAL;
 
         boolean active = Vars.net.active(),
                 server = Vars.net.server(),
