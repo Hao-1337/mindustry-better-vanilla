@@ -4,7 +4,6 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
-import java.util.UUID;
 
 import arc.Core;
 import arc.Events;
@@ -40,8 +39,6 @@ import mindustry.ui.Styles;
  * defined in {@link hao1337.net.Net}.</p>
  */
 public class TimeControl extends Table {
-    /** unique identifier used in network packets to avoid processing our own changes. */
-    private static final String uuid = UUID.randomUUID().toString();
     /** maximum allowed time multiplier. */
     private static final int MAX_SPEED = 8;
     /** minimum allowed time multiplier (negative for slow-reverse). */
@@ -285,7 +282,7 @@ public class TimeControl extends Table {
 
                 try  {
                     String Fuuid = r.str();
-                    if (uuid.equals(Fuuid)) return;
+                    if (HVars.uuid.equals(Fuuid)) return;
                     useable = r.bool();
 
                     String mes = r.str();
@@ -302,7 +299,7 @@ public class TimeControl extends Table {
                 try  {
                     // Server config is highest
                     String Fuuid = r.str();
-                    if (uuid.equals(Fuuid)) return;
+                    if (HVars.uuid.equals(Fuuid)) return;
                     /** useable = */r.bool();
                     String mes = r.str();
                     if (mes.length() > 0) Vars.player.sendUnformatted(mes);
@@ -332,7 +329,7 @@ public class TimeControl extends Table {
         Writes w = new Writes(s);
 
         try {
-            w.str(uuid);
+            w.str(HVars.uuid);
             w.bool(Core.settings.getBool("hao1337.ui.timecontrol.enable"));
             w.str(mes);
             w.i(time);
@@ -349,7 +346,7 @@ public class TimeControl extends Table {
      */
     void updateSnapshot() {
         try {
-            byte[] payload = exportConfigPacket( "[orange][" + Vars.player.name + "][] Set time control to [accent]" + (time < 0 ? "×1/" : "×") + displaytime);
+            byte[] payload = exportConfigPacket("[orange][" + Vars.player.name + "][] Set time control to [accent]" + (time < 0 ? "×1/" : "×") + displaytime);
             router.send(HVars.tcNetChannel, payload);
         } catch (Throwable e) {}
     }

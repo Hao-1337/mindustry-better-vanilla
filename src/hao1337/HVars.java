@@ -1,6 +1,8 @@
 package hao1337;
 
 import java.lang.reflect.Field;
+import java.util.UUID;
+
 import arc.Core;
 import arc.Events;
 import arc.scene.ui.Label;
@@ -16,6 +18,7 @@ import mindustry.game.EventType.ClientLoadEvent;
 import mindustry.game.EventType.WorldLoadEndEvent;
 import mindustry.input.MobileInput;
 import hao1337.addins.AutoUpdate;
+import hao1337.addins.MultiPlayerPause;
 import hao1337.addins.StateController;
 import hao1337.addons.autodrill.ui.AutoDrill;
 import hao1337.contents.HBlocks;
@@ -25,6 +28,8 @@ import hao1337.net.Protocol;
 import hao1337.ui.*;
 
 public class HVars {
+    /** unique identifier used in network packets to avoid processing our own changes. */
+    public static final String uuid = UUID.randomUUID().toString();
     /** Unique instance of units counter UI */
     public static UnitsDisplay unitDisplay = new UnitsDisplay();
     /** Unique instance of core items UI */
@@ -44,9 +49,14 @@ public class HVars {
     public static final short modStateNetChannel = 23554;
     /** Net channel for time control UI state */
     public static final short tcNetChannel = 23555;
+    /** Net channel for time control UI state */
+    public static final short pauseNetChannel = 23556;
 
     public static final boolean isSteam = Vars.steam;
     public static final boolean isBeta = Version.type.equals("bleeding-edge") || Version.build < 0;
+
+    public final MultiPlayerPause pause = new MultiPlayerPause();
+    public final Table poolTable = new Table() {{ update(() -> pause.pool()); }};
 
     public HVars() {
         Core.settings.defaults(
@@ -175,6 +185,8 @@ public class HVars {
             t.row();
             t.add(timecontrol).minWidth(155f).fillX();
         });
+
+        hud.addChild(poolTable);
     }
 
     @Nullable TextButton getButtonByI18NText(Group elementGroup, String name) {
