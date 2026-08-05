@@ -22,6 +22,11 @@ public class MultiPlayerPause {
     private final Interval interval = new Interval();
     private boolean debounce = false;
 
+    @PlatformDependance(version = "v159")
+    public boolean disable() {
+        return Vars.state.rules.pauseDisabled;
+    }
+
     public void pool() {
         if (debounce) {
             if (interval.get(40)) {
@@ -30,7 +35,7 @@ public class MultiPlayerPause {
             return;
         }
 
-        if (Core.input.keyTap(Binding.pause) && !HVars.net.isSinglePlayer() && !Vars.state.rules.pauseDisabled) {
+        if (Core.input.keyTap(Binding.pause) && !HVars.net.isSinglePlayer() && !disable()) {
             debounce = true;
             var doPause = Vars.state.isPaused();
             var packet = exportConfigPacket(doPause ? false : true, "[orange][" + Vars.player.name + "][] " + (doPause ? "Resume the game" : "Stop the game"));

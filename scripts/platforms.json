@@ -14,6 +14,13 @@
                     "oldField": "/\\s*@PlatformDependance\\(version\\s*=\\s*\"v159\"\\)(\\s*[\\w\\W]+?{$)([\\w\\W]+?)(}$)/gm",
                     "newField": "$1 /** This code already get stripped by 'platform.ts' for slient compiler error! */ $3"
                 }
+            ],
+            "../src/hao1337/addins/**/*.java": [
+                {
+                    "regex": true,
+                    "oldField": "/^\\s*@PlatformDependance\\(version\\s*=\\s*\"v159\"\\)($\\s*[\\W\\w]+?{)([\\w\\W]+?)(}$)/gm",
+                    "newField": "$1 /** Stub for avoid compiler error */return false; $3"
+                }
             ]
         }
     },
@@ -48,6 +55,13 @@
                     "regex": true,
                     "oldField": "/\\s*@PlatformDependance\\(version\\s*=\\s*\"v159\"\\)(\\s*[\\w\\W]+?{$)([\\w\\W]+?)(}$)/gm",
                     "newField": "$1 /** This code already get stripped by 'platform.ts' for slient compiler error! */ $3"
+                }
+            ],
+            "../src/hao1337/addins/**/*.java": [
+                {
+                    "regex": true,
+                    "oldField": "/^\\s*@PlatformDependance\\(version\\s*=\\s*\"v159\"\\)($\\s*[\\W\\w]+?{)([\\w\\W]+?)(}$)/gm",
+                    "newField": "$1 /** Stub for avoid compiler error */return false; $3"
                 }
             ],
             "../src/hao1337/Version.java": [
