@@ -1,13 +1,18 @@
 [
     {
+        "name": "Mindsutry V159.7",
+        "version": "v159.7",
+        "replacements": {}
+    },
+    {
         "name": "Mindsutry V8",
         "version": "v157",
         "replacements": {
-            "../src/hao1337/lib/ChargeWeapon.java": [
+            "../src/hao1337/lib/**/*.java": [
                 {
                     "regex": true,
-                    "oldField": "/(@PlatformDependance\\s*\\(\\s*version\\s*=\\s*\"v147\"\\s*\\)\\s*[\\w\\W]+?)\\s*{[\\w\\W]+?\\s*return false;\\s*}/",
-                    "newField": "$1 { return /** This code already get stripped by 'platform.ts' for slient compiler error! */true; }"
+                    "oldField": "/\\s*@PlatformDependance\\(version\\s*=\\s*\"v159\"\\)(\\s*[\\w\\W]+?{$)([\\w\\W]+)(}$)/gm",
+                    "newField": "$1 /** This code already get stripped by 'platform.ts' for slient compiler error! */ $3"
                 }
             ]
         }
@@ -38,11 +43,11 @@
                     "newField": "version: \"1.0.0\""
                 }
             ],
-            "../src/hao1337/lib/ChargeWeapon.java": [
+            "../src/hao1337/lib/**/*.java": [
                 {
                     "regex": true,
-                    "oldField": "/(@PlatformDependance\\s*\\(\\s*version\\s*=\\s*\"v157\"\\s*\\)\\s*[\\w\\W]+?)\\s*{[\\w\\W]+?\\s*return false;\\s*}/",
-                    "newField": "$1 { return /** This code already get stripped by 'platform.ts' for slient compiler error! */true; }"
+                    "oldField": "/\\s*@PlatformDependance\\(version\\s*=\\s*\"v159\"\\)(\\s*[\\w\\W]+?{$)([\\w\\W]+)(}$)/gm",
+                    "newField": "$1 /** This code already get stripped by 'platform.ts' for slient compiler error! */ $3"
                 }
             ],
             "../src/hao1337/Version.java": [

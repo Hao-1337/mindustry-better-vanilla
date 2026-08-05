@@ -5,6 +5,7 @@ import arc.graphics.Blending;
 import arc.graphics.g2d.Draw;
 import arc.graphics.g2d.TextureRegion;
 import arc.math.Mathf;
+import arc.util.Log;
 import arc.util.io.Reads;
 import arc.util.io.Writes;
 import mindustry.content.Fx;
@@ -17,8 +18,10 @@ import mindustry.type.Item;
 import mindustry.world.blocks.storage.StorageBlock;
 import mindustry.world.blocks.storage.Unloader;
 import mindustry.world.meta.BlockStatus;
+import hao1337.addins.DisableCacheBehaviour;
+import hao1337.addins.PlatformDependance;
 
-public class CoreStorageBlock extends StorageBlock {
+public class CoreStorageBlock extends StorageBlock implements DisableCacheBehaviour {
     @SuppressWarnings("unused")
     private final int itemCapacity = -1;
 
@@ -50,6 +53,14 @@ public class CoreStorageBlock extends StorageBlock {
         noUpdateDisabled = true;
         ambientSound = Sounds.drillCharge;
         buildTime = 240f;
+        disableCache();
+    }
+
+    @PlatformDependance(version = "v159")
+    public void disableCache() {
+        // cacheLayer = CacheLayer.normal;
+        drawDynamic = true;
+        drawCached = false;
     }
 
     @Override
@@ -57,6 +68,11 @@ public class CoreStorageBlock extends StorageBlock {
         super.init();
         sTopRegion = Core.atlas.find(name + "-top");
         sRotatorRegion = Core.atlas.find(name + "-rotator");
+    }
+
+    @Override
+    public boolean isStatic() {
+        return false;
     }
 
     public class CoreStorageBuilding extends StorageBlock.StorageBuild {
@@ -122,7 +138,7 @@ public class CoreStorageBlock extends StorageBlock {
                 warmup = Mathf.approachDelta(warmup, 1.0f, warmupSpeed);
 
                 if(Mathf.chanceDelta(updateEffectChance * warmup))
-                    updateEffect.at(x + Mathf.range(size * 2.5f), y + Mathf.range(size * 2.5f));
+                    updateEffect.at(x + Mathf.range(size * 3.5f), y + Mathf.range(size * 3.5f));
             } else {
                 warmup = Mathf.approachDelta(warmup, 0f, warmupSpeed);
             }
@@ -131,8 +147,11 @@ public class CoreStorageBlock extends StorageBlock {
         @Override
         public void draw() {
             super.draw();
-            if (sRotatorRegion != null)
+            Log.info("gay");
+            if (sRotatorRegion != null) {
+                Log.info("@, @, @, @", sRotatorRegion, x, y, rotationOffset + rotation * rotateSpeed);
                 Drawf.spinSprite(sRotatorRegion, x, y, rotationOffset + rotation * rotateSpeed);
+            }
 
             if (sTopRegion != null) {
                 Draw.color();

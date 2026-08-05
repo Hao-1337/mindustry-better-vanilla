@@ -1,62 +1,67 @@
 apply plugin: "java"
+
 version = '1.0'
 
 sourceSets.main.java.srcDirs = ["src"]
-def targetVersion = project.findProperty("mindustryVersion") ?: "v159"
+
+def targetVersion = project.findProperty("mindustryVersion") ?: "v159.7"
 def isDev = project.hasProperty("dev")
 
 repositories{
     mavenCentral()
-    maven{ url = "https://raw.githubusercontent.com/Zelaux/MindustryRepo/master/repository" }
-    maven{ url = 'https://www.jitpack.io' }
-}
 
-java{
-    targetCompatibility = 8
-    sourceCompatibility = JavaVersion.VERSION_18
-}
-ext{
-    //the build number that this mod is made for
-    mindustryVersion = targetVersion
-    jabelVersion = "93fde537c7"
-    isWindows = System.getProperty("os.name").toLowerCase().contains("windows")
-    sdkRoot = System.getenv("ANDROID_HOME") ?: System.getenv("ANDROID_SDK_ROOT")
-}
+    // Mindustry dependencies directly from GitHub releases.
+    ivy{
+        url = "https://github.com/"
+        patternLayout{
+            artifact(
+                (targetVersion == "latest"
+                    ? "/[organisation]/[module]/releases/[revision]/download/dependencies.jar"
+                    : targetVersion == "be"
+                        ? "/[organisation]/[module]/releases/download/master/[revision].jar"
+                        : "/[organisation]/[module]/releases/download/[revision]/dependencies.jar")
+            )
+        }
 
-//java 8 backwards compatibility flag
-allprojects{
-    tasks.withType(JavaCompile).tap{
-        configureEach{
-            if (isDev) {
-                // options.compilerArgs = ['--release', '11']
-                options.compilerArgs = ['--release', '17']
-            } else {
-                if (mindustryVersion == "v159") {
-                    options.compilerArgs = ['--release', '17']
-                }
-                else {
-                    options.compilerArgs = ['--release', '8']
-                }
-                exclude "hao1337/addins/DevTools.java"
+        metadataSources{
+            artifact()
+        }
+
+        content{
+            if(targetVersion == "be"){
+                includeVersion("Anuken", "MindustryBuilds", "latest")
+            }else{
+                includeVersion("Anuken", "Mindustry", targetVersion)
             }
         }
     }
 }
 
-dependencies{
-    compileOnly "com.github.Anuken.Arc:arc-core:$mindustryVersion"
-    compileOnly "com.github.Anuken.Mindustry:core:$mindustryVersion"
-
-    annotationProcessor "com.github.Anuken:jabel:$jabelVersion"
+java{
+    targetCompatibility = JavaVersion.VERSION_17
+    sourceCompatibility = JavaVersion.VERSION_17
 }
 
-//force arc version
-configurations.configureEach{
-    resolutionStrategy.eachDependency { details ->
-        if(details.requested.group == 'com.github.Anuken.Arc'){
-            details.useVersion "$mindustryVersion"
+ext{
+    mindustryVersion = targetVersion
+    isWindows = System.getProperty("os.name").toLowerCase().contains("windows")
+    sdkRoot = System.getenv("ANDROID_HOME") ?: System.getenv("ANDROID_SDK_ROOT")
+}
+
+allprojects{
+    tasks.withType(JavaCompile).configureEach{
+        if(!isDev){
+            exclude "hao1337/addins/DevTools.java"
         }
     }
+}
+
+dependencies{
+    compileOnly(
+        mindustryVersion == "be"
+            ? "Anuken:MindustryBuilds:latest"
+            : "Anuken:Mindustry:$mindustryVersion"
+    )
 }
 
 tasks.register('jarAndroid'){
@@ -138,5 +143,5 @@ tasks.register("deployv147", GradleBuild) {
 
 tasks.register("deployv157", GradleBuild) {
     tasks = ["preparev157", "deploy", "platformcleanup"]
-    startParameter.projectProperties = [ mindustryVersion: "v159" ]
+    startParameter.projectProperties = [ mindustryVersion: "v159.7" ]
 }

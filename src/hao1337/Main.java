@@ -11,6 +11,7 @@ public class Main extends Mod {
     @Override
     public void init() {
         Log.info("[Hao1337: Better Vanilla] is launching.");
+        
         new HVars();
     }
 }

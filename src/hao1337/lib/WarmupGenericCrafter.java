@@ -10,6 +10,9 @@ import mindustry.graphics.Drawf;
 import mindustry.world.blocks.production.GenericCrafter;
 import mindustry.world.meta.BlockStatus;
 import mindustry.world.meta.BuildVisibility;
+import hao1337.addins.DisableCacheBehaviour;
+import hao1337.addins.PlatformDependance;
+
 
 /**
  * A GenericCrafter extension that adds warmup mechanics and rotating visual effects.
@@ -28,7 +31,7 @@ import mindustry.world.meta.BuildVisibility;
  * 
  * @author Hao-1337
  */
-public class WarmupGenericCrafter extends GenericCrafter {
+public class WarmupGenericCrafter extends GenericCrafter implements DisableCacheBehaviour {
     /** Warmup speed */
     public float warmupSpeed = 0.02f;
     /** Rotator speed */
@@ -43,6 +46,13 @@ public class WarmupGenericCrafter extends GenericCrafter {
         buildVisibility = Core.settings.getBool("hao1337.gameplay.experimental") ? BuildVisibility.shown : BuildVisibility.hidden;
         warmupSpeed = 0.01f;
         ambientSound = Sounds.drillCharge;
+        disableCache();
+    }
+
+    @PlatformDependance(version = "v159")
+    public void disableCache() {
+        drawCached = false;
+        drawDynamic = true;
     }
 
     @Override
