@@ -10,28 +10,33 @@ def isDev = project.hasProperty("dev")
 repositories{
     mavenCentral()
 
-    // Mindustry dependencies directly from GitHub releases.
-    ivy{
-        url = "https://github.com/"
-        patternLayout{
-            artifact(
-                (targetVersion == "latest"
-                    ? "/[organisation]/[module]/releases/[revision]/download/dependencies.jar"
-                    : targetVersion == "be"
-                        ? "/[organisation]/[module]/releases/download/master/[revision].jar"
-                        : "/[organisation]/[module]/releases/download/[revision]/dependencies.jar")
-            )
-        }
+    if (targetVersion == "v147") {
+        maven{ url = "https://raw.githubusercontent.com/Zelaux/MindustryRepo/master/repository" }
+        maven{ url = 'https://www.jitpack.io' }
+    }
+    else {
+        ivy{
+            url = "https://github.com/"
+            patternLayout{
+                artifact(
+                    (targetVersion == "latest"
+                        ? "/[organisation]/[module]/releases/[revision]/download/dependencies.jar"
+                        : targetVersion == "be"
+                            ? "/[organisation]/[module]/releases/download/master/[revision].jar"
+                            : "/[organisation]/[module]/releases/download/[revision]/dependencies.jar")
+                )
+            }
 
-        metadataSources{
-            artifact()
-        }
+            metadataSources{
+                artifact()
+            }
 
-        content{
-            if(targetVersion == "be"){
-                includeVersion("Anuken", "MindustryBuilds", "latest")
-            }else{
-                includeVersion("Anuken", "Mindustry", targetVersion)
+            content{
+                if(targetVersion == "be"){
+                    includeVersion("Anuken", "MindustryBuilds", "latest")
+                }else{
+                    includeVersion("Anuken", "Mindustry", targetVersion)
+                }
             }
         }
     }
@@ -44,6 +49,7 @@ java{
 
 ext{
     mindustryVersion = targetVersion
+    if (targetVersion == "v147") { jabelVersion = "93fde537c7" }
     isWindows = System.getProperty("os.name").toLowerCase().contains("windows")
     sdkRoot = System.getenv("ANDROID_HOME") ?: System.getenv("ANDROID_SDK_ROOT")
 }
@@ -57,11 +63,29 @@ allprojects{
 }
 
 dependencies{
-    compileOnly(
-        mindustryVersion == "be"
-            ? "Anuken:MindustryBuilds:latest"
-            : "Anuken:Mindustry:$mindustryVersion"
-    )
+    if (targetVersion == "v147") {
+        compileOnly "com.github.Anuken.Arc:arc-core:$mindustryVersion"
+        compileOnly "com.github.Anuken.Mindustry:core:$mindustryVersion"
+
+        annotationProcessor "com.github.Anuken:jabel:$jabelVersion"
+    }
+    else {
+        compileOnly(
+            mindustryVersion == "be"
+                ? "Anuken:MindustryBuilds:latest"
+                : "Anuken:Mindustry:$mindustryVersion"
+        )
+    }
+}
+
+if (targetVersion == "v147") {
+    configurations.configureEach{
+        resolutionStrategy.eachDependency { details ->
+            if(details.requested.group == 'com.github.Anuken.Arc'){
+                details.useVersion "$mindustryVersion"
+            }
+        }
+    }
 }
 
 tasks.register('jarAndroid'){
