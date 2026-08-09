@@ -161,6 +161,9 @@ public class SettingBuilder {
             t.checkPref("hao1337.gameplay.serpulo.leviathan-reconstructor", true);
             t.checkPref("hao1337.gameplay.serpulo.m1014", true);
             t.checkPref("hao1337.gameplay.serpulo.dropper", true);
+            t.checkPref("hao1337.gameplay.serpulo.liquid-storage-core", true);
+            t.checkPref("hao1337.gameplay.serpulo.liquid-storage-router", true);
+            t.checkPref("hao1337.gameplay.serpulo.liquid-storage-unlodader", true);
 
 
             t.pref(new SettingTitle(){{ desc = Core.bundle.format("hao1337.setting.category.gameplay.erekir"); }});

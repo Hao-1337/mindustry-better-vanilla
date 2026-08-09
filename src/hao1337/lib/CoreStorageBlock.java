@@ -35,7 +35,7 @@ public class CoreStorageBlock extends StorageBlock implements DisableCacheBehavi
     public float rotationOffset = 60.f;
 
     /** Random working effect spawn chance */
-    public float updateEffectChance = 0.02f;
+    public float updateEffectChance = 0.2f;
     /** Effect that get used as working effect */
     public Effect updateEffect = Fx.pulverizeSmall;
 
@@ -49,7 +49,7 @@ public class CoreStorageBlock extends StorageBlock implements DisableCacheBehavi
         solid = true;
         sync = true;
         separateItemCapacity = false;
-        noUpdateDisabled = true;
+        noUpdateDisabled = false;
         ambientSound = Sounds.drillCharge;
         buildTime = 240f;
         disableCache();
@@ -132,13 +132,14 @@ public class CoreStorageBlock extends StorageBlock implements DisableCacheBehavi
             rotation += warmup * delta();
 
             var stat = status();
+
             if (stat == BlockStatus.active) {
                 warmup = Mathf.approachDelta(warmup, 1.0f, warmupSpeed);
 
                 if(Mathf.chanceDelta(updateEffectChance * warmup))
                     updateEffect.at(x + Mathf.range(size * 3.5f), y + Mathf.range(size * 3.5f));
             } else {
-                warmup = Mathf.approachDelta(warmup, 0f, warmupSpeed);
+                warmup = Mathf.approachDelta(warmup, 0f, warmupSpeed * (stat == BlockStatus.logicDisable ? 3f : 1f));
             }
         }
 

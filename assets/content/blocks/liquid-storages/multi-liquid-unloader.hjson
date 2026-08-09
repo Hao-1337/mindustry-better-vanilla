@@ -1,0 +1,21 @@
+type: "hao1337.lib.liquidcomps.MultiLiquidUnloader"
+category: liquid
+group: liquids
+
+health: 250
+
+requirements: [
+    titanium/30
+    metaglass/3
+    plastanium/3
+]
+
+research: {
+    parent: multi-liquid-storage
+    requirements: [
+        titanium/3500
+        thorium/2000
+        metaglass/5000
+        silicon/7000
+    ]
+}

@@ -48,30 +48,36 @@ import arc.util.io.Writes;
  * between clients and server, ensuring all players have consistent mod configurations.
  */
 public class StateController {
-    public boolean thoriumConveyor;
-    public boolean surgeConveyor;
-
-    public boolean box;
-    public boolean silo;
-    public boolean ultraVault;
-    public boolean valveUnloader;
-    public boolean noConnectContainer;
-    public boolean leviathanReconstructor;
-
-    public boolean dropper;
-    public boolean m1014;
-
-    public boolean giganticDome;
-    public boolean slagCentrifuge;
-    public boolean heatReactor;
-
-    public boolean betterShield;
-    public boolean betterOverrideDome;
-    public boolean betterSerpuloVault;
-    public boolean betterErekirVault;
-
-    public boolean hiddenLiquids;
-    public boolean hiddenItems;
+    public boolean
+    // Conveyor
+    thoriumConveyor,
+    surgeConveyor,
+    // Storage
+    box,
+    silo,
+    ultraVault,
+    valveUnloader,
+    noConnectContainer,
+    // Liquid
+    liquidStorageCore,
+    liquidStorageRouter,
+    liquidStorageUnloader,
+    // Constructor
+    leviathanReconstructor,
+    // Turret
+    dropper,
+    m1014,
+    // Modification
+    giganticDome,
+    slagCentrifuge,
+    heatReactor,
+    betterShield,
+    betterOverrideDome,
+    betterSerpuloVault,
+    betterErekirVault,
+    // Hidden contents
+    hiddenLiquids,
+    hiddenItems;
 
     public int sechematicSize;
     public boolean experimental;
@@ -110,6 +116,10 @@ public class StateController {
         betterSerpuloVault = Core.settings.getBool("hao1337.gameplay.serpulo.vault-bigger");
         betterErekirVault = Core.settings.getBool("hao1337.gameplay.erekir.vault-bigger");
 
+        liquidStorageCore = Core.settings.getBool("hao1337.gameplay.serpulo.liquid-storage-core");
+        liquidStorageRouter = Core.settings.getBool("hao1337.gameplay.serpulo.liquid-storage-router");
+        liquidStorageUnloader = Core.settings.getBool("hao1337.gameplay.serpulo.liquid-storage-unlodader");
+
         hiddenLiquids = Core.settings.getBool("hao1337.gameplay.erekir.hidden-liquid");
         hiddenItems = Core.settings.getBool("hao1337.gameplay.erekir.hidden-item");
 
@@ -139,6 +149,10 @@ public class StateController {
         HBlocks.dropper.buildVisibility = check(shouldEnable, dropper);
         HBlocks.giganticDome.buildVisibility = check(shouldEnable, giganticDome);
         HBlocks.noConnectContainer.buildVisibility = check(shouldEnable, noConnectContainer);
+
+        HBlocks.liquidStorageCore.buildVisibility = check(shouldEnable, liquidStorageCore);
+        HBlocks.liquidStorageRouter.buildVisibility = check(shouldEnable, liquidStorageRouter);
+        HBlocks.liquidStorageUnloader.buildVisibility = check(shouldEnable, liquidStorageUnloader);
         
         Vars.maxSchematicSize = sechematicSize;
         try {
@@ -153,7 +167,6 @@ public class StateController {
 
     public void techTree() {
         TechTreeModification.margeNode(Blocks.phaseHeater, Blocks.heatReactor, ItemStack.with(Items.beryllium, 2000, Items.oxide, 1500, Items.silicon, 3000), Seq.with(new Objectives.SectorComplete(SectorPresets.stronghold)));
-        // TechTreeModification.margeNode(Blocks.vault, HaoBlocks.noConnectContainer, ItemStack.with(Items.copper, 20000, Items.graphite, 15000, Items.silicon, 30000, Items.titanium, 10000, Items.thorium, 5000), Seq.with(new Objectives.SectorComplete(SectorPresets.impact0078)));
         TechTreeModification.margeNodeProduce(Items.thorium, Items.fissileMatter, 1);
         TechTreeModification.margeNodeProduce(Items.fissileMatter, HItems.uranium, 0);
     }
@@ -180,6 +193,9 @@ public class StateController {
                 betterOverrideDome = r.bool();
                 betterSerpuloVault = r.bool();
                 betterErekirVault = r.bool();
+                liquidStorageCore = r.bool();
+                liquidStorageRouter = r.bool();
+                liquidStorageUnloader = r.bool();
                 hiddenLiquids = r.bool();
                 hiddenItems = r.bool();
                 sechematicSize = r.i();
@@ -213,6 +229,9 @@ public class StateController {
             w.bool(betterOverrideDome);
             w.bool(betterSerpuloVault);
             w.bool(betterErekirVault);
+            w.bool(liquidStorageCore);
+            w.bool(liquidStorageRouter);
+            w.bool(liquidStorageUnloader);
             w.bool(hiddenLiquids);
             w.bool(hiddenItems);
             w.i(sechematicSize);

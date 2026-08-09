@@ -1,5 +1,5 @@
-type: hao1337.lib.ValveUnloader
-category: effect
+type: "hao1337.lib.ValveUnloader"
+category: distribution
 group: transportation
 
 health: 330

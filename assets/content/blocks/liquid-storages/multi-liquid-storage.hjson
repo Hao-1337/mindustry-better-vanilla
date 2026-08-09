@@ -1,0 +1,41 @@
+type: "hao1337.lib.liquidcomps.MultiLiquidCoreStorage"
+category: liquid
+group: liquids
+
+size: 4
+health: 4500
+liquidCapacity: 1800
+
+requirements: [
+    silicon/1500
+    thorium/750
+    plastanium/150
+    metaglass/500
+    surge-alloy/50
+]
+
+research: {
+    parent: liquid-tank
+    objectives: [
+        {
+            type: SectorComplete
+            preset: desolateRift
+        },
+        {
+            type: Produce
+            content: thorium
+        }
+        {
+            type: Produce
+            content: surge-alloy
+        }
+    ]
+    requirements: [
+        titanium/35000
+        thorium/20000
+        metaglass/10000
+        silicon/30000
+        plastanium/15000
+        surge-alloy/2000
+    ]
+}

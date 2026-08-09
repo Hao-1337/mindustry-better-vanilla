@@ -156,6 +156,11 @@ public class MultiBlockMachine extends Block {
     @Override
     public void setBars() {
         super.setBars();
+
+        addBar("dai-vip-vai-lon", (MultiBlockMachineBuild e) -> new ProgressBar(
+            () -> Core.bundle.format("hao1337.block.correct-count", (float) e.correct / capacity * 100),
+            Color.orange,
+            () -> (float) e.correct / capacity));
     }
 
     public class MultiBlockMachineBuild extends Building {
@@ -169,13 +174,10 @@ public class MultiBlockMachine extends Block {
         Interval interval = new Interval();
         Seq<Projector> projectors = new Seq<Projector>();
 
+
         @Override
         public void draw() {
             super.draw();
-            addBar("dai-vip-vai-lon", (e) -> new ProgressBar(
-                    () -> Core.bundle.format("hao1337.block.correct-count", (float) correct / capacity * 100),
-                    Color.orange,
-                    () -> (float) correct / capacity));
 
             BlockStatus status = status();
             if (status != BlockStatus.active) return;
