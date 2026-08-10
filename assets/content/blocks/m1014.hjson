@@ -29,6 +29,8 @@ reload: 80
 recoil: 2
 shake: 4
 rotateSpeed: 6
+shootX: 0
+shootY: 12
 
 ammoTypes: {
   titanium: {

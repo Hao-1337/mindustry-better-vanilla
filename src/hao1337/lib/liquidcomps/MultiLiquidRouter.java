@@ -64,6 +64,7 @@ public class MultiLiquidRouter extends LiquidRouter {
         
         @Override
         public void draw() {
+            drawTiledFrames(size, x, y, liquidPadding, liquids.current(), liquids.currentAmount() / liquidCapacity);
             Draw.rect(this.block.region, this.x, this.y, this.drawrot());
             this.drawTeamTop();
         }

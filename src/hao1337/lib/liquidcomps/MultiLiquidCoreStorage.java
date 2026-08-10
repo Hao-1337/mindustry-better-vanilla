@@ -90,7 +90,7 @@ public class MultiLiquidCoreStorage extends LiquidRouter {
                 for (var liq : Vars.content.liquids())
                     totalFlowRate += build.graph.caculator.getFlowRate(liq);
 
-                return Math.clamp(totalFlowRate, 0f, maxConsumePower);
+                return Mathf.clamp(totalFlowRate, 0f, maxConsumePower);
             });
         }
     }

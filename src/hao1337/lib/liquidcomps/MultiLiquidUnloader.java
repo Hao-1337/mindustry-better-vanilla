@@ -11,7 +11,6 @@ import mindustry.gen.Unit;
 import mindustry.type.*;
 import mindustry.world.blocks.*;
 import mindustry.world.blocks.sandbox.LiquidSource;
-import mindustry.world.meta.BuildVisibility;
 import mindustry.world.modules.LiquidModule;
 
 import static mindustry.Vars.*;
@@ -39,7 +38,6 @@ public class MultiLiquidUnloader extends LiquidSource {
         super.setBars();
 
         removeBar("liquid");
-        buildVisibility = BuildVisibility.shown;
     }
 
     @Override
