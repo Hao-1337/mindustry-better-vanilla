@@ -12,7 +12,7 @@ public class Version {
     /** Mod maajor version */
     public static final int majorVersion = 1;
     /** Mod minor version */
-    public static final int minorVersion = 11;
+    public static final int minorVersion = 12;
     /** Mod patch version */
     public static final int patchVersion = 0;
     /** Mod version tag */
