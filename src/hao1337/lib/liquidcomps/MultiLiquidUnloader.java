@@ -6,6 +6,7 @@ import arc.graphics.g2d.*;
 import arc.scene.ui.layout.*;
 import arc.util.*;
 import arc.util.io.*;
+import hao1337.addins.PlatformDependance;
 import mindustry.entities.units.*;
 import mindustry.gen.Unit;
 import mindustry.type.*;
@@ -104,8 +105,12 @@ public class MultiLiquidUnloader extends LiquidSource {
         public void configured(Unit builder, Object value) {
             super.configured(builder, value);
 
-            if (!headless)
-                recache();
+            recacheT();
+        }
+
+        @PlatformDependance(version = "v159")
+        void recacheT() {
+            if (!headless) recache();
         }
 
         @Override
