@@ -269,7 +269,7 @@ public class MultiLiquidCoreStorage extends LiquidRouter {
             }
             else warmup = 1f;
 
-            if (warmup >= minWarmup) {
+            if (warmup >= minWarmup && liquidDrop != null) {
                 float maxPump = Math.min(liquidCapacity - liquids.get(liquidDrop), amount * pumpAmount * edelta());
                 liquids.add(liquidDrop, maxPump);
             }
