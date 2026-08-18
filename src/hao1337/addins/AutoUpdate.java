@@ -111,7 +111,7 @@ public class AutoUpdate {
 					if (!allowPrerelease && version.getBool("prerelease", false))
 						return false;
 					String tag = version.getString("tag_name");
-					return Version.isLarger(tag);
+					return Version.isLargerOrEqual(tag);
 				} catch (InvalidVersionStringException e) {
 					e.printStackTrace();
 					return false;
