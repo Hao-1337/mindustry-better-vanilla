@@ -273,12 +273,17 @@ public class AutoUpdate {
 	public static final String[] validFileNames = {
 		"mindustry-better-vanilla.zip",
 		"hao1337mindustry-better-vanilla.zip",
+		"hao-1337mindustry-better-vanilla.zip",
+		"hao-1337mindustry-better-vanilla1.zip",
+		"hao-1337mindustry-better-vanilla2.zip",
+		"hao-1337mindustry-better-vanilla3.zip",
 		"hao1337-mindustry-better-vanilla.zip",
 		"hao-1337-mindustry-better-vanilla.zip",
 		"Hao-1337mindustry-better-vanilla.zip",
 		"mindustry-better-vanilla.jar",
 		"hao1337mindustry-better-vanilla.jar",
 		"hao1337-mindustry-better-vanilla.jar",
+		"hao-1337mindustry-better-vanilla.jar",
 		"hao-1337-mindustry-better-vanilla.jar",
 		"Hao-1337mindustry-better-vanilla.jar",
 	};
