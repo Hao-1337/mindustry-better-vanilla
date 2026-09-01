@@ -50,7 +50,7 @@ public abstract class RegionChargeShader extends Shader {
     abstract float normalizeProgress(float progress);
 
     @Override
-    public void apply(){
+    public void apply() {
         setUniformf("u_progress", normalizeProgress(progress));
         setUniformf("u_glow", glow);
         setUniformf("u_tint", tint);

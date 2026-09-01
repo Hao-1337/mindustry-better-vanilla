@@ -7,6 +7,7 @@ import arc.scene.ui.layout.*;
 import arc.util.*;
 import arc.util.io.*;
 import hao1337.addins.PlatformDependance;
+import mindustry.Vars;
 import mindustry.entities.units.*;
 import mindustry.gen.Unit;
 import mindustry.type.*;
@@ -17,7 +18,7 @@ import mindustry.world.modules.LiquidModule;
 import static mindustry.Vars.*;
 
 public class MultiLiquidUnloader extends LiquidSource {
-    TextureRegion centerRegion;
+    @Nullable TextureRegion centerRegion;
 
     public MultiLiquidUnloader(String name) {
         super(name);
@@ -31,6 +32,8 @@ public class MultiLiquidUnloader extends LiquidSource {
     @Override
     public void init() {
         super.init();
+
+        if (Vars.headless) return;
         centerRegion = Core.atlas.find(name + "-center");
     }
 

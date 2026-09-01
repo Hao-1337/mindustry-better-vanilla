@@ -20,6 +20,7 @@ import mindustry.input.MobileInput;
 import hao1337.addins.AutoUpdate;
 import hao1337.addins.MultiPlayerPause;
 import hao1337.addins.StateController;
+import hao1337.addins.TimeControlBackend;
 import hao1337.addons.autodrill.ui.AutoDrill;
 import hao1337.contents.HBlocks;
 import hao1337.contents.HItems;
@@ -31,19 +32,19 @@ public class HVars {
     /** unique identifier used in network packets to avoid processing our own changes. */
     public static final String uuid = UUID.randomUUID().toString();
     /** Unique instance of units counter UI */
-    public static UnitsDisplay unitDisplay = new UnitsDisplay();
+    public static final UnitsDisplay unitDisplay;
     /** Unique instance of core items UI */
-    public static CoreItemsDisplay coreitemDisplay = new CoreItemsDisplay();
+    public static final CoreItemsDisplay coreitemDisplay;
     /** Unique instace of settings UI */
-    public static final SettingBuilder setting = new SettingBuilder();
+    public static final SettingBuilder setting;
     /** Control how mod block should be visible in different server */
     public static final StateController modState = new StateController();
     /** Unique instance of time control UI */
-    public static final TimeControl timecontrol = new TimeControl();
+    public static final TimeControl timecontrol;
     /** Internal mod networking */
     public static final hao1337.net.Net net = new hao1337.net.Net();
     /** Auto drill addons */
-    public static final AutoDrill autoDrill = new AutoDrill();
+    public static final AutoDrill autoDrill;
 
     /** Net channel for mod state */
     public static final short modStateNetChannel = 23554;
@@ -55,8 +56,28 @@ public class HVars {
     public static final boolean isSteam = Vars.steam;
     public static final boolean isBeta = Version.type.equals("bleeding-edge") || Version.build < 0;
 
-    public final MultiPlayerPause pause = new MultiPlayerPause();
-    public final Table poolTable = new Table() {{ update(() -> pause.pool()); }};
+    public static final MultiPlayerPause pause = new MultiPlayerPause();
+    public static final Table poolTable;
+    public static final TimeControlBackend tcBackend = new TimeControlBackend();
+
+    static  {
+        if (Vars.headless) {
+            unitDisplay = null;
+            coreitemDisplay = null;
+            setting = null;
+            timecontrol = null;
+            autoDrill = null;
+            poolTable = null;
+        }
+        else {
+            unitDisplay = new UnitsDisplay();
+            coreitemDisplay = new CoreItemsDisplay();
+            setting = new SettingBuilder();
+            timecontrol = new TimeControl(tcBackend);
+            autoDrill = new AutoDrill();
+            poolTable = new Table() {{ update(() -> pause.pool()); }};
+        }
+    }
 
     public HVars() {
         Core.settings.defaults(
@@ -75,13 +96,14 @@ public class HVars {
             Log.err(e);
         }
 
+        if (Vars.headless) headlessLoader();
+        else loader();
+    }
+
+    void loader() {
         AutoUpdate.load();
         Htex.load(hao1337.Version.name);
 
-        eventsLoader();
-    }
-
-    void eventsLoader() {
         Events.on(WorldLoadEndEvent.class, e -> {
             // Log.info("World load event");
             unitDisplay.resetUsed();
@@ -100,8 +122,14 @@ public class HVars {
         });
     }
 
+    void headlessLoader() {
+        Log.info("[MBV] Headless mode.");
+        Events.on(ClientLoadEvent.class, e -> {
+            contentsLoader();
+        });
+    }
+
     void contentsLoader() {
-        autoDrill.register();
         HItems.load();
         HBlocks.load();
         HUnits.load();
@@ -112,6 +140,7 @@ public class HVars {
     private @Nullable TextButton toggleSeqButton = null;
 
     void UILoader() {
+        autoDrill.register();
         unitDisplay.name = "unit-display";
         coreitemDisplay.name = "coreitem-display";
 

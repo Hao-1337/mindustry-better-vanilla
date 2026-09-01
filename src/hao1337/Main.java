@@ -10,7 +10,7 @@ import mindustry.mod.Mod;
 public class Main extends Mod {
     @Override
     public void init() {
-        Log.info("[Hao1337: Better Vanilla] is launching.");
+        Log.info("'Hao1337: Better Vanilla (MBV)' is launching.");
         
         new HVars();
     }

@@ -6,7 +6,9 @@ import arc.graphics.g2d.Draw;
 import arc.graphics.g2d.TextureRegion;
 import arc.math.Angles;
 import arc.math.Mathf;
+import arc.util.Nullable;
 import arc.util.Time;
+import mindustry.Vars;
 import mindustry.entities.pattern.ShootPattern;
 import mindustry.entities.units.WeaponMount;
 import mindustry.gen.Unit;
@@ -24,9 +26,9 @@ public class ChargeWeapon extends Weapon {
     /** Charge region layer */
     public float chargeLayer = Layer.bullet - 2f;
 
-    TextureRegion chargeRegion;
+    @Nullable TextureRegion chargeRegion;
 
-    public final RegionChargeShader shader = new RegionChargeShader() {
+    public final @Nullable RegionChargeShader shader = Vars.headless ? null : new RegionChargeShader() {
         @Override
         float normalizeProgress(float progress) { return chargeQuad[0] + (chargeQuad[1] - chargeQuad[0]) * progress; }
     };
@@ -53,6 +55,8 @@ public class ChargeWeapon extends Weapon {
     @Override
     public void load() {
         super.load();
+
+        if (Vars.headless) return;
         chargeRegion = Core.atlas.find(chargeSuffix == null ? name + "-heat" : name + chargeSuffix);
     }
 

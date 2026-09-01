@@ -3,8 +3,10 @@ package hao1337.lib;
 import arc.Core;
 import arc.graphics.g2d.TextureRegion;
 import arc.math.Mathf;
+import arc.util.Nullable;
 import arc.util.io.Reads;
 import arc.util.io.Writes;
+import mindustry.Vars;
 import mindustry.gen.Sounds;
 import mindustry.graphics.Drawf;
 import mindustry.world.blocks.production.GenericCrafter;
@@ -39,7 +41,7 @@ public class WarmupGenericCrafter extends GenericCrafter implements DisableCache
     /** Default offset for rotation (deg) */
     public float rotationOffset = 60.f;
 
-    TextureRegion sRotatorRegion;
+    @Nullable TextureRegion sRotatorRegion;
 
     public WarmupGenericCrafter(String name) {
         super(name);
@@ -58,6 +60,8 @@ public class WarmupGenericCrafter extends GenericCrafter implements DisableCache
     @Override
     public void init() {
         super.init();
+
+        if (Vars.headless) return;
         sRotatorRegion = Core.atlas.find(name + "-rotator");
     }
 

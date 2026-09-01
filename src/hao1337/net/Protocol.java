@@ -1,5 +1,7 @@
 package hao1337.net;
 
+import static mindustry.Vars.state;
+
 import arc.Events;
 import arc.struct.ObjectIntMap;
 import arc.util.Log;
@@ -58,7 +60,7 @@ public class Protocol {
             playerConnections.remove(e.player.con);
         });
 
-        Events.on(PlayerConnectionConfirmed.class, e -> {
+        Events.on(PlayerJoin.class, e -> {
             Timer.schedule(() -> {
                 if (e.player.con.hasDisconnected) {
                     playerConnections.remove(e.player.con);
@@ -69,7 +71,7 @@ public class Protocol {
                     kick(e.player.con);
                     playerConnections.remove(e.player.con);
                 }
-            }, 2.5f);
+            }, 1.5f);
         });
 
         Vars.net.handleServer(HandShakePacket.class, (con, p) -> {
@@ -116,11 +118,15 @@ public class Protocol {
     boolean isCompatible = false;
 
     void protocolChangeFire(boolean doHandShake) {
+        if (Vars.headless) /** Headless does not fire any event when map loaded. It does but not in correct timing, force add anyway. */
+            Vars.state.rules.tags.put(validProtocolString, Version.getNoVendorVersionString());
+
         var state = ProtocolType.fetch();
+
         if (lastProtocolType == state && !doHandShake)
             return;
         if (lastProtocolType != state)
-            Log.info("[Protocol Listener] Detect protocol state change: [green]@", state.toString());
+            Log.info("[MBV] Detect protocol state change: [green]@", state);
 
         lastProtocolType = state;
 
@@ -134,6 +140,7 @@ public class Protocol {
         }
 
         else {
+            Log.info("[MBV] Server states: @", Vars.state.rules.tags);
             if (Vars.state.rules.tags.containsKey(validProtocolString)) {
                 isCompatible = true;
 

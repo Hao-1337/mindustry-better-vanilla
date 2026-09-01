@@ -5,8 +5,10 @@ import arc.graphics.Blending;
 import arc.graphics.g2d.Draw;
 import arc.graphics.g2d.TextureRegion;
 import arc.math.Mathf;
+import arc.util.Nullable;
 import arc.util.io.Reads;
 import arc.util.io.Writes;
+import mindustry.Vars;
 import mindustry.content.Fx;
 import mindustry.entities.Effect;
 import mindustry.game.Team;
@@ -39,7 +41,7 @@ public class CoreStorageBlock extends StorageBlock implements DisableCacheBehavi
     /** Effect that get used as working effect */
     public Effect updateEffect = Fx.pulverizeSmall;
 
-    TextureRegion sTopRegion, sRotatorRegion, sRotatorTeam;
+    @Nullable TextureRegion sTopRegion, sRotatorRegion, sRotatorTeam;
 
     public CoreStorageBlock(String name) {
         super(name);
@@ -64,6 +66,8 @@ public class CoreStorageBlock extends StorageBlock implements DisableCacheBehavi
     @Override
     public void init() {
         super.init();
+
+        if (Vars.headless) return;
         sTopRegion = Core.atlas.find(name + "-top");
         sRotatorRegion = Core.atlas.find(name + "-rotator");
     }

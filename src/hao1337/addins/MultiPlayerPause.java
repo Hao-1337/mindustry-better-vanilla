@@ -6,7 +6,10 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 
 import arc.Core;
+import arc.util.CommandHandler.CommandRunner;
 import arc.util.Interval;
+import arc.util.Log;
+import arc.util.Nullable;
 import arc.util.io.Reads;
 import arc.util.io.Writes;
 import hao1337.HVars;
@@ -14,6 +17,7 @@ import static hao1337.net.Net.*;
 import hao1337.net.IORouter;
 import mindustry.Vars;
 import mindustry.core.GameState;
+import mindustry.gen.Player;
 import mindustry.input.Binding;
 import mindustry.net.NetConnection;
 
@@ -35,10 +39,10 @@ public class MultiPlayerPause {
             return;
         }
 
-        if (Core.input.keyTap(Binding.pause) && !HVars.net.isSinglePlayer() && !disable()) {
+        if (Core.input.keyTap(Binding.pause) && !Core.scene.hasField() && !HVars.net.isSinglePlayer() && !disable()) {
             debounce = true;
             var doPause = Vars.state.isPaused();
-            var packet = exportConfigPacket(doPause ? false : true, "[orange][" + Vars.player.name + "][] " + (doPause ? "Resume the game" : "Stop the game"));
+            var packet = exportConfigPacket(Vars.player, doPause ? false : true, "[orange][" + Vars.player.name + "][] " + (doPause ? "Resume the game" : "Stop the game"));
             router.send(HVars.pauseNetChannel, packet);
         }
     }
@@ -75,8 +79,9 @@ public class MultiPlayerPause {
                     isAdmin = r.bool();
                     if (!isAdmin) return /* Only admin can be pause */;
 
+                    Log.info("[MBV] Pause request: @. From @", requestPause, connection);
                     String mes = r.str();
-                    if (mes.length() > 0) Vars.player.sendUnformatted(mes);
+                    if (mes.length() > 0 && Vars.player != null) Vars.player.sendUnformatted(mes);
                     Vars.state.set(requestPause ? GameState.State.paused : GameState.State.playing);
                     router.broadcast(HVars.pauseNetChannel, payload);
                 } finally {
@@ -84,9 +89,21 @@ public class MultiPlayerPause {
                 }
             }
         });
+
+        if (Vars.headless) {
+            Vars.netServer.clientCommands.register("pause", "<on/off>", "multi player pause", new CommandRunner<Player>() {
+                @Override
+                public void accept(String[] args, Player player) {
+                    boolean doPause = args[0] != null && args[0].equals("on");
+                    Vars.state.set(doPause ? GameState.State.paused : GameState.State.playing);
+                    var packet = exportConfigPacket(player, doPause ? false : true, "[orange][" + Vars.player.name + "][] " + (doPause ? "Resume the game" : "Stop the game"));
+                    router.send(HVars.pauseNetChannel, packet);
+                }
+            });
+        }
     }
 
-    byte[] exportConfigPacket(boolean doPause, String mes) {
+    byte[] exportConfigPacket(@Nullable Player player, boolean doPause, String mes) {
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
         DataOutputStream s = new DataOutputStream(bos);
         Writes w = new Writes(s);

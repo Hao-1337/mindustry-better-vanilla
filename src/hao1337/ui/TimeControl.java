@@ -1,32 +1,20 @@
 package hao1337.ui;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-
 import arc.Core;
-import arc.Events;
 import arc.graphics.Color;
 import arc.scene.style.Drawable;
 import arc.scene.style.TextureRegionDrawable;
 import arc.scene.ui.Label;
 import arc.scene.ui.layout.Cell;
 import arc.scene.ui.layout.Table;
-import arc.util.Time;
 import arc.util.Tmp;
-import arc.util.io.Reads;
-import arc.util.io.Writes;
 import hao1337.HVars;
-import static hao1337.net.Net.*;
-import hao1337.net.IORouter;
-import hao1337.net.Protocol.PlayerAuthSuccess;
+import hao1337.addins.TimeControlBackend;
+
 import mindustry.Vars;
-import mindustry.game.EventType.ResetEvent;
 import mindustry.gen.Icon;
 import mindustry.graphics.Pal;
 import mindustry.input.InputHandler;
-import mindustry.net.NetConnection;
 import mindustry.ui.Styles;
 
 /**
@@ -57,10 +45,6 @@ public class TimeControl extends Table {
      * shown and speed cannot be changed).
      */
     public boolean useable = true;
-    /** current multiplier setting. Positive values speed up, negative values
-     * slow or reverse; 1 is normal real-time.
-     */
-    public int time = 1;
 
     /** Icon used by the slowdown button. */
     public Drawable left = new TextureRegionDrawable(Icon.left);
@@ -69,21 +53,14 @@ public class TimeControl extends Table {
     /** Icon for the reset button. */
     public Drawable reset = new TextureRegionDrawable(Icon.refresh);
 
-    private int displaytime = 1;
-    private float gametime = 1;
     private Cell<Label> label;
     private boolean IUseable = true;
     private boolean IEnableState = true;
     private boolean needRebuild = false;
+    private final TimeControlBackend backend; 
 
-    /**
-     * Construct a new TimeControl widget and register its network handlers.
-     */
-    public TimeControl() {
-        super();
-        netRegister();
-    }
-    
+    public TimeControl(TimeControlBackend backend) { this.backend = backend; }
+
     /**
      * Helper to build a styled button with padding and tooltip.
      *
@@ -115,7 +92,7 @@ public class TimeControl extends Table {
 
         table(null, table -> {
             table.label(() -> Core.bundle.format("hao1337.timecontrol.speedlabel"));
-            label = table.label(() -> (time < 0 ? "×1/" : "×") + displaytime);
+            label = table.label(backend::getDisplayTime);
             marginBottom(10f);
         });
         row();
@@ -174,31 +151,6 @@ public class TimeControl extends Table {
     }
 
     /**
-     * Decide whether the time control UI should be hidden based on various
-     * conditions (settings, HUD visibility, current input state).
-     *
-     * @return {@code true} if the widget should be disabled and hidden
-     */
-    boolean shouldDisable() {
-        InputHandler input = Vars.control.input;
-        return !Vars.ui.hudfrag.shown || Vars.ui.minimapfrag.shown() || input.lastSchematic != null; //|| !input.selectPlans.isEmpty();
-    }
-
-    /**
-     * Recalculate derived values after the {@link #time} field changes.  Thiswwssasasas
-     * method updates the display label, adjusts the game time scaling via the
-     * {@code Time} API, and colours the label according to the speed.
-     */
-    void timeUpdate() {
-        gametime = Math.abs(time);
-        displaytime = (int) (time < 0 ? gametime + 1 : gametime);
-        if (time < 0) gametime = 1 / (gametime + 1);
-
-        Time.setDeltaProvider(() -> Math.min(Core.graphics.getDeltaTime() * 60 * gametime, 3 * gametime));
-        if (label != null) label.color(Tmp.c1.lerp(GRADIENT, (time + MAX_SPEED) / (2 * MIN_SPEED)));
-    }
-
-    /**
      * Change the current speed by a relative step, enforce bounds, and send
      * updates if the value actually changed.
      *
@@ -209,6 +161,8 @@ public class TimeControl extends Table {
             Vars.ui.showInfoToast(Core.bundle.format("hao1337.ui.speedup.error"), 5f);
             return;
         }
+
+        var time = backend.getTimeState();
 
         time += step;
         if (time == 0) time = step >= 0 ? 1 : -1;
@@ -224,19 +178,8 @@ public class TimeControl extends Table {
             return;
         }
 
-        timeUpdate();
-        updateSnapshot();
-    }
-
-    /**
-     * Reset speed to 1 (normal) and optionally send a network snapshot.
-     *
-     * @param useSnapshot whether to broadcast the new speed to other clients
-     */
-    public void update(boolean useSnapshot) {
-        time = 1;
-        timeUpdate();
-        if (useSnapshot) updateSnapshot();
+        backend.setTimeState(time);
+        if (label != null) label.color(Tmp.c1.lerp(GRADIENT, (time + MAX_SPEED) / (2 * MIN_SPEED)));
     }
 
     /**
@@ -244,19 +187,8 @@ public class TimeControl extends Table {
      * snapshot.
      */
     public void update() {
-        time = 1;
-        timeUpdate();
-        updateSnapshot();
-    }
-
-    /**
-     * Apply a received speed value from the network without rebroadcasting.
-     *
-     * @param speed new time multiplier to adopt
-     */
-    void setSnapshot(int speed) {
-        time = speed;
-        timeUpdate();
+        backend.setTimeState(1);
+        if (label != null) label.color(Tmp.c1.lerp(GRADIENT, ((float) MAX_SPEED) / (2 * MIN_SPEED)));
     }
 
     /**
@@ -270,84 +202,13 @@ public class TimeControl extends Table {
     }
 
     /**
-     * Register network handlers for time control packets and attach relevant
-     * game event listeners.  The client handler applies incoming snapshots,
-     * while the server handler rebroadcasts them to all connected clients.
-     */
-    void netRegister() {
-        router.register(HVars.tcNetChannel, new IORouter.ChannelHandler() {
-            public void handleClient(byte[] payload) {
-                var i = new DataInputStream(new ByteArrayInputStream(payload));
-                Reads r = new Reads(i);
-
-                try  {
-                    String Fuuid = r.str();
-                    if (HVars.uuid.equals(Fuuid)) return;
-                    useable = r.bool();
-
-                    String mes = r.str();
-                    if (mes.length() > 0) Vars.player.sendUnformatted(mes);
-                    setSnapshot(r.i());
-                } finally {
-                    r.close();
-                }
-            }
-            public void handleServer(NetConnection connection, byte[] payload) {
-                var i = new DataInputStream(new ByteArrayInputStream(payload));
-                Reads r = new Reads(i);
-
-                try  {
-                    // Server config is highest
-                    String Fuuid = r.str();
-                    if (HVars.uuid.equals(Fuuid)) return;
-                    /** useable = */r.bool();
-                    String mes = r.str();
-                    if (mes.length() > 0) Vars.player.sendUnformatted(mes);
-                    setSnapshot(r.i());
-
-                    router.broadcast(HVars.tcNetChannel, payload);
-                } finally {
-                    r.close();
-                }
-            }
-        });
-        
-        Events.on(PlayerAuthSuccess.class, e -> router.sendTo(e.connection, HVars.tcNetChannel, exportConfigPacket("")));
-        Events.on(ResetEvent.class, e -> update(false));
-    }
-
-    /**
-     * Build a packet containing the current configuration and an optional
-     * message.  The packet is later sent via the custom router.
+     * Decide whether the time control UI should be hidden based on various
+     * conditions (settings, HUD visibility, current input state).
      *
-     * @param mes text message to include (displayed on receipt)
-     * @return serialized packet payload
+     * @return {@code true} if the widget should be disabled and hidden
      */
-    byte[] exportConfigPacket(String mes) {
-        ByteArrayOutputStream bos = new ByteArrayOutputStream();
-        DataOutputStream s = new DataOutputStream(bos);
-        Writes w = new Writes(s);
-
-        try {
-            w.str(HVars.uuid);
-            w.bool(Core.settings.getBool("hao1337.ui.timecontrol.enable"));
-            w.str(mes);
-            w.i(time);
-
-            return bos.toByteArray();
-        } finally {
-            w.close();
-        }
-    }
-
-    /**
-     * Broadcast the current speed setting to all peers, including a chat message
-     * identifying the player who made the change.
-     */
-    void updateSnapshot() {
-        try {
-            byte[] payload = exportConfigPacket("[orange][" + Vars.player.name + "][] Set time control to [accent]" + (time < 0 ? "×1/" : "×") + displaytime);
-            router.send(HVars.tcNetChannel, payload);
-        } catch (Throwable e) {}
+    boolean shouldDisable() {
+        InputHandler input = Vars.control.input;
+        return !Vars.ui.hudfrag.shown || Vars.ui.minimapfrag.shown() || input.lastSchematic != null; //|| !input.selectPlans.isEmpty();
     }
 }

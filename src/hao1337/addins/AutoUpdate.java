@@ -271,27 +271,24 @@ public class AutoUpdate {
 	}
 
 	public static final String[] validFileNames = {
-		"mindustry-better-vanilla.zip",
-		"hao1337mindustry-better-vanilla.zip",
-		"hao-1337mindustry-better-vanilla.zip",
-		"hao-1337mindustry-better-vanilla1.zip",
-		"hao-1337mindustry-better-vanilla2.zip",
-		"hao-1337mindustry-better-vanilla3.zip",
-		"hao1337-mindustry-better-vanilla.zip",
-		"hao-1337-mindustry-better-vanilla.zip",
-		"Hao-1337mindustry-better-vanilla.zip",
-		"mindustry-better-vanilla.jar",
-		"hao1337mindustry-better-vanilla.jar",
-		"hao1337-mindustry-better-vanilla.jar",
-		"hao-1337mindustry-better-vanilla.jar",
-		"hao-1337-mindustry-better-vanilla.jar",
-		"Hao-1337mindustry-better-vanilla.jar",
+		"mindustry-better-vanilla",
+		"hao1337mindustry-better-vanilla",
+		"hao-1337mindustry-better-vanilla",
+		"hao-1337mindustry-better-vanilla1",
+		"hao-1337mindustry-better-vanilla2",
+		"hao-1337mindustry-better-vanilla3",
+		"hao1337-mindustry-better-vanilla",
+		"hao-1337-mindustry-better-vanilla",
+		"Hao-1337mindustry-better-vanilla",
+		"Hao-1337mindustry-better-vanilla1"
 	};
 
 	private static void cleanup() {
 		try {
 			for (String k : validFileNames) {
-				Fi oldFile = Vars.modDirectory.child(k);
+				Fi oldFile = Vars.modDirectory.child(k + ".zip");
+				if (oldFile.exists()) oldFile.delete();
+				oldFile = Vars.modDirectory.child(k + ".jar");
 				if (oldFile.exists()) oldFile.delete();
 			}
 		} catch (Throwable e) {
