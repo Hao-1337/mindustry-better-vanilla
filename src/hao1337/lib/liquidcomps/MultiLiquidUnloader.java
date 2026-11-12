@@ -72,13 +72,8 @@ public class MultiLiquidUnloader extends LiquidSource {
 
         @Override
         public void updateTile() {
-            if (unloadLiquid == null) {
-                liquids.clear();
-                return;
-            }
-
-            if (router == null || !router.isValid()) {
-                liquids = new LiquidModule();
+            if (unloadLiquid == null || router == null || !router.isValid()) {
+                liquids = null;
                 return;
             }
 
@@ -86,7 +81,7 @@ public class MultiLiquidUnloader extends LiquidSource {
             if (graph == null) return;
 
             liquids = graph.liquids;
-            if (graph.allowTransfer) dumpLiquid(unloadLiquid);
+            if (graph.allowTransfer && liquids != null) dumpLiquid(unloadLiquid);
         }
 
         @Override
