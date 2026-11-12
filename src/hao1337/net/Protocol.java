@@ -1,7 +1,5 @@
 package hao1337.net;
 
-import static mindustry.Vars.state;
-
 import arc.Events;
 import arc.struct.ObjectIntMap;
 import arc.util.Log;

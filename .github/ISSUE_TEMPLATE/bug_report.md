@@ -7,6 +7,8 @@ assignees: BackNNHH, Hao-1337
 
 ---
 
+NOTE: Due to hybird mod structure, change the version can make all of content disappear. As the result. You alway see version as '1.10.2'. You can see real version at the mod description.
+
 Please follow the instruction to open a issue, i won't resolve if it looks completely spontaneous.
 
 ## Describe the Bug

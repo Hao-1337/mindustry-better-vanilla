@@ -170,3 +170,4 @@ android/libs/
 /scripts/.cloned
 /scripts/jdt-language-server/
 /scripts/jdt-language-server-latest.tar.gz
+.sourcecode
