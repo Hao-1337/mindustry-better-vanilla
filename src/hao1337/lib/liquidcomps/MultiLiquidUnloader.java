@@ -4,6 +4,7 @@ import arc.Core;
 import arc.graphics.Color;
 import arc.graphics.g2d.*;
 import arc.scene.ui.layout.*;
+import arc.struct.Seq;
 import arc.util.*;
 import arc.util.io.*;
 import hao1337.addins.PlatformDependance;
@@ -13,7 +14,6 @@ import mindustry.gen.Unit;
 import mindustry.type.*;
 import mindustry.world.blocks.*;
 import mindustry.world.blocks.sandbox.LiquidSource;
-import mindustry.world.modules.LiquidModule;
 
 import static mindustry.Vars.*;
 
@@ -56,32 +56,41 @@ public class MultiLiquidUnloader extends LiquidSource {
 
     public class MultiLiquidUnloaderBuild extends LiquidSource.LiquidSourceBuild {
         public @Nullable Liquid unloadLiquid = null;
-        MultiLiquidRouter.MultiLiquidRouterBuilding router;
+        Seq<MultiLiquidRouter.MultiLiquidRouterBuilding> routers = new Seq<>();
 
         @Override
         public void onProximityUpdate() {
             super.onProximityUpdate();
             
             for (var build : proximity) {
-                if (build instanceof MultiLiquidRouter.MultiLiquidRouterBuilding r && r.isValid()) {
-                    this.router = r;
-                    break;
+                if (
+                    build instanceof MultiLiquidRouter.MultiLiquidRouterBuilding r &&
+                    r.isValid() &&
+                    !routers.contains(r1 -> ((MultiLiquidRouter) r1.block).groupId == ((MultiLiquidRouter) r.block).groupId)
+                ) {
+                    this.routers.add(r);
                 }
             }
         }
 
         @Override
         public void updateTile() {
-            if (unloadLiquid == null || router == null || !router.isValid()) {
+            if (unloadLiquid == null || routers.isEmpty()) {
                 liquids = null;
                 return;
             }
 
-            var graph = router.getGraph();
-            if (graph == null) return;
-
-            liquids = graph.liquids;
-            if (graph.allowTransfer && liquids != null) dumpLiquid(unloadLiquid);
+            for (var router : routers) {
+                var graph = router.getGraph();
+                if (graph == null) continue;
+    
+                float amount = graph.liquids.get(unloadLiquid);
+    
+                if (!graph.allowTransfer || amount < 0.1f) continue;
+                liquids = graph.liquids;
+                dumpLiquid(unloadLiquid);
+                break;
+            }
         }
 
         @Override

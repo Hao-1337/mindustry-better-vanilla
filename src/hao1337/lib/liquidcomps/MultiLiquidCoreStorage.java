@@ -11,6 +11,7 @@ import arc.graphics.g2d.Draw;
 import arc.graphics.g2d.TextureRegion;
 import arc.math.Mathf;
 import arc.struct.ObjectFloatMap;
+import arc.util.Log;
 import arc.util.Nullable;
 import arc.util.Time;
 import arc.util.io.Reads;
@@ -43,7 +44,7 @@ import mindustry.world.modules.LiquidModule.LiquidCalculator;
 /**
  * Main storage whose hold shared LiquidGraph.
  */
-public class MultiLiquidCoreStorage extends LiquidRouter {
+public class MultiLiquidCoreStorage extends LiquidRouter implements ContraptionGroupId {
     public @Nullable Effect explodeEffect;
     public @Nullable Sound explodeSound;
 
@@ -65,6 +66,9 @@ public class MultiLiquidCoreStorage extends LiquidRouter {
     /** Default offset for rotation (deg) */
     public float rotationOffset = 0f;
     public Color heatColor = Color.valueOf("ff5512");
+
+    /** Indicate if other multi liquid components can connect to each others */
+    public int groupId = 0x01;
 
     TextureRegion rotationTopRegion, rotatorRegion, rimRegion;
 
@@ -94,6 +98,9 @@ public class MultiLiquidCoreStorage extends LiquidRouter {
             });
         }
     }
+
+    public int getId() { return groupId; }
+    public boolean accept(int other) { return groupId == other; }
 
     @Override
     public boolean consumesLiquid(Liquid liq){
@@ -128,9 +135,14 @@ public class MultiLiquidCoreStorage extends LiquidRouter {
         });
     }
 
-    public static @Nullable MultiLiquidCoreStorageBuilding get(Team team) {
+    public static @Nullable MultiLiquidCoreStorageBuilding get(Team team, int contraptionGroupId) {
         for (Building build : Groups.build) {
-            if (build.team == team && build instanceof MultiLiquidCoreStorageBuilding storage) {
+            if (
+                build.team == team &&
+                build instanceof MultiLiquidCoreStorageBuilding storage &&
+                storage.block instanceof MultiLiquidCoreStorage block &&
+                block.accept(contraptionGroupId)
+            ) {
                 return storage;
             }
         }
@@ -139,7 +151,7 @@ public class MultiLiquidCoreStorage extends LiquidRouter {
 
     @Override
     public boolean canPlaceOn(Tile tile, Team team, int rotation) {
-        return get(team) == null && super.canPlaceOn(tile, team, rotation);
+        return get(team, groupId) == null && super.canPlaceOn(tile, team, rotation);
     }
 
     protected boolean canPump(Tile tile){
@@ -200,7 +212,7 @@ public class MultiLiquidCoreStorage extends LiquidRouter {
         public Building create(Block block, Team team) {
             var res = super.create(block, team);
 
-            if (get(team) != null) {
+            if (get(team, groupId) != null) {
                 isSecondOne = true;
             }
             else {
@@ -276,15 +288,15 @@ public class MultiLiquidCoreStorage extends LiquidRouter {
 
             // Dynamically add bars for every stored liquid.
             for (var liq : Vars.content.liquids()) {
-                if (liquids.get(liq) > 0.05f) {
-                    String name = "liquid-" + liq.name;
-
-                    if (!barMap.containsKey(name)) {
-                        addBar("liquid-" + liq.name, entity -> !liq.unlockedNow() ? null : new Bar(() -> liq.localizedName, liq::barColor, () -> entity.liquids.get(liq) / liquidCapacity));
-                    }
+                String name = "liquid-" + liq.name;
+    
+                if (liquids != null && liquids.get(liq) > 0.05f) {
+                    if (!barMap.containsKey(name)) addLiquidBar(liq);
                 }
+                else barMap.remove(name);
             }
 
+            if (graph.liquids != null) Log.info("[Storage] Storage liquid hash: @", graph.liquids.hashCode());
             // Intentionally DO NOT dump liquids.
             // We'll make a dedicated extractor/unloader later.
         }
@@ -346,8 +358,7 @@ public class MultiLiquidCoreStorage extends LiquidRouter {
         }
 
         @Override
-        public void dumpLiquid(Liquid liquid) {
-        }
+        public void dumpLiquid(Liquid liquid) {}
 
         @Override
         public byte version() {

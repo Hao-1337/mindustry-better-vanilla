@@ -5,9 +5,12 @@ import arc.graphics.g2d.Draw;
 import arc.math.Mathf;
 import arc.scene.ui.layout.Table;
 import arc.struct.ObjectFloatMap;
+import arc.util.Log;
 import mindustry.Vars;
+import mindustry.game.Team;
 import mindustry.gen.Building;
 import mindustry.type.Liquid;
+import mindustry.world.Block;
 import mindustry.world.blocks.liquid.LiquidRouter;
 import mindustry.world.modules.LiquidModule;
 
@@ -19,7 +22,10 @@ import mindustry.world.modules.LiquidModule;
  * - They DO NOT dump liquids (traditional piping cannot choose which liquid).
  * - Actual liquid storage is shared through LiquidGraph.
  */
-public class MultiLiquidRouter extends LiquidRouter {
+public class MultiLiquidRouter extends LiquidRouter implements ContraptionGroupId {
+    /** Indicate if other multi liquid components can connect to each others */
+    public int groupId = 0x01;
+
     public MultiLiquidRouter(String name) {
         super(name);
 
@@ -35,13 +41,30 @@ public class MultiLiquidRouter extends LiquidRouter {
     }
 
     @Override
+    public void init() {
+        setCapacity();
+        super.init();
+    }
+
+    @Override
     public void setBars() {
         super.setBars();
 
         // remove vanilla single-liquid bar
         barMap.remove("liquid");
     }
+    
+    void setCapacity() {
+        for (var block : Vars.content.blocks()) {
+            if (block instanceof MultiLiquidCoreStorage m && m.accept(groupId)) {
+                liquidCapacity = m.liquidCapacity;
+            }
+        }
+    }
 
+    
+    public int getId() { return groupId; }
+    public boolean accept(int other) { return groupId == other; }
     
     public class MultiLiquidRouterBuilding extends LiquidBuild implements LiquidGraph.InferLiquidGraph {
         public MultiLiquidCoreStorage.MultiLiquidCoreStorageBuilding storageBuilding;
@@ -50,6 +73,30 @@ public class MultiLiquidRouter extends LiquidRouter {
         public void setGraph(LiquidGraph graph) { this.graph = graph; }
         
         @Override
+        public Building create(Block block, Team team) {
+            var res = super.create(block, team);
+            fetchStorage();
+            setCapacity();
+            return res;
+        }
+
+        void fetchStorage() {
+            if (storageBuilding == null || !storageBuilding.isValid()) {
+                var storage = MultiLiquidCoreStorage.get(this.team, groupId);
+                if (storage == null) {
+                    storageBuilding = null;
+                    graph = null;
+                    liquids = new LiquidModule();
+                    return;
+                }
+
+                storageBuilding = storage;
+                graph = storageBuilding.getGraph();
+                liquids = graph.liquids;
+            }
+        }
+
+        @Override
         public void display(Table table) {
             super.display(table);
             table.row();
@@ -57,7 +104,7 @@ public class MultiLiquidRouter extends LiquidRouter {
                 if (storageBuilding != null) t.image(storageBuilding.block.uiIcon).size(32f).padRight(5f);
                 t.label(() -> {
                     if (graph == null) return Core.bundle.format("hao1337.block.multi-liquid.no-core");
-                    return Core.bundle.format("hao1337.block.multi-liquid.linked", tileX(), tileY());
+                    return Core.bundle.format("hao1337.block.multi-liquid.linked", storageBuilding.tileX(), storageBuilding.tileY());
                 });
             }).left().padTop(5f);
         }
@@ -72,28 +119,15 @@ public class MultiLiquidRouter extends LiquidRouter {
         @Override
         public void updateTile() {
             // Dynamically add bars for every stored liquid.
-            if (storageBuilding == null || !storageBuilding.isValid()) {
-                var storage = MultiLiquidCoreStorage.get(this.team);
-                if (storage == null) {
-                    storageBuilding = null;
-                    graph = null;
-                    liquids = new LiquidModule();
-                    return;
-                }
+            fetchStorage();
 
-                storageBuilding = storage;
-                graph = storageBuilding.getGraph();
-                liquids = graph.liquids;
-            }
-            
             for (var liq : Vars.content.liquids()) {
-                if (liquids.get(liq) > 0.05f) {
-                    String name = "liquid-" + liq.name;
-
-                    if (!barMap.containsKey(name)) {
-                        addLiquidBar(liq);
-                    }
+                String name = "liquid-" + liq.name;
+    
+                if (liquids != null && liquids.get(liq) > 0.05f) {
+                    if (!barMap.containsKey(name)) addLiquidBar(liq);
                 }
+                else barMap.remove(name);
             }
 
             // Intentionally DO NOT dump liquids.
